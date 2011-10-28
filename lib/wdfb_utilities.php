@@ -1,0 +1,148 @@
+<?php
+/**
+ * Misc utilities, helpers and handlers.
+ */
+
+
+
+/**
+ * Helper function for generating the registration fields array.
+ */
+function wdfb_get_registration_fields_array () {
+	$data = Wdfb_OptionsRegistry::get_instance();
+	$wp_grant_blog = false;
+	if (is_multisite()) {
+		$reg = get_site_option('registration');
+		if ('all' == $reg) $wp_grant_blog = true;
+		else if ('user' != $reg) return array();
+	} else {
+		if (!(int)get_option('users_can_register')) return array();
+	}
+	$fields = array(
+		array("name" => "name"),
+		array("name" => "email"),
+		array("name" => "first_name"),
+		array("name" => "last_name"),
+		array("name" => "gender"),
+		array("name" => "location"),
+		array("name" => "birthday"),
+	);
+	if ($wp_grant_blog) {
+		$fields[] = array(
+			'name' => 'blog_title',
+			'description' => __('Your blog title', 'wdfb'),
+			'type' => 'text',
+		);
+		$fields[] = array(
+			'name' => 'blog_domain',
+			'description' => __('Your blog address', 'wdfb'),
+			'type' => 'text',
+		);
+	}
+	if (!$data->get_option('wdfb_connect', 'no_captcha')) {
+		$fields[] = array("name" => "captcha");
+	}
+	return apply_filters('wdfb-registration_fields_array', $fields);
+}
+
+/**
+ * Helper function for processing registration fields array into a string.
+ */
+function wdfb_get_registration_fields () {
+	$ret = array();
+	$fields = wdfb_get_registration_fields_array();
+	foreach ($fields as $field) {
+		$tmp = array();
+		foreach ($field as $key => $value) {
+			$tmp[] = "'{$key}':'{$value}'";
+		}
+		$ret[] = '{' . join(',', $tmp) . '}';
+	}
+	$ret = '[' . join(',', $ret) . ']';
+	return apply_filters('wdfb-registration_fields_string', $ret);
+}
+
+/**
+ * Helper function for finding out the proper locale.
+ */
+function wdfb_get_locale () {
+	$data = Wdfb_OptionsRegistry::get_instance();
+	$locale = $data->get_option('wdfb_api', 'locale');
+	return $locale ? $locale : preg_replace('/-/', '_', get_locale());
+}
+
+/**
+ * Helper function for getting the login redirect URL.
+ */
+function wdfb_get_login_redirect ($force_admin_redirect=false) {
+	$data = Wdfb_OptionsRegistry::get_instance();
+	$url = $data->get_option('wdfb_connect', 'login_redirect_url');
+	if ($url) {
+		$base = $data->get_option('wdfb_connect', 'login_redirect_base');
+		$base = ('admin_url' == $base) ? 'admin_url' : 'site_url';
+		return $base($url);
+	} else return defined('BP_VERSION') ? home_url() : $force_admin_redirect ? admin_url() : home_url();
+}
+
+/**
+ * Helper function for fetching the image for OpenGraph info.
+ */
+function wdfb_get_og_image ($id=false) {
+	$data = Wdfb_OptionsRegistry::get_instance();
+	$use = $data->get_option('wdfb_opengraph', 'always_use_image');
+	if ($use) return $use;
+
+	// Try to find featured image
+	if (function_exists('get_post_thumbnail_id')) { // BuddyPress :/
+		$thumb_id = get_post_thumbnail_id($id);
+	} else {
+		$thumb_id = false;
+	}
+	if ($thumb_id) {
+		$image = wp_get_attachment_image_src($thumb_id, 'thumbnail');
+		if ($image) return $image[0];
+	}
+
+	// If we're still here, post has no featured image.
+	// Fetch the first one.
+	// Thank you for this fix, grola!
+	if ($id) {
+		$post = get_post($id);
+		$html = $post->post_content;
+		if (!function_exists('load_membership_plugins')) $html = apply_filters('the_content', $html);
+	} else if (is_home() && $data->get_option('wdfb_opengraph', 'fallback_image')) {
+		return $data->get_option('wdfb_opengraph', 'fallback_image');
+	} else {
+		$html = get_the_content();
+		if (!function_exists('load_membership_plugins')) $html = apply_filters('the_content', $html);
+	}
+	preg_match_all('/<img .*src=["\']([^ ^"^\']*)["\']/', $html, $matches);
+	if ($matches[1][0]) return $matches[1][0];
+
+	// Post with no images? Pffft.
+	// Return whatever we have as fallback.
+	return $data->get_option('wdfb_opengraph', 'fallback_image');
+}
+
+
+
+/**
+ * Applying the proper message for registration email notification.
+ */
+function wdfb_add_registration_filter () {
+	add_filter('wdfb-registration_message', 'wdfb_add_email_message');
+}
+add_action('wdfb-registration_email_sent', 'wdfb_add_registration_filter');
+
+/**
+ * Creates a proper registration email notification message.
+ */
+function wdfb_add_email_message ($msg) {
+	return
+		apply_filters(
+			'wdfb-registration_message-user',
+			__('<p>An email with your login credentails has been sent to your email address.</p>', 'wdfb')
+		) .
+		$msg
+	;
+}
