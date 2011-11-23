@@ -160,7 +160,7 @@ function insertAtCursor(fld, text) {
 function init_ui () {
 	
 	// Find Media Buttons strip and add the new one
-	var mbuttons_container = $('#media-buttons');
+	var mbuttons_container = $('#media-buttons').length ? /*3.2*/ $('#media-buttons') : /*3.3*/ $("#wp-content-media-buttons");
 	if (!mbuttons_container.length) return;
 	
 	mbuttons_container.append('' + 

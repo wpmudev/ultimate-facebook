@@ -67,6 +67,8 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_use_opengraph', __('Use OpenGraph support', 'wdfb'), array($form, 'create_use_opengraph_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('wdfb_always_use_image', __('Always use this image', 'wdfb'), array($form, 'create_always_use_image_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('wdfb_fallback_image', __('Fallback image', 'wdfb'), array($form, 'create_fallback_image_box'), 'wdfb_options_page', 'wdfb_opengraph');
+		add_settings_field('wdfb_og_type', __('OpenGraph type', 'wdfb'), array($form, 'create_og_type_box'), 'wdfb_options_page', 'wdfb_opengraph');
+		add_settings_field('wdfb_og_extras', __('Additional OpenGraph headers', 'wdfb'), array($form, 'create_og_extras_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_opengraph');
 
 		register_setting('wdfb', 'wdfb_comments');
@@ -162,6 +164,8 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_use_opengraph', __('Use OpenGraph support', 'wdfb'), array($form, 'create_use_opengraph_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('wdfb_always_use_image', __('Always use this image', 'wdfb'), array($form, 'create_always_use_image_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('wdfb_fallback_image', __('Fallback image', 'wdfb'), array($form, 'create_fallback_image_box'), 'wdfb_options_page', 'wdfb_opengraph');
+		add_settings_field('wdfb_og_type', __('OpenGraph type', 'wdfb'), array($form, 'create_og_type_box'), 'wdfb_options_page', 'wdfb_opengraph');
+		add_settings_field('wdfb_og_extras', __('Additional OpenGraph headers', 'wdfb'), array($form, 'create_og_extras_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_opengraph');
 
 		register_setting('wdfb', 'wdfb_comments');
@@ -311,8 +315,10 @@ class Wdfb_AdminPages {
 		$log = new Wdfb_ErrorLog;
 		if ('purge' == @$_GET['action']) {
 			$log->purge_errors();
+			$log->purge_notices();
 		}
 		$errors = $log->get_all_errors();
+		$notices = $log->get_all_notices();
 		include(WDFB_PLUGIN_BASE_DIR . '/lib/forms/error_log.php');
 	}
 
@@ -379,7 +385,7 @@ class Wdfb_AdminPages {
 	}
 
 	function inject_fb_init_js () {
-		echo "<script>
+		echo "<script type='text/javascript'>
          FB.init({
             appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "', cookie:true,
             status: true,
@@ -408,6 +414,11 @@ class Wdfb_AdminPages {
 			if (!$user_id) $user_id = $this->model->map_fb_to_current_wp_user();
 			if ($user_id) {
 				$user = get_userdata($user_id);
+				/*
+				if (is_multisite() && function_exists('is_user_member_of_blog')) {
+					if (!is_user_member_of_blog($user_id)) return false; // Don't allow this
+				}
+				*/
 				wp_set_current_user($user->ID, $user->user_login);
 				wp_set_auth_cookie($user->ID); // Logged in with Facebook, yay
 				do_action('wp_login', $user->user_login);
@@ -557,6 +568,10 @@ class Wdfb_AdminPages {
 					'link' => get_permalink($post_id),
 					'name' => $post->post_title,
 					'description' => get_option('blogdescription'),
+					'actions' => array (
+						'name' => __('Share', 'wdfb'),
+						'link' => 'http://www.facebook.com/sharer.php?u=' . rawurlencode(get_permalink($post_id)),
+					),
 				);
 				if ($picture) $send['picture'] = $picture;
 				break;
@@ -710,7 +725,9 @@ class Wdfb_AdminPages {
 
 		// Connect
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
-			add_action('after_setup_theme', array($this, 'handle_fb_session_state'));
+			// Move session handling earlier in the execution sequence
+			//add_action('after_setup_theme', array($this, 'handle_fb_session_state'));
+			add_action('sanitize_comment_cookies', array($this, 'handle_fb_session_state'));
 			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 2);
 			// Single-click registration enabled
 			if ($this->data->get_option('wdfb_connect', 'easy_facebook_registration')) {

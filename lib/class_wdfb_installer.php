@@ -98,7 +98,8 @@ class Wdfb_Installer {
 				update_option('wdfb_' . $section, $res);
 				$this->data->set_key('wdfb_' . $section, $res);
 			} else {
-				$opts = is_array($opts) ? $opts : array();
+				//$opts = is_array($opts) ? $opts : array();
+				$opts = is_array($opts) ? $opts : $site_opts;
 				$this->data->set_key('wdfb_' . $section, $opts);
 			}
 		}

@@ -39,7 +39,7 @@ class Wdfb_MarkerReplacer {
 		} else {
 			$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
 			$html .= get_avatar($user->ID, 32);
-			$html .= "<br /><a href='{$logout}'>Log out</a>";
+			$html .= "<br /><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a>";
 		}
 		return $html;
 	}
@@ -90,6 +90,7 @@ class Wdfb_MarkerReplacer {
 			'show_location' => "true",
 			'show_start_date' => "true",
 			'show_end_date' => "true",
+			'order' => false,
 		), $atts);
 
 		if (!$atts['for']) return ''; // We don't know whose events to show
@@ -106,6 +107,10 @@ class Wdfb_MarkerReplacer {
 		}
 
 		if (!is_array($events)) return $content;
+
+		if ($atts['order']) {
+			$events = $this->_sort_by_time($events, $atts['order']);
+		}
 
 		$show_image = ("true" == $atts['show_image']) ? true : false;
 		$show_location = ("true" == $atts['show_location']) ? true : false;
@@ -128,6 +133,18 @@ class Wdfb_MarkerReplacer {
 		ob_end_clean();
 
 		return "<div><ul>{$ret}</ul></div>";
+	}
+
+	/**
+	 * Helper for sorting events by their start_time.
+	 */
+	function _sort_by_time ($events, $direction="ASC") {
+		usort($events, create_function(
+			'$a,$b',
+			'if (strtotime($a["start_time"]) == strtotime($b["start_time"])) return 0;' .
+			'return (strtotime($a["start_time"]) > strtotime($b["start_time"])) ? 1 : -1;'
+		));
+		return ("DESC" == $direction) ? array_reverse($events) : $events;
 	}
 
 	/**

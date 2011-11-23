@@ -182,6 +182,11 @@ class Wdfb_AdminFormRenderer {
 		$opt = $this->_get_option('wdfb_connect');
 		echo $this->_create_checkbox('connect', 'force_facebook_registration',  @$opt['force_facebook_registration']);
 	}
+	function create_no_main_site_registration_box () {
+		$opt = $this->_get_option('wdfb_connect');
+		echo $this->_create_checkbox('connect', 'no_main_site_registration',  @$opt['no_main_site_registration']);
+		echo '<div><small>' . __('This option does not apply to single-click registration.', 'wdfb') . '</small></div>';
+	}
 	function create_easy_facebook_registration_box () {
 		$opt = $this->_get_option('wdfb_connect');
 		echo $this->_create_checkbox('connect', 'easy_facebook_registration',  @$opt['easy_facebook_registration']);
@@ -391,6 +396,56 @@ class Wdfb_AdminFormRenderer {
 		}
 		echo '<div><small>' . __("By default, we will attempt to use featured image or first image from the post for sharing on Facebook.", 'wdfb') . '</small></div>';
 		echo '<div><small>' . __("If we fail, this image will be used instead. Please, use full URL to image (e.g. <code>http://example.com/images/example.jpg</code>).", 'wdfb') . '</small></div>';
+	}
+	function create_og_type_box () {
+		$opt = $this->_get_option('wdfb_opengraph');
+
+		echo $this->_create_checkbox('opengraph', 'og_custom_type', @$opt['og_custom_type']);
+		echo '<label for="og_custom_type">' . __('Do not autodetect my OpenGraph type, I will set it manually', 'wdfb') . '</label> ';
+		echo '<div><small>' . __("If you check this option the plugin will not autodetect your OpenGraph type and you'll be able to set it manually.", 'wdfb') . '</small></div>';
+
+		echo '<div id="og_custom_mapping">';
+		echo '<label for="og_custom_type_front_page">' . __('OpenGraph type on my front page', 'wdfb') . '</label> ';
+		echo $this->_create_text_box('opengraph', 'og_custom_type_front_page', @$opt['og_custom_type_front_page']);
+
+		echo '<label for="og_custom_type_not_singular">' . __('OpenGraph type on my taxonomies pages', 'wdfb') . '</label> ';
+		echo $this->_create_text_box('opengraph', 'og_custom_type_not_singular', @$opt['og_custom_type_not_singular']);
+		echo '<div><small>' . __("This type will be used on your pages that show multiple content (e.g. archives, tags, categories).", 'wdfb') . '</small></div>';
+
+		echo '<label for="og_custom_type_singular">' . __('OpenGraph type on my content pages', 'wdfb') . '</label> ';
+		echo $this->_create_text_box('opengraph', 'og_custom_type_singular', @$opt['og_custom_type_singular']);
+		echo '<div><small>' . __("This type will be used on your pages that show individual content pieces (e.g. posts and pages).", 'wdfb') . '</small></div>';
+
+		echo '</div>';
+	}
+	function create_og_extras_box () {
+		$opt = $this->_get_option('wdfb_opengraph');
+		$extras = @$opt['og_extra_headers'] ? $opt['og_extra_headers'] : array();
+
+		foreach ($extras as $idx=>$extra) {
+			$name = esc_attr(@$extra['name']);
+			if (!$name) continue;
+			$value = esc_attr(@$extra['value']);
+			echo '<div class="wdfb_og_extra_mapping">';
+			echo "<label for='og_extra_name-{$idx}'>" . __('OpenGraph name:', 'wdfb') . '</label> ' .
+				"<input id='og_extra_name-{$idx}' size='24' name='wdfb_opengraph[og_extra_headers][{$idx}][name]' value='{$name}' />" .
+			"&nbsp;&nbsp;&nbsp;";
+			echo "<label for='og_extra_value-{$idx}'>" . __('OpenGraph value:', 'wdfb') . '</label> ' .
+				"<input id='og_extra_value-{$idx}' size='24' name='wdfb_opengraph[og_extra_headers][{$idx}][value]' value='{$value}' />" .
+			"&nbsp;&nbsp;&nbsp;";
+			echo "<a href='' class='wdfb_og_remove_extra'>" . __('Remove', 'wdfb') . '</a>';
+			echo "</div>";
+		}
+		$last = count($extras);
+		echo '<div class="wdfb_og_extra_mapping">';
+			echo "<label for='og_extra_name'>" . __('OpenGraph name:', 'wdfb') . '</label> ' .
+				"<input id='og_extra_name' size='24' name='wdfb_opengraph[og_extra_headers][{$last}][name]' value='' />" .
+			"&nbsp;&nbsp;&nbsp;";
+			echo "<label for='og_extra_value-'>" . __('OpenGraph value:', 'wdfb') . '</label> ' .
+				"<input id='og_extra_value' size='24' name='wdfb_opengraph[og_extra_headers][{$last}][value]' value='' />" .
+			"";
+			echo "</div>";
+		echo '<input type="submit" value="' . esc_attr(__('Add header', 'wdfb')) . '" />';
 	}
 
 	function create_import_fb_comments_box () {

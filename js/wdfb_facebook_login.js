@@ -17,7 +17,7 @@ function notifyAndRedirect () {
 	// Start UI change
 	$('fb\\:login-button').each(function () {
 		var $parent = $(this).parent('p');
-		$parent.after('<img src="' + _wdfb_root_url + '/img/waiting.gif">');
+		$parent.after('<img src="' + _wdfb_root_url + '/img/waiting.gif" class="' + $parent.attr("class") + '">');
 		$parent.remove();
 	});
 	

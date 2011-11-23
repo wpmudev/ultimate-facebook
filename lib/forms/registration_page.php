@@ -17,10 +17,13 @@ $redirect_url = is_multisite() ?
 
 <div style="margin-top:2em">
 
-<iframe src="http://www.facebook.com/plugins/registration.php?
-             client_id=<?php echo $this->data->get_option('wdfb_api', 'app_key');?>&
-             redirect_uri=<?php echo urlencode(site_url($redirect_url));?>&
-             fields=<?php echo wdfb_get_registration_fields();?>"
+<iframe src="http://www.facebook.com/plugins/registration.php?client_id=<?php
+		echo $this->data->get_option('wdfb_api', 'app_key');
+	?>&redirect_uri=<?php
+		echo urlencode(site_url($redirect_url));
+	?>&fields=<?php
+		echo wdfb_get_registration_fields();
+	?>"
         scrolling="auto"
         frameborder="no"
         style="border:none"

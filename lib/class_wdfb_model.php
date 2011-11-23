@@ -304,6 +304,10 @@ class Wdfb_Model {
 		$type = $type ? $type : 'feed';
 		$fid = $fid ? $fid : $this->get_current_user_fb_id();
 
+		$title = ('feed' == $type) ? @$post['message'] : '';
+		$_ap = $as_page ? 'as page' : '';
+		$this->log->notice("Posting {$title} to Facebook [{$type}] - [{$fid}] {$_ap}.");
+
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
 		$post['auth_token'] = $tokens[$fid];
 		if ($as_page) $post['access_token'] = $tokens[$fid];
@@ -314,6 +318,7 @@ class Wdfb_Model {
 			$this->log->error(__FUNCTION__, $e);
 			return false;
 		}
+		$this->log->notice("Posting to Facebook finished.");
 		return $ret;
 	}
 

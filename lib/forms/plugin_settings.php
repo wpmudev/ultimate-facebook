@@ -152,6 +152,20 @@ $(".wdfb_uid_to_name_mapper").each(function () {
 	});
 });
 
+// Toggle custom OG type
+function toggle_custom_og_type () {
+	if ($("#og_custom_type").is(":checked")) $("#og_custom_mapping").find("input:text").attr("disabled", false).end().show();
+	else $("#og_custom_mapping").find("input:text").attr("disabled", true).end().hide();
+}
+$("#og_custom_type").change(toggle_custom_og_type);
+toggle_custom_og_type();
+
+// Extra OG mappings removal
+$(".wdfb_og_remove_extra").click(function () {
+	$(this).parents(".wdfb_og_extra_mapping").remove();
+	return false;
+});
+
 });
 })(jQuery);
 </script>

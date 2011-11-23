@@ -23,6 +23,7 @@
 		<li><code>show_location</code> - <em>optional.</em> Shows event location. Accepted values are <code>true</code> and <code>false</code>. Defaults to <code>true</code>.</li>
 		<li><code>show_start_date</code> - <em>optional.</em> Shows when the event starts. Accepted values are <code>true</code> and <code>false</code>. Defaults to <code>true</code>.</li>
 		<li><code>show_end_date</code> - <em>optional.</em> Shows when the event ends. Accepted values are <code>true</code> and <code>false</code>. Defaults to <code>true</code>.</li>
+		<li><code>order</code> - <em>optional.</em> Ordering direction for your events, according to their start time. Accepted values are <code>ASC</code> and <code>DESC</code>.</li>
 	</ul>
 </p>
 <p>

@@ -35,9 +35,9 @@ class Wdfb_PublicPages {
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
 	}
 	function js_setup_ajaxurl () {
-		printf('<script type="text/javascript">var _wdfb_ajaxurl="%s";</script>', admin_url('admin-ajax.php'));
 		printf(
-			'<script type="text/javascript">var _wdfb_root_url="%s";</script>',
+			'<script type="text/javascript">var _wdfb_ajaxurl="%s";var _wdfb_root_url="%s";</script>',
+			admin_url('admin-ajax.php'),
 			WDFB_PLUGIN_URL
 		);
 	}
@@ -91,20 +91,52 @@ class Wdfb_PublicPages {
 			$description = get_option('blogdescription');
 		}
 		$image = wdfb_get_og_image($id);
-		if (is_singular()) {
-			echo "<meta property='og:type' content='article' />\n";
-		} else {
-			echo "<meta property='og:type' content='website' />\n";
+
+		// App ID
+		if (!defined('WDFB_APP_ID_OG_SET')) {
+			$app_id = trim($this->data->get_option('wdfb_api', 'app_key'));
+			if ($app_id) {
+				echo "<meta property='fb:app_id' content='{$app_id}' />\n";
+				define('WDFB_APP_ID_OG_SET', true);
+			}
 		}
+
+		// Type
+		if ($this->data->get_option('wdfb_opengraph', 'og_custom_type')) {
+			if (!is_singular()) {
+				$type = $this->data->get_option('wdfb_opengraph', 'og_custom_type_not_singular');
+				$type = $type ? $type : 'website';
+			} else {
+				$type = $this->data->get_option('wdfb_opengraph', 'og_custom_type_singular');
+				$type = $type ? $type : 'article';
+			}
+			if (is_home() || is_front_page()) {
+				$type = $this->data->get_option('wdfb_opengraph', 'og_custom_type_front_page');
+				$type = $type ? $type : 'website';
+			}
+		}
+		$type = $type ? $type : (is_singular() ? 'article' : 'website');
+		echo "<meta property='og:type' content='{$type}' />\n";
+
+		// Defaults
 		if ($title) echo "<meta property='og:title' content='{$title}' />\n";
 		if ($url) echo "<meta property='og:url' content='{$url}' />\n";
 		if ($site_name) echo "<meta property='og:site_name' content='{$site_name}' />\n";
 		if ($description) echo "<meta property='og:description' content='{$description}' />\n";
 		if ($image) echo "<meta property='og:image' content='{$image}' />\n";
+
+		$extras = $this->data->get_option('wdfb_opengraph', 'og_extra_headers');
+		$extras = $extras ? $extras : array();
+		foreach ($extras as $extra) {
+			$name = apply_filters('wdfb-opengraph-extra_headers-name', @$extra['name']);
+			$value = apply_filters('wdfb-opengraph-extra_headers-value', @$extra['value'], @$extra['name']);
+			if (!$name || !$value) continue;
+			echo "<meta property='{$name}' content='{$value}' />\n";
+		}
 	}
 
 	function inject_fb_init_js () {
-		echo "<script>
+		echo "<script type='text/javascript'>
          FB.init({
             appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "',
             status: true,
@@ -134,9 +166,11 @@ class Wdfb_PublicPages {
 	}
 
 	function inject_fb_comments_admin_og () {
+		if (defined('WDFB_APP_ID_OG_SET')) return false;
 		$app_id = trim($this->data->get_option('wdfb_api', 'app_key'));
 		if (!$app_id) return false;
 		echo "<meta property='fb:app_id' content='{$app_id}' />\n";
+		define('WDFB_APP_ID_OG_SET', true);
 	}
 
 	function inject_fb_comments ($defaults) {
@@ -323,9 +357,37 @@ class Wdfb_PublicPages {
 			}
 		}
 
-		$page = (isset($_GET['fb_register']) && $registration_success) ? WDFB_PLUGIN_BASE_DIR . '/lib/forms/registration_page_success.php' : WDFB_PLUGIN_BASE_DIR . '/lib/forms/registration_page.php';
+		// Allow registration page templating
+		// By KFUK-KFUM
+		// Thank you so much!
+		$page = (isset($_GET['fb_register']) && $registration_success)
+			//? WDFB_PLUGIN_BASE_DIR . '/lib/forms/registration_page_success.php'
+			? $this->get_template_page('registration_page_success.php')
+			//: WDFB_PLUGIN_BASE_DIR . '/lib/forms/registration_page.php'
+			: $this->get_template_page('registration_page.php')
+		;
 		require_once $page;
 		exit();
+	}
+
+	/**
+	 * Allows registration page templating.
+	 * Method by KFUK-KFUM
+	 * Thank you so much!
+	 */
+	function get_template_page ($template) {
+		$theme_file = locate_template(array($template));
+		if ($theme_file) {
+			// Look for the template file in the theme directory
+			// Anyone who wants to theme the registration page can copy
+			// the template file to their theme directory while keeping
+			// the file name intact
+			$file = $theme_file;
+		} else {
+			// If none was found in the current theme, use the default plugin template
+			$file = WDFB_PLUGIN_BASE_DIR . '/lib/forms/' . $template;
+		}
+		return $file;
 	}
 
 	function publish_post_on_facebook ($id) {
@@ -448,7 +510,11 @@ class Wdfb_PublicPages {
 			if (is_multisite()) add_action('before_signup_form', array($this, 'inject_optional_facebook_registration_button'));
 			else if (isset($_GET['action']) && 'register' == $_GET['action']) {
 				add_action('login_head', create_function('', 'echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"' . WDFB_PLUGIN_URL . '/css/wdfb.css\" />";'));
-				add_action('login_message', array($this, 'inject_optional_facebook_registration_button'));
+				// Better registration button placement for single site
+				// Fix by riyaku
+				// Thank you so much!
+				//add_action('login_message', array($this, 'inject_optional_facebook_registration_button'));
+				add_action('register_form', array($this, 'inject_optional_facebook_registration_button'));
 			}
 
 			// BuddyPress

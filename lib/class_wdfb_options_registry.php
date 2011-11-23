@@ -29,6 +29,11 @@ class Wdfb_OptionsRegistry {
 		return $this->_store[$key][$option];
 	}
 
+	function get_network_option ($key, $option) {
+		$opts = is_multisite() ? get_site_option($key) : get_option($key);
+		return @$opts[$option];
+	}
+
 	function set_option ($key, $option, $value=false) {
 		if (!isset($this->_store[$key])) $this->_store[$key] = array();
 		$this->_store[$key][$option] = $value;
