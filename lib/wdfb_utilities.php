@@ -90,7 +90,10 @@ function wdfb_get_login_redirect ($force_admin_redirect=false) {
 function wdfb_get_og_image ($id=false) {
 	$data = Wdfb_OptionsRegistry::get_instance();
 	$use = $data->get_option('wdfb_opengraph', 'always_use_image');
-	if ($use) return $use;
+	if ($use) return apply_filters(
+		'wdfb-opengraph-image',
+		apply_filters('wdfb-opengraph-image-always_used_image', $use)
+	);
 
 	// Try to find featured image
 	if (function_exists('get_post_thumbnail_id')) { // BuddyPress :/
@@ -100,7 +103,10 @@ function wdfb_get_og_image ($id=false) {
 	}
 	if ($thumb_id) {
 		$image = wp_get_attachment_image_src($thumb_id, 'thumbnail');
-		if ($image) return $image[0];
+		if ($image) return apply_filters(
+			'wdfb-opengraph-image',
+			apply_filters('wdfb-opengraph-image-featured_image', $image[0])
+		);
 	}
 
 	// If we're still here, post has no featured image.
@@ -111,17 +117,26 @@ function wdfb_get_og_image ($id=false) {
 		$html = $post->post_content;
 		if (!function_exists('load_membership_plugins')) $html = apply_filters('the_content', $html);
 	} else if (is_home() && $data->get_option('wdfb_opengraph', 'fallback_image')) {
-		return $data->get_option('wdfb_opengraph', 'fallback_image');
+		return apply_filters(
+			'wdfb-opengraph-image',
+			apply_filters('wdfb-opengraph-image-fallback_image', $data->get_option('wdfb_opengraph', 'fallback_image'))
+		);
 	} else {
 		$html = get_the_content();
 		if (!function_exists('load_membership_plugins')) $html = apply_filters('the_content', $html);
 	}
 	preg_match_all('/<img .*src=["\']([^ ^"^\']*)["\']/', $html, $matches);
-	if ($matches[1][0]) return $matches[1][0];
+	if ($matches[1][0]) return apply_filters(
+		'wdfb-opengraph-image',
+		apply_filters('wdfb-opengraph-image-post_image', $matches[1][0])
+	);
 
 	// Post with no images? Pffft.
 	// Return whatever we have as fallback.
-	return $data->get_option('wdfb_opengraph', 'fallback_image');
+	return apply_filters(
+		'wdfb-opengraph-image',
+		apply_filters('wdfb-opengraph-image-fallback_image', $data->get_option('wdfb_opengraph', 'fallback_image'))
+	);
 }
 
 
