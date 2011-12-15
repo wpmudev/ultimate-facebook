@@ -35,13 +35,20 @@ function init () {
 			$(".wdfb_grant_events_perms").live("click", function () { 
 				var $me = $(this);
 				var locale = $me.attr("wdfb:locale");
+				FB.login(function () {
+					window.location.reload(true);
+				}, {
+					"scope": 'create_event,rsvp_event,read_stream'
+				});
+				/*
 				FB.ui({ 
 					"method": "permissions.request", 
 					"perms": 'create_event,rsvp_event,read_stream',
 					"display": "iframe"
 				}, function () {
 					window.location.reload(true);
-				}); 
+				});
+				*/ 
 				return false; 
 			}); 
 		}

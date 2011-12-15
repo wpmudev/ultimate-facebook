@@ -28,10 +28,10 @@ function notifyAndRedirect () {
 
 $('fb\\:login-button').click(function () {
 	FB.Event.subscribe('auth.login', function (r) {
-		if (r.session) notifyAndRedirect();
+		if (r.authResponse && r.authResponse.userID) notifyAndRedirect();
 	});
 	FB.getLoginStatus(function (resp) {
-		if (resp.session) notifyAndRedirect();
+		if (resp.authResponse && resp.authResponse.userID) notifyAndRedirect();
 	});	
 });
 

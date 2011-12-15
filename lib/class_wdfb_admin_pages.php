@@ -109,6 +109,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_widget_likebox', __('Use Facebook Like Box widget', 'wdfb'), array($form, 'create_widget_likebox_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_recommendations', __('Use Facebook Recommendations widget', 'wdfb'), array($form, 'create_widget_recommendations_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_activityfeed', __('Use Facebook Activity Feed widget', 'wdfb'), array($form, 'create_widget_activityfeed_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
+		add_settings_field('wdfb_widget_recent_comments', __('Use Facebook Recent Comments widget', 'wdfb'), array($form, 'create_widget_recent_comments_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_dashboard_permissions', __('Use Facebook Dashboard widgets', 'wdfb'), array($form, 'create_dashboard_permissions_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 	}
 
@@ -200,6 +201,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_widget_likebox', __('Use Facebook Like Box widget', 'wdfb'), array($form, 'create_widget_likebox_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_recommendations', __('Use Facebook Recommendations widget', 'wdfb'), array($form, 'create_widget_recommendations_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_activityfeed', __('Use Facebook Activity Feed widget', 'wdfb'), array($form, 'create_widget_activityfeed_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
+		add_settings_field('wdfb_widget_recent_comments', __('Use Facebook Recent Comments widget', 'wdfb'), array($form, 'create_widget_recent_comments_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_dashboard_permissions', __('Use Facebook Dashboard widgets', 'wdfb'), array($form, 'create_dashboard_permissions_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 	}
 
@@ -390,7 +392,8 @@ class Wdfb_AdminPages {
             appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "', cookie:true,
             status: true,
             cookie: true,
-            xfbml: true
+            xfbml: true,
+            oauth: true
          });
       </script>";
 	}
@@ -407,9 +410,9 @@ class Wdfb_AdminPages {
 	 */
 	function handle_fb_session_state () {
 		if (wp_validate_auth_cookie('')) return $this->handle_fb_auth_tokens();
-		$session = $this->model->fb->getSession();
+		$fb_user = $this->model->fb->getUser();
 
-		if ($session) {
+		if ($fb_user) {
 			$user_id = $this->model->get_wp_user_from_fb();
 			if (!$user_id) $user_id = $this->model->map_fb_to_current_wp_user();
 			if ($user_id) {
@@ -672,8 +675,8 @@ class Wdfb_AdminPages {
 		$user = wp_get_current_user();
 		if ($user->ID) die();
 
-		$session = $this->model->fb->getSession();
-		if ($session) {
+		$fb_user = $this->model->fb->getUser();
+		if ($fb_user) {
 			$user_id = $this->model->get_wp_user_from_fb();
 			if (!$user_id) $user_id = $this->model->map_fb_to_current_wp_user();
 			if (!$user_id && $this->data->get_option('wdfb_connect', 'easy_facebook_registration')) {

@@ -75,9 +75,12 @@ class Wdfb_WidgetConnect extends WP_Widget {
 
 			if (!$user->ID) {
 				if (!$register) { // Do the simple thing first
-					echo '<p class="wdfb_login_button"><fb:login-button perms="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+					echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 				} else {
 					$fields = wdfb_get_registration_fields();
+					$force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $opts->get_option('wdfb_connect', 'require_facebook_account'))
+						? 'fb_only=true&' : ''
+					;
 					echo '<div class="wdfb_connect_widget_container">';
 					echo '	<div class="wdfb_connect_widget_tabs"><ul class="wdfb_connect_widget_action_links">';
 					echo '		<li><a href="#wdfb_connect_widget_login"><span>' . __("Login", 'wdfb') . '</span></a></li>';
@@ -85,10 +88,10 @@ class Wdfb_WidgetConnect extends WP_Widget {
 					echo '	</ul></div>';
 					echo '	<div style="clear:both"></div>';
 					echo '	<div class="wdfb_connect_target" id="wdfb_connect_widget_login">';
-					echo '		<p class="wdfb_login_button"><fb:login-button perms="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+					echo '		<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 					echo '	</div>';
 					echo '	<div class="wdfb_connect_target" id="wdfb_connect_widget_register">';
-					echo '	<iframe src="http://www.facebook.com/plugins/registration.php?' .
+					echo '	<iframe src="http://www.facebook.com/plugins/registration.php?' . $force .
 						        'client_id=' . trim($opts->get_option('wdfb_api', 'app_key')) . '&' .
 						        'redirect_uri=' . urlencode(site_url('/wp-signup.php?action=register&fb_register=1')) . '&' .
 						        'fields=' . $fields . '&width=' . $width . '"

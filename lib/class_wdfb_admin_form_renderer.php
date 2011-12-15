@@ -181,6 +181,12 @@ class Wdfb_AdminFormRenderer {
 	function create_force_facebook_registration_box () {
 		$opt = $this->_get_option('wdfb_connect');
 		echo $this->_create_checkbox('connect', 'force_facebook_registration',  @$opt['force_facebook_registration']);
+		
+		echo '<br />';
+		echo $this->_create_checkbox('connect', 'require_facebook_account', @$opt['require_facebook_account']);
+		echo ' <label for="require_facebook_account">' . __('Require Facebook account', 'wdfb') . '</label>';
+		echo '<div><small>' . __('By default, Facebook regitration form will allow your users to register with their chosen usernames and emails.', 'wdfb') . '</small></div>';
+		echo '<div><small>' . __('Check this box to make the Facebook account an absolute requirement.', 'wdfb') . '</small></div>';
 	}
 	function create_no_main_site_registration_box () {
 		$opt = $this->_get_option('wdfb_connect');
@@ -355,7 +361,7 @@ class Wdfb_AdminFormRenderer {
 		$blog_uri = get_option('siteurl');
 		$send_value = @$opt['show_send_button'] ? 'true' : 'false';
 
-		echo "<table border='1'>";
+		echo "<table border='0'>";
 
 		echo '<tr>';
 		echo '<td valign="top"><input type="radio" name="wdfb_button[button_appearance]" value="standard" ' . (($opt['button_appearance'] == "standard") ? 'checked="checked"' : '') . ' /></td>';
@@ -646,6 +652,10 @@ class Wdfb_AdminFormRenderer {
 	function create_widget_activityfeed_box () {
 		$description = sprintf(__('Easily display Facebook Activity Feed. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/activityfeed_allowed.jpg" /></td><td valign="top"><img src="%s/img/activityfeed_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('activityfeed', $description);
+	}
+	function create_widget_recent_comments_box () {
+		$description = sprintf(__('Easily display your recently imported Facebook comments. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/recent_comments_allowed.jpg" /></td><td valign="top"><img src="%s/img/recent_comments_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$this->_create_widget_box('recent_comments', $description);
 	}
 	function create_dashboard_permissions_box () {
 		$description = sprintf(__('Display extended permissions granting box for your users in the Dashboard. <table> <th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/dashboard_permissions_allowed.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL);

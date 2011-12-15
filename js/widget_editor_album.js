@@ -126,19 +126,28 @@ function init () {
 			$(".wdfb_grant_albums_perms").live("click", function () { 
 				var $me = $(this);
 				var locale = $me.attr("wdfb:locale");
+				/*
 				FB.ui({ 
 					"method": "permissions.request", 
 					"perms": 'user_photos',
 					"display": "iframe"
 				}, function () {
 					window.location.reload(true);
+				});
+				*/
+				FB.login(function () {
+					window.location.reload(true);
+				}, {
+					"scope": 'user_photos'
 				}); 
 				return false; 
 			}); 
 		}
 	});
 }
-init();
+FB.getLoginStatus(function (resp) {
+	init();
+})
 	
 });
 })(jQuery);

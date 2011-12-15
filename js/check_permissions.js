@@ -5,8 +5,10 @@ function check_perms () {
 	var $perms = $(".wdfb_grant_perms:first");
 	if (!$perms.length) return false;
 	var query = "SELECT " + $perms.attr("wdfb:perms") + " FROM permissions WHERE uid=me()";
+
 	FB.api({
 		"method": "fql.query",
+		//"access_token": FB.getAccessToken(),
 		"query": query
 	}, function (resp) {
 		var all_good = true;
@@ -30,20 +32,21 @@ function check_perms () {
 
 $(".wdfb_perms_root").show();
 $(".wdfb_grant_perms, .wdfb_perms_granted, .wdfb_perms_not_granted").hide();
-check_perms();	
+
+FB.getLoginStatus(function (resp) {
+	check_perms();
+});		
 	
 $(".wdfb_grant_perms").click(function () { 
 	var $me = $(this);
 	var perms = $me.attr("wdfb:perms"); 
 	var locale = $me.attr("wdfb:locale");
-	FB.ui({ 
-		"method": "permissions.request", 
-		"perms": perms, 
-		"locale": locale,
-		"display": "iframe"
-	}, function () {
+
+	FB.login(function () {
 		window.location.href = window.location.href;
-	}); 
+	}, {
+		"scope": perms
+	});
 	return false; 
 }); 
 	

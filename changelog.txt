@@ -5,6 +5,12 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+1.6 - 2011-12-15
+----------------------------------------------------------------------
+- Added recently imported comments widget.
+- Switched to new method of permissions requesting.
+- Added an option for making a Facebook account an absolute requirement.
+
 1.5.1 - 2011-11-27
 ----------------------------------------------------------------------
 - Added event title as link to event on Facebook.

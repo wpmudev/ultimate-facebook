@@ -141,7 +141,8 @@ class Wdfb_PublicPages {
             appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "',
             status: true,
             cookie: true,
-            xfbml: true
+            xfbml: true,
+            oauth: true
          });
       </script>";
 	}
@@ -154,15 +155,15 @@ class Wdfb_PublicPages {
 	}
 
 	function inject_fb_login () {
-		echo '<p class="wdfb_login_button"><fb:login-button perms="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect(true) . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect(true) . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 		if (isset($_GET['loggedout'])) {
-			$this->model->fb->setSession(null);
+			$this->model->fb->destroySession();
 			echo '<script type="text/javascript">(function ($) { $(function () { FB.logout(); }) })(jQuery);</script>';
 		}
 	}
 
 	function inject_fb_login_for_bp () {
-		echo '<p class="wdfb_login_button"><fb:login-button perms="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 	}
 
 	function inject_fb_comments_admin_og () {
@@ -199,7 +200,7 @@ class Wdfb_PublicPages {
 		if (isset($_GET['action']) && 'logout' == $_GET['action']) {
 			$next = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : home_url();
 			$redirect = $this->model->fb->getLogoutUrl(array('next'=>$next));
-			$this->model->fb->setSession(null);
+			$this->model->fb->destroySession();
 			$this->model->wp_logout($redirect);
 			//wp_redirect ($redirect);
 			exit();
@@ -210,13 +211,13 @@ class Wdfb_PublicPages {
 	 * This happens only if allow_facebook_registration is true.
 	 */
 	function handle_fb_session_state () {
-		$session = $this->model->fb->getSession();
+		$fb_user = $this->model->fb->getUser();
 
 		// User logs out
-		if ($session && isset($_GET['action']) && 'logout' == $_GET['action']) {
+		if ($fb_user && isset($_GET['action']) && 'logout' == $_GET['action']) {
 			$redirect = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : home_url();
 			$fb_redirect = $this->model->fb->getLogoutUrl(array('next'=>$redirect));
-			$this->model->fb->setSession(null);
+			$this->model->fb->destroySession();
 			$this->model->wp_logout($fb_redirect);
 			//wp_redirect($redirect);
 			exit();

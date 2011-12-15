@@ -212,7 +212,9 @@ function init () {
 		}
 	});
 }
-init ();
+FB.getLoginStatus(function (resp) {
+	init();
+})
 	
 });
 })(jQuery);

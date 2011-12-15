@@ -41,7 +41,10 @@ class Wdfb_Model {
 	 * Logs the user out of the site and Facebook.
 	 */
 	function wp_logout ($redirect=false) {
-		setcookie('fbs_' . $this->fb->getAppId(), '', time()-100, '/', COOKIE_DOMAIN); // Yay for retardness in FB SDK
+		setcookie('fbsr_' . $this->fb->getAppId(), '', time()-100, '/', COOKIE_DOMAIN); // Yay for retardness in FB SDK
+		@session_unset();
+		@session_destroy();
+		unset($_SESSION);
 		if ($redirect) wp_redirect($redirect);
 		wp_logout();
 		wp_set_current_user(0);
