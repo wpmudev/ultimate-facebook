@@ -75,11 +75,17 @@ class Wdfb_WidgetRecommendations extends WP_Widget {
 		$color_scheme = $color_scheme ? $color_scheme : 'light';
 
 		$url = get_option('siteurl');
+		$locale = wdfb_get_locale();
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo '<iframe src="http://www.facebook.com/plugins/recommendations.php?site=' . $url . '&amp;width=' . $width . '&amp;height=' . $height . '&amp;header=' . $show_header . '&amp;colorscheme=' . $color_scheme . '&amp;font&amp;border_color" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $width . 'px; height:' . $height . 'px;" allowTransparency="true"></iframe>';
+		echo '<iframe src="http://www.facebook.com/plugins/recommendations.php?site=' . 
+			$url . '&amp;width=' . $width . '&amp;height=' . $height . 
+			'&amp;locale=' . $locale . '&amp;header=' . $show_header . '&amp;colorscheme=' . 
+			$color_scheme . '&amp;font&amp;border_color" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . 
+			$width . 'px; height:' . $height . 'px;" allowTransparency="true"></iframe>'
+		;
 
 		echo $after_widget;
 	}

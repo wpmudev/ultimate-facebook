@@ -20,6 +20,7 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 		$filter = esc_attr($instance['filter']);
 		$color_scheme = esc_attr($instance['color_scheme']);
 		$links = esc_attr($instance['links']);
+		$iframe = esc_attr($instance['iframe']);
 
 		// Set defaults
 		// ...
@@ -77,6 +78,12 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 		$html .= '<option value="_blank" ' . (('_blank' == $links) ? 'selected="selected"' : '') . '>_blank</option>';
 		$html .= '</select>';
 		$html .= '</p>';
+		
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('iframe') . '">' . __('Do not use xfbml tag:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('iframe') . '" id="' . $this->get_field_id('iframe') . '" value="1" ' . ($iframe ? 'checked="checked"' : '') . ' />';
+		$html .= '<div><small>' . __("If you're experiencing issues with your Activity Feeds, try checking this option", 'wdfb') . '</small></div>';
+		$html .= '</p>';
 
 		echo $html;
 	}
@@ -92,6 +99,7 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 		$instance['filter'] = strip_tags($new_instance['filter']);
 		$instance['color_scheme'] = strip_tags($new_instance['color_scheme']);
 		$instance['links'] = strip_tags($new_instance['links']);
+		$instance['iframe'] = strip_tags($new_instance['iframe']);
 
 		return $instance;
 	}
@@ -114,11 +122,19 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 		$color_scheme = $color_scheme ? $color_scheme : 'light';
 		$links = $instance['links'];
 		$links = $links ? $links : '_blank';
+		$iframe = (int)$instance['iframe'];
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo "<fb:activity site='{$url}' width='{$width}' height='{$height}' header='{$show_header}' recommendations='{$recommendations}' linktarget='{$links}'></fb:activity>";
+		if (!$iframe) {
+			echo "<fb:activity site='{$url}' width='{$width}' height='{$height}' header='{$show_header}' recommendations='{$recommendations}' linktarget='{$links}'></fb:activity>";
+		} else {
+			$data = Wdfb_OptionsRegistry::get_instance();
+			$key = $data->get_option('wdfb_api', 'app_key');
+			$locale = wdfb_get_locale();
+			echo "<iframe src='//www.facebook.com/plugins/activity.php?site={$url}&amp;width={$width}&amp;height={$height}&amp;header={$show_header}&amp;colorscheme={$color_scheme}&amp;linktarget={$links}&amp;locale={$locale}&amp;border_color&amp;font&amp;recommendations={$recommendations}&amp;appId=254843611229518' scrolling='no' frameborder='0' style='border:none; overflow:hidden; width:{$width}px; height:{$height}px;' allowTransparency='true'></iframe>";
+		} 
 
 		echo $after_widget;
 	}

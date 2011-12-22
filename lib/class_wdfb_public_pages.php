@@ -223,7 +223,7 @@ class Wdfb_PublicPages {
 			exit();
 		}
 
-		if ($session) {
+		if ($fb_user) {
 			$user_id = $this->model->get_wp_user_from_fb();
 			if (!$user_id) $user_id = $this->model->map_fb_to_current_wp_user();
 			if ($user_id) {

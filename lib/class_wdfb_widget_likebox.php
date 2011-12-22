@@ -100,11 +100,19 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$color_scheme = $color_scheme ? $color_scheme : 'light';
 
 		$height = $height ? $height : (('true' == $show_stream || 'true' == $show_faces) ? 427 : 62);
+		
+		$locale = wdfb_get_locale();
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo '<iframe src="http://www.facebook.com/plugins/likebox.php?href=' . $url . '&amp;width=' . $width . '&amp;colorscheme=' . $color_scheme . '&amp;show_faces=' . $show_faces . '&amp;stream=' . $show_stream . '&amp;header=' . $show_header . '&amp;height='. $height . '" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $width .'px; height:' . $height . 'px;" allowTransparency="true"></iframe>';
+		echo '<iframe src="http://www.facebook.com/plugins/likebox.php?href=' . 
+			$url . '&amp;width=' . $width . '&amp;locale=' . $locale . '&amp;colorscheme=' . 
+			$color_scheme . '&amp;show_faces=' . $show_faces . '&amp;stream=' . 
+			$show_stream . '&amp;header=' . $show_header . '&amp;height='. 
+			$height . '" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . 
+			$width .'px; height:' . $height . 'px;" allowTransparency="true"></iframe>'
+		;
 
 		echo $after_widget;
 	}

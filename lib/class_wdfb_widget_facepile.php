@@ -67,11 +67,17 @@ class Wdfb_WidgetFacepile extends WP_Widget {
 		$rows = $rows ? $rows : 4;
 
 		$url = ($url) ? $url : rawurlencode('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+		
+		$locale = wdfb_get_locale();
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo '<iframe src="http://www.facebook.com/plugins/facepile.php?href=' . $url . '&amp;width=' . $width . '&amp;max_rows=' . $rows . '" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $width . 'px;" allowTransparency="true"></iframe>';
+		echo '<iframe src="http://www.facebook.com/plugins/facepile.php?href=' . 
+			$url . '&amp;width=' . $width . '&amp;locale=' . $locale . '&amp;max_rows=' . 
+			$rows . '" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . 
+			$width . 'px;" allowTransparency="true"></iframe>'
+		;
 
 		echo $after_widget;
 	}
