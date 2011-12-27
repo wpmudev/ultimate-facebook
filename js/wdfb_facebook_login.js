@@ -21,9 +21,20 @@ function notifyAndRedirect () {
 		$parent.remove();
 	});
 	
-	$.post(_wdfb_ajaxurl, {"action": "wdfb_perhaps_create_wp_user"}, function () {
-		window.location = redir;
-	});
+	/**
+	 * A workaround for FB JS SDK issue - auth.login is triggered
+	 * *before* the cookie is ever set. Yay.
+	 */
+	function do_redirect_when_cookie_is_set () {
+		if (document.cookie.match(/fbsr_\d+/)) {
+			$.post(_wdfb_ajaxurl, {"action": "wdfb_perhaps_create_wp_user"}, function () {
+				window.location = redir;
+			});
+		} else {
+			setTimeout(do_redirect_when_cookie_is_set, 200);
+		}
+	}
+	do_redirect_when_cookie_is_set();
 }
 
 $('fb\\:login-button').click(function () {

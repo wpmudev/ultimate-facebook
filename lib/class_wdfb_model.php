@@ -17,6 +17,7 @@ class Wdfb_Model {
 			'secret' => trim($this->data->get_option('wdfb_api', 'secret_key')),
 			'cookie' => true,
 		));
+		$this->fb->getLoginUrl(); // Generate the CSRF sig stuff yay
 		$this->log = new Wdfb_ErrorLog;
 	}
 
@@ -217,7 +218,7 @@ class Wdfb_Model {
 			$me['id'] = $this->fb->user_id;
 		}
 		if (!$me) return false;
-
+file_put_contents('d:/model_create.txt', var_Export($me,1));
 		$username = $this->_create_username_from_fb_response($me);
 		$password = wp_generate_password(12, false);
 		$user_id = wp_create_user($username, $password, $me['email']);
