@@ -9,6 +9,7 @@ class Wdfb_MarkerReplacer {
 	var $buttons = array (
 		'like_button' => 'wdfb_like_button',
 		'events' => 'wdfb_events',
+		'album' => 'wdfb_album',
 		'connect' => 'wdfb_connect'
 	);
 
@@ -97,15 +98,25 @@ class Wdfb_MarkerReplacer {
 
 		// Attempt to fetch the freshest events
 		// Update cache if we can
-		$new_events = $this->model->get_events_for($atts['for']);
-		if(!empty($new_events['data'])) {
-			$events = $new_events['data'];
-			update_post_meta($post_id, 'wdfb_events', $events);
-		} else {
-			$events = get_post_meta($post_id, 'wdfb_events');
-			$events = $events[0];
-		}
 
+/*		
+		$now = time();
+		$last_checked = (int)get_post_meta($post_id, '_wdfb_last_checked_events', true);
+		if (!$last_checked || ($last_checked + WDFB_TRANSIENT_TIMEOUT) < $now) {
+			$new_events = $this->model->get_events_for($atts['for']);
+			if(!empty($new_events['data'])) {
+				$events = $new_events['data'];
+				update_post_meta($post_id, 'wdfb_events', $events);
+				update_post_meta($post_id, '_wdfb_last_checked_events', $now);
+			} else {
+				$events = get_post_meta($post_id, 'wdfb_events', true);
+			}
+		} else {
+				$events = get_post_meta($post_id, 'wdfb_events', true);			
+		}
+*/
+		$api = new Wdfb_EventsBuffer;
+		$events = $api->get_for($atts['for']);
 		if (!is_array($events)) return $content;
 
 		if ($atts['order']) {
@@ -133,6 +144,46 @@ class Wdfb_MarkerReplacer {
 		ob_end_clean();
 
 		return "<div><ul>{$ret}</ul></div>";
+	}
+	
+	function process_album_code ($atts, $content='') {
+		$post_id = get_the_ID();
+		if (!$post_id) return '';
+
+		$atts = shortcode_atts(array(
+			'id' => false,
+			'limit' => false,
+			'photo_class' => 'thickbox',
+			'album_class' => false,
+			'photo_width' => 75,
+			'photo_height' => false,
+			'crop' => false,
+			'columns' => false,
+		), $atts);
+
+		if (!$atts['id']) return ''; // We don't know what album to show
+		$img_w = (int)$atts['photo_width'];
+		$img_h = (int)$atts['photo_height'];
+		
+		$api = new Wdfb_AlbumPhotosBuffer;
+		$photos = $api->get_for($atts['id']);
+		if (!is_array($photos)) return $content;
+		
+		$ret = false;
+		$i = 0;
+		$columns = (int)$atts['columns'];
+		foreach ($photos as $photo) {
+			$style = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
+			$ret .= '<a href="' . $photo['images'][0]['source'] . 
+				'" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' >' .
+					'<img src="' . $photo['images'][count($photo['images'])-1]['source'] . '" ' .
+						($img_w ? "width='{$img_w}'" : '') .
+						($img_h && !$atts['crop'] ? "height='{$img_h}'" : '') .
+					' />' .
+			'</a>';
+			if ($columns && (++$i % $columns) == 0) $ret .= '<br ' . ($style ? 'style="clear:left"' : '') . '/>';
+		}
+		return "<div class='{$atts['album_class']}'>{$ret}</div>";
 	}
 
 	/**

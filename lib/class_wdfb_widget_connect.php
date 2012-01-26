@@ -94,7 +94,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 					echo '	<iframe src="http://www.facebook.com/plugins/registration.php?' . $force .
 						        'client_id=' . trim($opts->get_option('wdfb_api', 'app_key')) . '&' .
 						        'redirect_uri=' . urlencode(site_url('/wp-signup.php?action=register&fb_register=1')) . '&' .
-						        'fields=' . $fields . '&width=' . $width . '"
+						        'fields=' . $fields . '&width=' . $width . '&locale=' . wdfb_get_locale() . '"
 						        scrolling="auto"
 						        frameborder="no"
 						        style="border:none; overflow:hidden; width:' . $width . 'px;"

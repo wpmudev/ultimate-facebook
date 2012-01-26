@@ -118,7 +118,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$instance['date_threshold'] = strip_tags($new_instance['date_threshold']);
 		$instance['only_future'] = strip_tags($new_instance['only_future']);
 
-		$instance['events'] = empty($instance['events']) ? $this->model->get_events_for($instance['for']) : $instance['events'];
+		//$instance['events'] = empty($instance['events']) ? $this->model->get_events_for($instance['for']) : $instance['events'];
 
 		return $instance;
 	}
@@ -135,23 +135,35 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$only_future = $instance['only_future'];
 
 		$date_threshold = $date_threshold ? strtotime($date_threshold) : false;
+		$now = time();
 		if ($only_future) {
-			$now = time();
 			$date_threshold = ($date_threshold && $date_threshold > $now) ? $date_threshold : $now;
 		}
-
-		$events = $this->model->get_events_for($for);
-		if (!empty($events['data'])) {
-			// We have a valid FB connection.
-			// Use that to refresh data:
-			// Update the instance with fresh events
-			$all_instances = $this->get_settings();
-			$all_instances[$this->number]['events'] = $events;
-			$this->save_settings($all_instances);
+/*
+		if (
+			!@$instance['_last_checked_on'] 
+			|| 
+			(WDFB_TRANSIENT_TIMEOUT + (int)@$instance['_last_checked_on']) < $now
+		) {
+			$events = $this->model->get_events_for($for);
+			if (!empty($events['data'])) {
+				// We have a valid FB connection.
+				// Use that to refresh data:
+				// Update the instance with fresh events
+				$all_instances = $this->get_settings();
+				$all_instances[$this->number]['events'] = $events;
+				$all_instances[$this->number]['_last_checked_on'] = $now;
+				$this->save_settings($all_instances);
+			} else {
+				$events = $instance['events'];
+			}
 		} else {
 			$events = $instance['events'];
 		}
 		$events = $events['data'];
+*/
+		$api = new Wdfb_EventsBuffer;
+		$events = $api->get_for($for);
 
 		$timestamp_format = get_option('date_format') . ' ' . get_option('time_format');
 

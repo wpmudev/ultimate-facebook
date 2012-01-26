@@ -15,14 +15,17 @@ class Wdfb_AdminFormRenderer {
 		return "<input type='text' name='wdfb_{$pfx}[{$name}]' id='{$name}' size='3' value='{$value}' />";
 	}
 	function _create_checkbox ($pfx, $name, $value) {
-		return "<input type='checkbox' name='wdfb_{$pfx}[{$name}]' id='{$name}' value='1' " . ($value ? 'checked="checked" ' : '') . " /> ";
+		return "<input type='hidden' name='wdfb_{$pfx}[{$name}]' value='0' />" . 
+			"<input type='checkbox' name='wdfb_{$pfx}[{$name}]' id='{$name}' value='1' " . ($value ? 'checked="checked" ' : '') . " /> "
+		;
 	}
 	function _create_subcheckbox ($pfx, $name, $value, $checked) {
-		return "<input type='checkbox' name='wdfb_{$pfx}[{$name}][{$value}]' id='{$name}-{$value}' value='{$value}' " . ($checked ? 'checked="checked" ' : '') . " /> ";
+		return "<input type='hidden' name='wdfb_{$pfx}[{$name}][{$value}]' value='0' />" . 
+			"<input type='checkbox' name='wdfb_{$pfx}[{$name}][{$value}]' id='{$name}-{$value}' value='{$value}' " . ($checked ? 'checked="checked" ' : '') . " /> ";
 	}
 
 	function next_step () {
-		echo "<input type='button' class='wdfb_next_step' value='" . __('Next step', 'wdfb') . "' />";
+		//echo "<input type='button' class='wdfb_next_step' value='" . __('Next step', 'wdfb') . "' />";
 	}
 
 	function _create_widget_box ($widget, $description) {
@@ -44,8 +47,13 @@ class Wdfb_AdminFormRenderer {
 			'</ol>' .
 			'<p>Once you\'re done with that, please click the "Save changes" button below before proceeding onto other steps.<p>',
 		'wdfb'),
-			get_bloginfo('siteurl')
+			get_bloginfo('url')
 		);
+		echo '<div class="wdfb-api_connect-result">' . 
+			__('Checking API settings...', 'wdfb') .
+			'&nbsp;' .
+			'<img src="' . WDFB_PLUGIN_URL . '/img/waiting.gif" />' . 
+		'</div>';
 	}
 
 	function api_permissions () {
@@ -156,7 +164,7 @@ class Wdfb_AdminFormRenderer {
 			"Traditional Chinese (Taiwan)" => "zh_TW",
 		);
 		$api = $this->_get_option('wdfb_api');
-		echo "<select name='wdfb_api[locale]'>";
+		echo "<select id='wdfb-api_locale' name='wdfb_api[locale]'>";
 		foreach ($fb_locales as $label => $locale) {
 			$checked = ($locale == @$api['locale']) ? 'selected="selected"' : '';
 			echo "<option value='{$locale}' {$checked}>{$label}</option>";
@@ -181,12 +189,12 @@ class Wdfb_AdminFormRenderer {
 	function create_force_facebook_registration_box () {
 		$opt = $this->_get_option('wdfb_connect');
 		echo $this->_create_checkbox('connect', 'force_facebook_registration',  @$opt['force_facebook_registration']);
-		
+		echo '<span id="wdfb-force_facebook_registration-help"></span>';
 		echo '<br />';
 		echo $this->_create_checkbox('connect', 'require_facebook_account', @$opt['require_facebook_account']);
 		echo ' <label for="require_facebook_account">' . __('Require Facebook account', 'wdfb') . '</label>';
-		echo '<div><small>' . __('By default, Facebook regitration form will allow your users to register with their chosen usernames and emails.', 'wdfb') . '</small></div>';
-		echo '<div><small>' . __('Check this box to make the Facebook account an absolute requirement.', 'wdfb') . '</small></div>';
+		echo '<div><small>' . __('By default, Facebook registration form will allow your users to register with their Facebook account, or with their chosen usernames and emails.', 'wdfb') . '</small></div>';
+		echo '<div><small>' . __('Check this if users will need to have a Facebook account already.', 'wdfb') . '</small></div>';
 	}
 	function create_no_main_site_registration_box () {
 		$opt = $this->_get_option('wdfb_connect');
@@ -211,11 +219,12 @@ class Wdfb_AdminFormRenderer {
 			$checked = ($base == $item) ? 'selected="selected"' : '';
 			echo "<option value='{$item}' {$checked}>{$label}</option>";
 		}
-		echo "</select>";
+		echo "</select><span id='wdfb-login_redirect_base-help'></span>";
+		echo '<div><small>' . sprintf(__('Select your site area (above), then fill in the relative URL fragment:', 'wdfb'), $url) . '</small></div>';
 		echo $this->_create_text_box('connect', 'login_redirect_url', @$opt['login_redirect_url']);
 
 		$url = @$opt['login_redirect_url'] ? '<code>' . $base(@$opt['login_redirect_url']) . '</code>' : __('current page, or plugin default', 'wdfb');
-		echo '<div><small>' . sprintf(__('Upon login, my users will be redirected to %s.', 'wdfb'), $url) . '</small></div>';
+		echo '<div><small>' . sprintf(__('This is what will happen upon login: my users will be redirected to %s.', 'wdfb'), $url) . '</small></div>';
 	}
 	function create_captcha_box () {
 		$opt = $this->_get_option('wdfb_connect');
@@ -255,7 +264,7 @@ class Wdfb_AdminFormRenderer {
 			_e(sprintf('Map %s to', $bpf['name']), 'wdfb');
 			echo ' <select name="wdfb_connect[buddypress_registration_fields_' . $bpf['id'] . ']">';
 			foreach ($fb_fields as $fbf_key=>$fbf_label) {
-				echo '<option value="' . $fbf_key . '" ' . ((@$opt['buddypress_registration_fields_' . $bpf['id']] == $fbf_key) ? 'selected="selected"' : '') . '">' . $fbf_label . '</option>';
+				echo '<option value="' . $fbf_key . '" ' . ((@$opt['buddypress_registration_fields_' . $bpf['id']] == $fbf_key) ? 'selected="selected"' : '') . ' >' . $fbf_label . '</option>';
 			}
 			echo '</select><br />';
 		}
@@ -341,10 +350,10 @@ class Wdfb_AdminFormRenderer {
 	}
 	function create_do_not_show_button_box () {
 		$opt = $this->_get_option('wdfb_button'); // 'not_in_post_types'
-		$types = get_post_types(array('public'=>true), 'names');
+		$types = get_post_types(array('public'=>true), 'objects');
 		foreach ($types as $type) {
-			echo $this->_create_subcheckbox('button', 'not_in_post_types',  $type, @in_array($type, $opt['not_in_post_types']));
-			echo '<label>' . ucfirst($type) . '</label><br />';
+			echo $this->_create_subcheckbox('button', 'not_in_post_types',  $type->name, @in_array($type->name, $opt['not_in_post_types']));
+			echo '<label>' . ucfirst($type->labels->name) . '</label><br />';
 		}
 	}
 	function create_button_position_box () {
@@ -451,7 +460,7 @@ class Wdfb_AdminFormRenderer {
 				"<input id='og_extra_value' size='24' name='wdfb_opengraph[og_extra_headers][{$last}][value]' value='' />" .
 			"";
 			echo "</div>";
-		echo '<input type="submit" value="' . esc_attr(__('Add header', 'wdfb')) . '" />';
+		echo '<input type="button" class="wdfb-save_settings" data-wdfb_section_id="wdfb_opengraph" value="' . esc_attr(__('Add header', 'wdfb')) . '" />';
 	}
 
 	function create_import_fb_comments_box () {
@@ -463,15 +472,32 @@ class Wdfb_AdminFormRenderer {
 		$opt = $this->_get_option('wdfb_comments');
 		$skips = @$opt['skip_import'];
 		$skips = is_array($skips) ? $skips : array();
+		$reverse = @$opt['reverse_skip_logic'];
 		$data = Wdfb_OptionsRegistry::get_instance();
 		$accounts = $data->get_option('wdfb_api', 'auth_tokens');
-		if (is_array($accounts)) foreach ($accounts as $fb_uid => $token) {
-			if (!$fb_uid) continue;
-			$checked = in_array($fb_uid, $skips) ? true : false;
-			echo $this->_create_subcheckbox('comments', 'skip_import',  $fb_uid, $checked) .
-				" <label for='skip_import-{$fb_uid}'><span class='wdfb_uid_to_name_mapper'>{$fb_uid}</span></label><br />";
+		if (is_array($accounts)) {
+			echo '<div id="wdfb-comments-skip_accounts">'; 
+			foreach ($accounts as $fb_uid => $token) {
+				if (!$fb_uid) continue;
+				$checked = in_array($fb_uid, $skips) ? true : false;
+				echo $this->_create_subcheckbox('comments', 'skip_import',  $fb_uid, $checked) .
+					" <label for='skip_import-{$fb_uid}'><span class='wdfb_uid_to_name_mapper'>{$fb_uid}</span></label><br />";
+			}
+			echo '<div><small>' . 
+				(
+					$reverse
+					? __('Comments on your posts on Facebook will <b>ONLY</b> be imported for the checked IDs.', 'wdfb')
+					: __('Comments on your posts on Facebook will <b>NOT</b> be imported for any of the checked IDs.', 'wdfb')
+				) . 
+			'</small></div>';
+			echo '<br />' . 
+				'<label for="reverse_skip_logic">' . __('Reverse checking logic:', 'wdfb') . '</label>' .
+				'&nbsp;' .
+				$this->_create_checkbox('comments', 'reverse_skip_logic', $reverse) .
+			'';
+			echo '<div><small>' . __('Togglig this option will reverse import skipping options.', 'wdfb') . '</small></div>';
+			echo '</div>';
 		}
-		echo '<div><small>' . __('Comments on your posts on Facebook will <b>NOT</b> be imported for any of the checked IDs.', 'wdfb') . '</small></div>';
 	}
 	function create_fb_comments_limit_box () {
 		$opt = $this->_get_option('wdfb_comments');
@@ -558,7 +584,7 @@ class Wdfb_AdminFormRenderer {
 		echo '<div><small>' . __('Enabling this will add a new column that shows if the post has already been published on Facebook to your post management pages.', 'wdfb') . '</small></div>';
 	}
 	function create_autopost_map_box () {
-		$post_types = get_post_types(array('public'=>true), 'names');
+		$post_types = get_post_types(array('public'=>true), 'objects');
 		$fb_locations = array (
 			'0' => __("Don't post this type to Facebook", 'wdfb'),
 			'feed' => __("Facebook wall", 'wdfb'),
@@ -571,9 +597,11 @@ class Wdfb_AdminFormRenderer {
 		$fb_accounts = get_user_meta($user->ID, 'wdfb_api_accounts', true);
 		$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
 
+		echo '<div id="wdfb-autopost_map_message"></div>';
 		echo "<ul>";
 		foreach ($post_types as $pname=>$pval) {
-
+			$pname = $pval->name;
+			$pval = $pval->labels->name;
 			$fb_action = @$opts["type_{$pname}_fb_type"];
 			$box = '<select name="wdfb_autopost[type_' . $pname . '_fb_type]">';
 			foreach ($fb_locations as $fbk=>$fbv) {
@@ -587,10 +615,17 @@ class Wdfb_AdminFormRenderer {
 				$fb_user .= "<option value='{$aid}' " . (($fb_user_val == $aid) ? 'selected="selected"' : '') . ">{$aval}</option>";
 			}
 			$fb_user .= '</select>';
+			
+			$shortlink = "" .
+				"<input type='hidden' class='wdfb-autopost-shortlink' name='wdfb_autopost[type_{$pname}_use_shortlink]' value='' />" .
+				"<input type='checkbox' class='wdfb-autopost-shortlink' name='wdfb_autopost[type_{$pname}_use_shortlink]' " .
+					"id='wdfb-{$pname}_use_shortlink' value='1' " . (@$opts["type_{$pname}_use_shortlink"] ? 'checked="checked"' : '') . " /> " .
+				'<label for="wdfb-' . $pname . '_use_shortlink">' . __('Use shortlink', 'wdfb') . '</label>' .
+			"";
 
 			printf(
-				__("<li>Autopost %s to %s of this user: %s</li>", 'wdfb'),
-				ucfirst($pval), $box, $fb_user
+				__("<li>Autopost %s to %s of this user: %s %s </li>", 'wdfb'),
+				ucfirst($pval), $box, $fb_user, $shortlink
 			);
 		}
 		echo "</ul>";
@@ -606,7 +641,7 @@ class Wdfb_AdminFormRenderer {
 	function create_allow_post_metabox_box () {
 		$opt =  $this->_get_option('wdfb_autopost');
 		echo $this->_create_checkbox('autopost', 'prevent_post_metabox',  @$opt['prevent_post_metabox']);
-		echo '<div><small>' . __('If you check this box, your users will <b>NOT</b> be able to make individual individual posts to Facebook using the post editor metabox.', 'wdfb') . '</small></div>';
+		echo '<div><small>' . __('If you check this box, your users will <b>NOT</b> be able to make individual posts to Facebook using the post editor metabox.', 'wdfb') . '</small></div>';
 	}
 
 	function create_override_all_box () {

@@ -91,6 +91,7 @@ function loadAlbumPhotos ($me) {
 
 function insertAlbum ($me) {
 	var albumId = parseAlbumIdHref($me.attr('href'));
+	/*
 	var markup = '';
 	$("#wdfb_album_container").html(l10nWdfbEditor.please_wait + ' <img src="' + _wdfb_root_url + '/img/waiting.gif">');
 	$.post(ajaxurl, {"action": "wdfb_list_fb_album_photos", "album_id": albumId}, function (response) {
@@ -109,10 +110,12 @@ function insertAlbum ($me) {
 		});
 		markup += '</ul>';
 		markup += '</div>';
-		console.log(markup);
 		updateEditorContents(markup);
 		wdfbCloseAlbumEditor();
 	});
+	*/
+	updateEditorContents('[wdfb_album id="' + albumId + '"]');
+	wdfbCloseAlbumEditor();
 	return false;
 }
 
@@ -212,9 +215,12 @@ function init () {
 		}
 	});
 }
-FB.getLoginStatus(function (resp) {
-	init();
-})
-	
+
+if (typeof FB == 'object' && FB._apiKey) {
+	FB.getLoginStatus(function (resp) {
+		init();
+	});
+}
+
 });
 })(jQuery);

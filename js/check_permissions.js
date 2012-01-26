@@ -19,6 +19,7 @@ function check_perms () {
 		} catch (e) {
 			all_good = false;
 		}
+		$("img.wdfb_perms_waiting").remove();
 		if (all_good) {
 			$("p.wdfb_perms_not_granted, div.wdfb_perms_not_granted").hide();
 			$("p.wdfb_perms_granted, div.wdfb_perms_granted").show();
@@ -30,12 +31,20 @@ function check_perms () {
 	});
 }
 
-$(".wdfb_perms_root").show();
+$(".wdfb_perms_root").append('<img src="' + _wdfb_root_url + '/img/waiting.gif" class="wdfb_perms_waiting" />').show();
 $(".wdfb_grant_perms, .wdfb_perms_granted, .wdfb_perms_not_granted").hide();
 
+if (typeof FB == 'object' && FB._apiKey) {
+	FB.getLoginStatus(function (resp) {
+		check_perms();
+	});
+}
+
+/*
 FB.getLoginStatus(function (resp) {
 	check_perms();
-});		
+});	
+*/	
 	
 $(".wdfb_grant_perms").click(function () { 
 	var $me = $(this);

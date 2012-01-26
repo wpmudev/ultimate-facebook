@@ -46,9 +46,9 @@ class Wdfb_Model {
 		@session_unset();
 		@session_destroy();
 		unset($_SESSION);
-		if ($redirect) wp_redirect($redirect);
 		wp_logout();
 		wp_set_current_user(0);
+		if ($redirect) wp_redirect($redirect);
 	}
 
 	/**
@@ -296,6 +296,8 @@ class Wdfb_Model {
 
 	function get_pages_tokens () {
 		$fid = $this->get_current_user_fb_id();
+		if (!$fid) return false;
+		
 		try {
 			$ret = $this->fb->api('/' . $fid . '/accounts/');
 		} catch (Exception $e) {
@@ -374,6 +376,7 @@ class Wdfb_Model {
 		try {
 			$res = $this->fb->api('/' . $aid . '/photos/' . $limit);
 		} catch (Exception $e) {
+			$this->log->error(__FUNCTION__, $e);
 			return false;
 		}
 		return $res;

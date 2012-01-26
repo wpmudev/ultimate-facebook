@@ -21,6 +21,7 @@ class Wdfb_ErrorLog {
 	}
 
 	function error ($function, $exception) {
+		Wdfb_ErrorRegistry::store($exception);
 		$this->_update_error_queue(array(
 			'date' => time(),
 			'area' => $function,

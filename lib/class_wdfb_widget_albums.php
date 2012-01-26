@@ -115,7 +115,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$instance['img_h'] = strip_tags($new_instance['img_h']);
 		$instance['img_crop'] = isset($new_instance['img_crop']) ? 1 : 0;
 
-		$instance['photos'] = empty($instance['photos']) ? $this->model->get_album_photos($instance['album_id'], $limit) : $instance['photos'];
+		//$instance['photos'] = empty($instance['photos']) ? $this->model->get_album_photos($instance['album_id'], $limit) : $instance['photos'];
 
 		return $instance;
 	}
@@ -130,6 +130,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$img_crop = (int)$instance['img_crop'];
 		$album_id = $instance['album_id'];
 
+/*
 		$photos = $this->model->get_album_photos($album_id, $limit);
 		if (!empty($photos['data'])) {
 			// We have a valid FB connection.
@@ -142,15 +143,19 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 			$photos = $instance['photos'];
 		}
 		$photos = $photos['data'];
+*/
+		$api = new Wdfb_AlbumPhotosBuffer;
+		$photos = $api->get_for($album_id);
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
 		if (is_array($photos)) {
 			echo '<table cellspacing="0" cellpadding="0" border="0" class="wdfb_album_photos">';
-			$count = 0;
+			$count = $overall = 0;
 			echo '<tr>';
 			foreach ($photos as $photo) {
+				if ($overall >= $limit) break;
 				$style = $img_crop ? "display:block;float:left;height:{$img_h}px;overflow:hidden" : '';
 				echo '<td valign="top">' .
 					'<a href="' . $photo['images'][0]['source'] . '" style="' . $style . '">' .
@@ -160,7 +165,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 						' />' .
 					'</a>' .
 				'</td>';
-				++$count;
+				++$count; ++$overall;
 				if ($count == $per_row) {
 					echo '</tr><tr>';
 					$count = 0;

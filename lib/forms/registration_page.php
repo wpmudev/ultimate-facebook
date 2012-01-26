@@ -29,7 +29,7 @@ $force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $o
 		echo urlencode(site_url($redirect_url));
 	?>&fields=<?php
 		echo wdfb_get_registration_fields();
-	?>"
+	?>&locale=<?php echo wdfb_get_locale();?>"
         scrolling="auto"
         frameborder="no"
         style="border:none"

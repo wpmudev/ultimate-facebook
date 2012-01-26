@@ -10,7 +10,6 @@ function init_ui () {
 }
 
 function init () {
-	//
 	if (typeof FB != 'object') return false; // Don't even bother
 	FB.api({
 		"method": "fql.query",
@@ -54,7 +53,12 @@ function init () {
 		}
 	});
 }
-init();
+//init();
+if (typeof FB == 'object' && FB._apiKey) {
+	FB.getLoginStatus(function (resp) {
+		init();
+	});
+}
 	
 });
 })(jQuery);

@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall and notes, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 1.6.2.1
+Version: 2.0
 Text Domain: wdfb
 Author: Ve Bailovity (Incsub)
 Author URI: http://premium.wpmudev.org
@@ -65,9 +65,6 @@ if (is_multisite() && defined('WPMU_PLUGIN_URL') && defined('WPMU_PLUGIN_DIR') &
 $textdomain_handler('wdfb', false, WDFB_PLUGIN_SELF_DIRNAME . '/languages/');
 
 
-//define ('WDFB_EXTENDED_PERMISSIONS', 'user_about_me,user_birthday,user_education_history,user_events,user_hometown,user_location,user_relationships,user_religion_politics,user_birthday,user_likes,user_photos,email,create_event,rsvp_event,read_stream,publish_stream,create_note,manage_pages,offline_access', true);
-
-
 /**
  * Dashboard permissions widget function.
  */
@@ -104,6 +101,7 @@ if (!class_exists('Facebook')) {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/external/facebook.php');
 }
 require_once (WDFB_PLUGIN_BASE_DIR . '/lib/wdfb_utilities.php');
+require_once (WDFB_PLUGIN_BASE_DIR . '/lib/wdfb_transients_api.php');
 require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_permissions.php');
 require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_options_registry.php');
 require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_marker_replacer.php');
@@ -171,8 +169,11 @@ if (!wp_next_scheduled('wdfb_import_comments')) wp_schedule_event(time()+600, 'h
 
 
 if (is_admin() || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) || (defined('DOING_CRON') && DOING_CRON)) {
+	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_help.php');
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_form_renderer.php');
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_pages.php');
+	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_tutorial.php');
+	Wdfb_Tutorial::serve();
 	Wdfb_AdminPages::serve();
 } else {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_public_pages.php');

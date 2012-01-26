@@ -55,4 +55,28 @@
 </p>
 <p><strong>Note:</strong> you have to <a href="?page=wdfb">allow</a> registering with Facebook in your plugin settings (under &quot;Facebook Connect&quot;) for this shortcode to work.</p>
 
+<h3>Album shortcode</h3>
+<p><em>Tag:</em> <code>[wdfb_album]</code></p>
+<p>
+	<em>Attributes:</em>
+	<ul>
+		<li><code>id</code> - <strong>required.</strong> Valid Facebook album ID (e.g. <code>379473193359</code>)</li>
+		<li><code>album_class</code> - <em>optional.</em> HTML class to be assigned to album wrapper in output.</li>
+		<li><code>photo_class</code> - <em>optional.</em> HTML class to be assigned to each photo in output.</li>
+		<li><code>columns</code> - <em>optional.</em> Show this many photos per row.</li>
+		<li><code>photo_width</code> - <em>optional.</em> Width of your images in the album.</li>
+		<li><code>photo_height</code> - <em>optional.</em> Height of your images in the album.</li>
+		<li><code>crop</code> - <em>optional.</em> Crop images to fit height.</li>
+		<li><code>limit</code> - <em>optional.</em> Limit output to this may photos.</li>
+	</ul>
+</p>
+<p>
+	<em>Examples:</em>
+	<ul>
+		<li><code>[wdfb_album id="379473193359"]</code> - default album output, rows will fill the width of your page.</li>
+		<li><code>[wdfb_album id="379473193359" photo_class="thickbox" columns="5"]</code> - album with 5 images per row, images will open in Thickbox.</li>
+		<li><code>[wdfb_album id="379473193359" photo_class="thickbox" columns="5" photo_height="50" crop="true"]</code> - same as above, but image height will be cropped to better fit the row height.</li>
+	</ul>
+</p>
+
 </div>

@@ -9,6 +9,7 @@
  * Helper function for generating the registration fields array.
  */
 function wdfb_get_registration_fields_array () {
+	global $current_site;
 	$data = Wdfb_OptionsRegistry::get_instance();
 	$wp_grant_blog = false;
 	if (is_multisite()) {
@@ -33,9 +34,13 @@ function wdfb_get_registration_fields_array () {
 			'description' => __('Your blog title', 'wdfb'),
 			'type' => 'text',
 		);
+		$newdomain = !is_subdomain_install() 
+			? 'youraddress.' . preg_replace('|^www\.|', '', $current_site->domain) 
+			: $current_site->domain . $current_site->path . 'youraddress'
+		;
 		$fields[] = array(
 			'name' => 'blog_domain',
-			'description' => __('Your blog address', 'wdfb'),
+			'description' => sprintf(__('Your blog address (%s)', 'wdfb'), $newdomain),
 			'type' => 'text',
 		);
 	}
@@ -160,4 +165,37 @@ function wdfb_add_email_message ($msg) {
 		) .
 		$msg
 	;
+}
+
+/**
+ * Error registry class for exception transport.
+ */
+class Wdfb_ErrorRegistry {
+	private static $_errors = array();
+	
+	private function __construct () {}
+	
+	public static function store ($exception) {
+		self::$_errors[] = $exception;
+	}
+	
+	public static function clear () {
+		self::$_errors = array();
+	}
+	
+	public static function get_errors () {
+		return self::$_errors;
+	}
+	
+	public static function get_last_error () {
+		return end(self::$_errors);
+	}
+	
+	public static function get_last_error_message () {
+		$e = self::get_last_error();
+		return ($e && is_object($e) && $e instanceof Exception) 
+			? $e->getMessage()
+			: false
+		;
+	}
 }

@@ -156,10 +156,6 @@ class Wdfb_PublicPages {
 
 	function inject_fb_login () {
 		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect(true) . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
-		if (isset($_GET['loggedout'])) {
-			$this->model->fb->destroySession();
-			echo '<script type="text/javascript">(function ($) { $(function () { FB.logout(); }) })(jQuery);</script>';
-		}
 	}
 
 	function inject_fb_login_for_bp () {
@@ -194,52 +190,6 @@ class Wdfb_PublicPages {
 			"reverse='{$reverse}' " .
 			"publish_feed='true'></fb:comments>";
 		return $defaults;
-	}
-
-	function handle_logout () {
-		if (isset($_GET['action']) && 'logout' == $_GET['action']) {
-			$next = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : home_url();
-			$redirect = $this->model->fb->getLogoutUrl(array('next'=>$next));
-			$this->model->fb->destroySession();
-			$this->model->wp_logout($redirect);
-			//wp_redirect ($redirect);
-			exit();
-		}
-	}
-
-	/**
-	 * This happens only if allow_facebook_registration is true.
-	 */
-	function handle_fb_session_state () {
-		$fb_user = $this->model->fb->getUser();
-
-		// User logs out
-		if ($fb_user && isset($_GET['action']) && 'logout' == $_GET['action']) {
-			$redirect = isset($_GET['redirect_to']) ? $_GET['redirect_to'] : home_url();
-			$fb_redirect = $this->model->fb->getLogoutUrl(array('next'=>$redirect));
-			$this->model->fb->destroySession();
-			$this->model->wp_logout($fb_redirect);
-			//wp_redirect($redirect);
-			exit();
-		}
-
-		if ($fb_user) {
-			$user_id = $this->model->get_wp_user_from_fb();
-			if (!$user_id) $user_id = $this->model->map_fb_to_current_wp_user();
-			if ($user_id) {
-				$user = get_userdata($user_id);
-				wp_set_current_user($user->ID, $user->user_login);
-				@wp_set_auth_cookie($user->ID, true); // Logged in with Facebook, yay
-				do_action('wp_login', $user->user_login);
-
-				// BuddyPress :/
-				if (function_exists('bp_core_setup_globals') && defined('BP_VERSION')) bp_core_setup_globals();
-			}
-		}
-	}
-
-	function clear_auth_cookies_on_logout () {
-		if (isset($_GET['loggedout'])) wp_clear_auth_cookie();
 	}
 
 	function get_commenter_avatar ($old, $comment, $size) {
@@ -353,6 +303,8 @@ class Wdfb_PublicPages {
 				} else if ($user_id) {
 					$registration_success = true;
 				} else {
+					$msg = Wdfb_ErrorRegistry::get_last_error_message();
+					if ($msg) $errors[] = $msg;
 					$errors[] = __('Could not register such user', 'wdfb');
 				}
 			}
@@ -439,11 +391,14 @@ class Wdfb_PublicPages {
 				break;
 			case "feed":
 			default:
+				$use_shortlink = $this->data->get_option('wdfb_autopost', "type_{$post_type}_use_shortlink");
+				$permalink = $use_shortlink ? wp_get_shortlink($post_id) : get_permalink($post_id);
+				$permalink = $permalink ? $permalink : get_permalink($post_id);
 				$picture = wdfb_get_og_image($post_id);
 				$send = array(
 					'caption' => substr($post_content, 0, 999),
 					'message' => $post_title,
-					'link' => get_permalink($post_id),
+					'link' => $permalink,
 					'name' => $post->post_title,
 					'description' => get_option('blogdescription'),
 				);
@@ -470,7 +425,6 @@ class Wdfb_PublicPages {
 
 		// Automatic Facebook button
 		if ('manual' != $this->data->get_option('wdfb_button', 'button_position')) {
-			//add_filter('the_content', array($this, 'inject_facebook_button'), 1); // Do this VERY early in content processing
 			add_filter('the_content', array($this, 'inject_facebook_button'), 10);
 		}
 
@@ -481,21 +435,16 @@ class Wdfb_PublicPages {
 
 		// Connect
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
-			add_action('init', array($this, 'handle_logout'));
-
 			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 2);
 
-			if(!defined('BP_VERSION')) add_action('wp_loaded', array($this, 'handle_fb_session_state'));
 			add_action('login_head', array($this, 'js_inject_fb_login_script'));
 			add_action('login_head', array($this, 'js_setup_ajaxurl'));
 			add_action('login_form', array($this, 'inject_fb_login'));
 			add_action('login_footer', array($this, 'inject_fb_root_div'));
 			add_action('login_footer', array($this, 'inject_fb_init_js'));
-			add_action('login_form_login', array($this, 'clear_auth_cookies_on_logout'));
 
 			// BuddyPress
 			if (defined('BP_VERSION')) {
-				add_action('bp_setup_globals', array($this, 'handle_fb_session_state'));
 				add_action('bp_before_profile_edit_content', 'wdfb_dashboard_profile_widget');
 				add_action('bp_before_sidebar_login_form', array($this, 'inject_fb_login_for_bp'));
 				add_action('wp_head', array($this, 'js_inject_fb_login_script'));
