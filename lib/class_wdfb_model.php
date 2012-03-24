@@ -56,7 +56,8 @@ class Wdfb_Model {
 	 */
 	function get_bp_xprofile_fields () {
 		if (!defined('BP_VERSION')) return true;
-		$sql = "SELECT id, name FROM " . $this->db->base_prefix . "bp_xprofile_fields";
+		$tbl_pfx = function_exists('bp_core_get_table_prefix') ? bp_core_get_table_prefix() : apply_filters('bp_core_get_table_prefix', $this->db->base_prefix);
+		$sql = "SELECT id, name FROM {$tbl_pfx}bp_xprofile_fields";
 		return $this->db->get_results($sql, ARRAY_A);
 	}
 
@@ -73,13 +74,14 @@ class Wdfb_Model {
 		if (is_array($data)) $data = $data['name']; // For complex FB fields that return JSON objects
 		if (!$data) return false; // Don't waste cycles if we don't need to
 
-		$sql = "SELECT id FROM " . $this->db->base_prefix . "bp_xprofile_data WHERE field_id={$field_id} AND user_id={$user_id}";
+		$tbl_pfx = function_exists('bp_core_get_table_prefix') ? bp_core_get_table_prefix() : apply_filters('bp_core_get_table_prefix', $this->db->base_prefix);
+		$sql = "SELECT id FROM {$tbl_pfx}bp_xprofile_data WHERE field_id={$field_id} AND user_id={$user_id}";
 		$id = $this->db->get_var($sql);
 
 		if ($id) {
-			$sql = "UPDATE " . $this->db->base_prefix . "bp_xprofile_data SET data='" . $data . "' WHERE id={$id}";
+			$sql = "UPDATE {$tbl_pfx}bp_xprofile_data SET data='" . $data . "' WHERE id={$id}";
 		} else {
-			$sql = "INSERT INTO " . $this->db->base_prefix . "bp_xprofile_data (field_id, user_id, value, last_updated) VALUES (" .
+			$sql = "INSERT INTO {$tbl_pfx}bp_xprofile_data (field_id, user_id, value, last_updated) VALUES (" .
 				(int)$field_id . ', ' . (int)$user_id . ", '" . $data . "', '" . date('Y-m-d H:i:s') . "')";
 		}
 		return $this->db->query($sql);
@@ -95,11 +97,34 @@ class Wdfb_Model {
 
 		$fb_uid = $me['id'];
 
-		$path = bp_core_avatar_upload_path() . '/avatars/' . $user_id;
-		if (!realpath($path)) @wp_mkdir_p($path);
+		if (function_exists('xprofile_avatar_upload_dir')) {
+			$xpath = xprofile_avatar_upload_dir(false, $user_id);
+			$path = $xpath['path'];
+		} 
+		if (!function_exists('xprofile_avatar_upload_dir') || empty($path)) {
+			$object = 'user';
+			$avatar_dir = apply_filters( 'bp_core_avatar_dir', 'avatars', $object );
+			$path = bp_core_avatar_upload_path() . "/{$avatar_dir}/" . $user_id;
+			$path = apply_filters('bp_core_avatar_folder_dir', $path, $user_id, $object, $avatar_dir);
+			if (!realpath($path)) @wp_mkdir_p($path);
+		}
 
 		// Get FB picture
-		$fb_img = file_get_contents("http://graph.facebook.com/{$fb_uid}/picture?type=large");
+		//$fb_img = file_get_contents("http://graph.facebook.com/{$fb_uid}/picture?type=large");
+		$page = wp_remote_get("http://graph.facebook.com/{$fb_uid}/picture?type=large", array(
+			'method' 		=> 'GET',
+			'timeout' 		=> '5',
+			'redirection' 	=> '5',
+			'user-agent' 	=> 'wdfb',
+			'blocking'		=> true,
+			'compress'		=> false,
+			'decompress'	=> true,
+			'sslverify'		=> false
+		));
+		if(is_wp_error($page)) return false; // Request fail
+		if ((int)$page['response']['code'] != 200) return false; // Request fail
+		$fb_img = $page['body'];
+		
 		$filename = md5($fb_uid);
 		$filepath = "{$path}/{$filename}";
 		file_put_contents($filepath, $fb_img);
@@ -108,16 +133,20 @@ class Wdfb_Model {
 		$info = getimagesize($filepath);
 		$extension = false;
 
-		switch ($info[2]) {
-			case IMAGETYPE_GIF:
-				$extension = 'gif';
-				break;
-			case IMAGETYPE_JPEG:
-				$extension = 'jpg';
-				break;
-			case IMAGETYPE_PNG:
-				$extension = 'png';
-				break;
+		if (function_exists('image_type_to_extension')) {
+			$extension = image_type_to_extension($info[2], false);
+		} else {
+			switch ($info[2]) {
+				case IMAGETYPE_GIF:
+					$extension = 'gif';
+					break;
+				case IMAGETYPE_JPEG:
+					$extension = 'jpg';
+					break;
+				case IMAGETYPE_PNG:
+					$extension = 'png';
+					break;
+			}
 		}
 		// Unknown file type, clean up
 		if (!$extension) {
@@ -130,10 +159,10 @@ class Wdfb_Model {
 		if (is_array($imgs)) foreach ($imgs as $old) {
 			@unlink($old);
 		}
-
 		// Create new avatar
 		copy($filepath, "{$filepath}-bpthumb.{$extension}");
 		copy($filepath, "{$filepath}-bpfull.{$extension}");
+		
 		@unlink($filepath);
 		return true;
 	}
@@ -309,6 +338,9 @@ class Wdfb_Model {
 	function post_on_facebook ($type, $fid, $post, $as_page=false) {
 		$type = $type ? $type : 'feed';
 		$fid = $fid ? $fid : $this->get_current_user_fb_id();
+		
+		// Events sanity check
+		if ('events' == $type && (!@$post['start_time'] || !@$post['end_time'])) return false;
 
 		$title = ('feed' == $type) ? @$post['message'] : '';
 		$_ap = $as_page ? 'as page' : '';
@@ -317,6 +349,7 @@ class Wdfb_Model {
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
 		$post['auth_token'] = $tokens[$fid];
 		if ($as_page) $post['access_token'] = $tokens[$fid];
+		//$post['access_token'] = $tokens[$fid]; // No offline_access
 
 		try {
 			$ret = $this->fb->api('/' . $fid . '/' . $type . '/', 'POST', $post);

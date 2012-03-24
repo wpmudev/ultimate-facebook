@@ -5,6 +5,16 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.0.1 - 2012-03-24
+----------------------------------------------------------------------
+- Improved OpenGraph tags generation.
+- Improved Facebook album photos shortcode handling.
+- Recalculating necessary widths for Like buttons.
+- Added metabox override caching for delayed autoposting.
+- Fix for https issues with linked resources.
+- Fix for address mapping.
+- Fix for activity feed widget.
+
 2.0 - 2012-01-26
 ----------------------------------------------------------------------
 - Added contextual help and pointer tutorial.

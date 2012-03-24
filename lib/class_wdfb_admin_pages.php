@@ -362,13 +362,13 @@ class Wdfb_AdminPages {
 		$fb_uid = $this->model->get_fb_user_from_wp($wp_uid);
 		if (!$fb_uid) return $avatar;
 
-		return "<img class='avatar' src='http://graph.facebook.com/{$fb_uid}/picture' />";
+		return "<img class='avatar' src='" . WDFB_PROTOCOL  . "graph.facebook.com/{$fb_uid}/picture' />";
 	}
 
 	function js_load_scripts () {
 		wp_enqueue_script('jquery');
 		$locale = wdfb_get_locale();
-		wp_enqueue_script('facebook-all', 'http://connect.facebook.net/' . $locale . '/all.js');
+		wp_enqueue_script('facebook-all', WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js');
 		wp_enqueue_script('wdfb_post_as_page', WDFB_PLUGIN_URL . '/js/wdfb_post_as_page.js');
 	}
 	
@@ -471,6 +471,26 @@ class Wdfb_AdminPages {
 
 		$token = substr($page['body'], 13);
 		if (!$token) return false;
+		
+		/*
+		// New token
+		$url = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}";
+		$page = wp_remote_get($url, array(
+			'method' 		=> 'GET',
+			'timeout' 		=> '5',
+			'redirection' 	=> '5',
+			'user-agent' 	=> 'wdfb',
+			'blocking'		=> true,
+			'compress'		=> false,
+			'decompress'	=> true,
+			'sslverify'		=> false
+		));
+		if(is_wp_error($page)) return false; // Request fail
+		if ((int)$page['response']['code'] != 200) return false; // Request fail
+
+		$token = substr($page['body'], 13);
+		if (!$token) return false;
+		*/
 
 		if (!$this->data->get_option('wdfb_api', 'prevent_linked_accounts_access')) {
 			$page_tokens = $this->model->get_pages_tokens();
@@ -540,7 +560,19 @@ class Wdfb_AdminPages {
 		) return false;
 
 		$post = get_post($post_id);
-		if ('publish' != $post->post_status) return false; // Draft, auto-save or something else we don't want
+		if ('publish' != $post->post_status) {
+			if ('future' == $post->post_status) update_post_meta($post_id, 'wdfb_scheduled_publish', array(
+				'wdfb_metabox_publishing_publish' => $_POST['wdfb_metabox_publishing_publish'],
+				'wdfb_metabox_publishing_title' => $_POST['wdfb_metabox_publishing_title'],
+				'wdfb_metabox_publishing_account' => $_POST['wdfb_metabox_publishing_account'],
+			));
+			return false; // Draft, auto-save or something else we don't want
+		}
+		
+		$_POST = wp_parse_args(
+			@$_POST,
+			get_post_meta($post_id, 'wdfb_scheduled_publish', true)
+		);
 
 		$is_published = get_post_meta($post_id, 'wdfb_published_on_fb', true);
 		if ($is_published && !@$_POST['wdfb_metabox_publishing_publish']) return true; // Already posted and no manual override, nothing to do
@@ -570,12 +602,19 @@ class Wdfb_AdminPages {
 				);
 				break;
 			case "events":
+				$time = time();
+				$start_time = apply_filters('wdfb-autopost-events-start_time', $time, $post);
+				$end_time = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
+				$location = apply_filters('wdfb-autopost-events-location', false, $post);
 				$send = array(
 					'name' => $post_title,
 					'description' => $post_content,
-					'start_time' => time(),
-					'location' => 'someplace',
+					'start_time' => $start_time,
+					'end_time' => $end_time,
 				);
+				if ($location) {
+					$send['location'] = $location;
+				}
 				break;
 			case "feed":
 			default:

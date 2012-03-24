@@ -72,11 +72,18 @@ class Wdfb_MarkerReplacer {
 			$tmp_url = get_permalink();
 			$url = $tmp_url ? $tmp_url : $url;
 			$url = rawurlencode($url);
+			
 			$height = ("box_count" == $layout) ? 60 : 25;
-			return "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;width=450&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height={$height}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; width:450px; height:{$height}px;' allowTransparency='true'></iframe></div>";
+			$height = apply_filters('wdfb-like_button-height', $height); 
+			
+			$width = ("standard" == $layout) ? 300 : (
+				("button_count" == $layout) ? 150 : 60
+			); 
+			$width = apply_filters('wdfb-like_button-width', $width); 
+			return "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height={$height}&amp;width={$width}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>";
 		}
 
-		return '<div class="wdfb_like_button"><fb:like href="http://' . $url . '" send="' . ($send ? 'true' : 'false') . '" layout="' . $layout . '" width="450" show_faces="true" font=""></fb:like></div>';
+		return '<div class="wdfb_like_button"><fb:like href="' . WDFB_PROTOCOL  . $url . '" send="' . ($send ? 'true' : 'false') . '" layout="' . $layout . '" width="' . $width . '" show_faces="true" font=""></fb:like></div>';
 	}
 
 	function process_events_code ($atts, $content='') {
@@ -171,12 +178,19 @@ class Wdfb_MarkerReplacer {
 		
 		$ret = false;
 		$i = 0;
+		
+		$display_idx = ($img_w >= 130)
+			? (($img_w >= 180) ? 0 : 1)
+			: (($img_w >= 75) ? 2 : 3)
+		;
+		
 		$columns = (int)$atts['columns'];
 		foreach ($photos as $photo) {
+			$photo_idx = isset($photo['images'][$display_idx]) ? $display_idx : count($photo['images'])-1;
 			$style = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
 			$ret .= '<a href="' . $photo['images'][0]['source'] . 
 				'" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' >' .
-					'<img src="' . $photo['images'][count($photo['images'])-1]['source'] . '" ' .
+					'<img src="' . $photo['images'][$photo_idx]['source'] . '" ' .
 						($img_w ? "width='{$img_w}'" : '') .
 						($img_h && !$atts['crop'] ? "height='{$img_h}'" : '') .
 					' />' .

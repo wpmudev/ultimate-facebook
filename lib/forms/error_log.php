@@ -35,7 +35,7 @@
 		<?php $user = get_userdata(@$error['user_id']);?>
 		<tr>
 			<td><?php echo date($datetime_format, $error['date']);?></td>
-			<td><?php echo ($user->user_login ? $user->user_login : __('Unknown', 'wdfb'));?></td>
+			<td><?php echo ((isset($user->user_login) && $user->user_login) ? $user->user_login : __('Unknown', 'wdfb'));?></td>
 			<td><?php echo $error['area'];?></td>
 			<td><?php echo $error['type'];?></td>
 			<td><?php echo $error['info'];?></td>
@@ -72,7 +72,7 @@
 		<?php $user = get_userdata(@$notice['user_id']);?>
 		<tr>
 			<td><?php echo date($datetime_format, $notice['date']);?></td>
-			<td><?php echo ($user->user_login ? $user->user_login : __('Unknown', 'wdfb'));?></td>
+			<td><?php echo ((isset($user->user_login) && $user->user_login) ? $user->user_login : __('Unknown', 'wdfb'));?></td>
 			<td><?php echo $notice['message'];?></td>
 		</tr>
 	<?php } ?>

@@ -34,7 +34,7 @@ function wdfb_get_registration_fields_array () {
 			'description' => __('Your blog title', 'wdfb'),
 			'type' => 'text',
 		);
-		$newdomain = !is_subdomain_install() 
+		$newdomain = is_subdomain_install() 
 			? 'youraddress.' . preg_replace('|^www\.|', '', $current_site->domain) 
 			: $current_site->domain . $current_site->path . 'youraddress'
 		;
@@ -87,7 +87,7 @@ function wdfb_get_login_redirect ($force_admin_redirect=false) {
 		$base = ('admin_url' == $base) ? 'admin_url' : 'site_url';
 		return $base($url);
 	} else return defined('BP_VERSION') ? home_url() : $force_admin_redirect ? admin_url() : home_url();
-}
+}// @TODO: EXPOSE FOR FILTERING AND ADD IN SOME MACRO EXPANSION
 
 /**
  * Helper function for fetching the image for OpenGraph info.

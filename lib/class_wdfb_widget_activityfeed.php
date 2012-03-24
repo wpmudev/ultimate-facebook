@@ -133,7 +133,7 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 			$data = Wdfb_OptionsRegistry::get_instance();
 			$key = $data->get_option('wdfb_api', 'app_key');
 			$locale = wdfb_get_locale();
-			echo "<iframe src='//www.facebook.com/plugins/activity.php?site={$url}&amp;width={$width}&amp;height={$height}&amp;header={$show_header}&amp;colorscheme={$color_scheme}&amp;linktarget={$links}&amp;locale={$locale}&amp;border_color&amp;font&amp;recommendations={$recommendations}&amp;appId=254843611229518' scrolling='no' frameborder='0' style='border:none; overflow:hidden; width:{$width}px; height:{$height}px;' allowTransparency='true'></iframe>";
+			echo "<iframe src='//www.facebook.com/plugins/activity.php?api_key={$key}&amp;app_id={$key}&amp;site={$url}&amp;width={$width}&amp;height={$height}&amp;header={$show_header}&amp;colorscheme={$color_scheme}&amp;linktarget={$links}&amp;locale={$locale}&amp;border_color&amp;font&amp;recommendations={$recommendations}&amp;appId={$key}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; width:{$width}px; height:{$height}px;' allowTransparency='true'></iframe>";
 		} 
 
 		echo $after_widget;

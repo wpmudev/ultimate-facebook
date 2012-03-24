@@ -28,7 +28,7 @@ class Wdfb_PublicPages {
 	function js_load_scripts () {
 		wp_enqueue_script('jquery');
 		$locale = wdfb_get_locale();
-		wp_enqueue_script('facebook-all', 'http://connect.facebook.net/' . $locale . '/all.js');
+		wp_enqueue_script('facebook-all',  WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js');
 	}
 
 	function js_inject_fb_login_script () {
@@ -73,6 +73,20 @@ class Wdfb_PublicPages {
 	function inject_opengraph_info () {
 		$title = $url = $site_name = $description = $id = $image = false;
 		if (is_singular()) {
+			global $post;
+			$id = $post->ID;
+			$title = get_the_title($post->post_title);
+			$url = get_permalink($id);
+			$site_name = get_option('blogname');
+			$content =
+				($post->post_excerpt) ? $post->post_excerpt
+				: (function_exists('load_membership_plugins') ? strip_shortcodes($post->post_content) : do_shortcode($post->post_content))
+			;
+			$text = htmlspecialchars(wp_strip_all_tags($content), ENT_QUOTES);
+			if (strlen($text) > 250) $description = preg_replace('/(.{0,247}).*/um', '$1', preg_replace('/\r|\n/', ' ', $text)) . '...'; //substr($text, 0, 250) . "...";
+			else $description = $text;
+			
+			/*
 			if (have_posts()) while (have_posts()) {
 				the_post();
 				$title = get_the_title($post->post_title);
@@ -84,6 +98,8 @@ class Wdfb_PublicPages {
 				else $description = $text;
 				$id = get_the_ID();
 			}
+			*/
+			
 		} else {
 			$title = get_option('blogname');
 			$url = home_url('/');
@@ -116,9 +132,15 @@ class Wdfb_PublicPages {
 			}
 		}
 		$type = $type ? $type : (is_singular() ? 'article' : 'website');
+		$type = apply_filters('wdfb-opengraph-type', $type);
 		echo "<meta property='og:type' content='{$type}' />\n";
 
 		// Defaults
+		$title = apply_filters('wdfb-opengraph-title', $title);
+		$url = apply_filters('wdfb-opengraph-url', $url);
+		$site_name = apply_filters('wdfb-opengraph-site_name', $site_name);
+		$description = apply_filters('wdfb-opengraph-description', $description);
+
 		if ($title) echo "<meta property='og:title' content='{$title}' />\n";
 		if ($url) echo "<meta property='og:url' content='{$url}' />\n";
 		if ($site_name) echo "<meta property='og:site_name' content='{$site_name}' />\n";
@@ -197,7 +219,7 @@ class Wdfb_PublicPages {
 		$meta = get_comment_meta($comment->comment_ID, 'wdfb_comment', true);
 		if (!$meta) return $old;
 
-		return '<img src="http://graph.facebook.com/' . $meta['fb_author_id'] . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
+		return '<img src="' . WDFB_PROTOCOL  . 'graph.facebook.com/' . $meta['fb_author_id'] . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
 	}
 
 	function get_fb_avatar ($avatar, $id_or_email) {
@@ -219,7 +241,7 @@ class Wdfb_PublicPages {
 		$fb_uid = $this->model->get_fb_user_from_wp($wp_uid);
 		if (!$fb_uid) return $avatar;
 
-		return "<img class='avatar' src='http://graph.facebook.com/{$fb_uid}/picture' />";
+		return "<img class='avatar' src='" . WDFB_PROTOCOL  . "graph.facebook.com/{$fb_uid}/picture' />";
 	}
 
 	function inject_optional_facebook_registration_button () {
@@ -382,12 +404,19 @@ class Wdfb_PublicPages {
 				);
 				break;
 			case "events":
+				$time = time();
+				$start_time = apply_filters('wdfb-autopost-events-start_time', $time, $post);
+				$end_time = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
+				$location = apply_filters('wdfb-autopost-events-location', false, $post);
 				$send = array(
 					'name' => $post_title,
 					'description' => $post_content,
-					'start_time' => time(),
-					'location' => 'someplace',
+					'start_time' => $start_time,
+					'end_time' => $end_time,
 				);
+				if ($location) {
+					$send['location'] = $location;
+				}
 				break;
 			case "feed":
 			default:

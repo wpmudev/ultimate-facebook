@@ -48,7 +48,7 @@ class Wdfb_ErrorLog {
 
 	function _update_notice_queue ($notice) {
 		$notices = $this->get_all_notices();
-		if (count($notices) >= $this->_limit) $notices = array_slice($notices, (($this->_limit * -1)-1), $this->_limit-1);
+		if (count($notices) >= $this->_limit) $notices = array_slice($notices, -$this->_limit);// * -1)), $this->_limit-1);
 		$notices[] = $notice;
 		update_option('wdfb_notice_log', $notices);
 	}
