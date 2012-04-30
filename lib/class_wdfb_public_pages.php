@@ -75,31 +75,13 @@ class Wdfb_PublicPages {
 		if (is_singular()) {
 			global $post;
 			$id = $post->ID;
-			$title = get_the_title($post->post_title);
+			$title = $post->post_title;
 			$url = get_permalink($id);
 			$site_name = get_option('blogname');
-			$content =
-				($post->post_excerpt) ? $post->post_excerpt
-				: (function_exists('load_membership_plugins') ? strip_shortcodes($post->post_content) : do_shortcode($post->post_content))
-			;
+			$content = $post->post_excerpt ? $post->post_excerpt : strip_shortcodes($post->post_content);
 			$text = htmlspecialchars(wp_strip_all_tags($content), ENT_QUOTES);
 			if (strlen($text) > 250) $description = preg_replace('/(.{0,247}).*/um', '$1', preg_replace('/\r|\n/', ' ', $text)) . '...'; //substr($text, 0, 250) . "...";
 			else $description = $text;
-			
-			/*
-			if (have_posts()) while (have_posts()) {
-				the_post();
-				$title = get_the_title($post->post_title);
-				$url = get_permalink();
-				$site_name = get_option('blogname');
-				$content = function_exists('load_membership_plugins') ? strip_shortcodes(get_the_content()) : do_shortcode(get_the_content());
-				$text = htmlspecialchars(strip_tags($content), ENT_QUOTES);
-				if (strlen($text) > 250) $description = substr($text, 0, 250) . "&hellip;";
-				else $description = $text;
-				$id = get_the_ID();
-			}
-			*/
-			
 		} else {
 			$title = get_option('blogname');
 			$url = home_url('/');

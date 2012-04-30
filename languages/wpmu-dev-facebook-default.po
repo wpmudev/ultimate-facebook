@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Facebook Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-26 15:49+0100\n"
-"PO-Revision-Date: 2012-01-26 15:49+0100\n"
+"POT-Creation-Date: 2012-04-30 14:56+0100\n"
+"PO-Revision-Date: 2012-04-30 14:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: Incsub\n"
 "MIME-Version: 1.0\n"
@@ -400,7 +400,7 @@ msgid "If posting to a page, post <b>AS</b> page"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:635
-msgid "Choose the Facebook user ID from the <em>user</em> box, or leave selection to &quot;Me&quot; to use your own profile. Remember, the plugin needs to be granted <strong>extended permissions</strong> to access the profile. <br />To allow posting to a fan page, you need to be administrator of that page. Also, extended permissions will have to be granted, too"
+msgid "Choose the Facebook user ID from the <em>user</em> box, or leave selection to &quot;Me&quot; to use your own profile. Remember, the plugin needs to be granted <strong>extended permissions</strong> to access the profile. <br />To post to a fan page as page, you need to be administrator of that page."
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:644
@@ -916,36 +916,36 @@ msgstr ""
 msgid "Please, wait..."
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:484
+#: lib/class_wdfb_admin_pages.php:509
 #, php-format
 msgid "Me (%s)"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:517
+#: lib/class_wdfb_admin_pages.php:542
 msgid "Facebook Publishing"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:593
+#: lib/class_wdfb_admin_pages.php:639
 msgid "Share"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:609
+#: lib/class_wdfb_admin_pages.php:655
 msgid "Post published on Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:609
+#: lib/class_wdfb_admin_pages.php:655
 msgid "Publishing on Facebook failed"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:639
+#: lib/class_wdfb_admin_pages.php:685
 msgid "On Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:645
+#: lib/class_wdfb_admin_pages.php:691
 msgid "Yes"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:645
+#: lib/class_wdfb_admin_pages.php:691
 msgid "No"
 msgstr ""
 
@@ -958,22 +958,22 @@ msgstr ""
 msgid "Log out"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:158
 #: lib/class_wdfb_public_pages.php:162
+#: lib/class_wdfb_public_pages.php:166
 #: lib/class_wdfb_widget_connect.php:78
 #: lib/class_wdfb_widget_connect.php:91
 msgid "Login with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:227
+#: lib/class_wdfb_public_pages.php:231
 msgid "Register with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:279
+#: lib/class_wdfb_public_pages.php:283
 msgid "My new blog"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:308
+#: lib/class_wdfb_public_pages.php:312
 msgid "Could not register such user"
 msgstr ""
 
@@ -1043,7 +1043,7 @@ msgid "Shows Facebook Activity Feed."
 msgstr ""
 
 #: lib/class_wdfb_widget_activityfeed.php:29
-#: lib/class_wdfb_widget_albums.php:63
+#: lib/class_wdfb_widget_albums.php:64
 #: lib/class_wdfb_widget_connect.php:33
 #: lib/class_wdfb_widget_events.php:63
 msgid "Title:"
@@ -1106,42 +1106,50 @@ msgstr ""
 msgid "Your app doesn't have enough permissions to access your albums"
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:56
+#: lib/class_wdfb_widget_albums.php:57
 #: lib/class_wdfb_widget_events.php:54
 #, php-format
 msgid "You should be logged into your Facebook account when adding this widget. <a href=\"%s\">Click here to do so now</a>, then refresh this page."
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:68
+#: lib/class_wdfb_widget_albums.php:69
 msgid "Album ID:"
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:70
+#: lib/class_wdfb_widget_albums.php:71
 msgid "Select album"
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:74
+#: lib/class_wdfb_widget_albums.php:75
 msgid "Display only this many photos:"
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:83
+#: lib/class_wdfb_widget_albums.php:84
 msgid "Photos per row:"
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:92
+#: lib/class_wdfb_widget_albums.php:93
 msgid "Image size:"
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:96
+#: lib/class_wdfb_widget_albums.php:97
 msgid "Format: width x height. <br />Omitting one of dimensions will show your images in scale."
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:100
+#: lib/class_wdfb_widget_albums.php:101
 msgid "Crop image height:"
 msgstr ""
 
-#: lib/class_wdfb_widget_albums.php:102
+#: lib/class_wdfb_widget_albums.php:103
 msgid "Selecting this option will crop your oversized images vertically."
+msgstr ""
+
+#: lib/class_wdfb_widget_albums.php:107
+msgid "Link to image on Facebook:"
+msgstr ""
+
+#: lib/class_wdfb_widget_albums.php:109
+msgid "By default, your images will be linked to their full size sources. Selecting this option will link your images to Facebook ones."
 msgstr ""
 
 #: lib/class_wdfb_widget_connect.php:8

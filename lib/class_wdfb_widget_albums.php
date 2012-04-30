@@ -47,6 +47,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$img_w = isset($instance['img_h']) ? $img_w : '75';
 		$img_h = isset($instance['img_w']) ? $img_h : '75';
 		$img_crop = $instance['img_crop'];
+		$fb_open = $instance['fb_open'];
 
 		$html = '';
 
@@ -102,6 +103,12 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$html .= '<br /><small>' . __('Selecting this option will crop your oversized images vertically.', 'wdfb')  . '</small>';
 		$html .= '</p>';
 
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('fb_open') . '">' . __('Link to image on Facebook:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('fb_open') . '" id="' . $this->get_field_id('fb_open') . '" value="1" ' . ($fb_open ? 'checked="checked"' : '') . ' />';
+		$html .= '<br /><small>' . __('By default, your images will be linked to their full size sources. Selecting this option will link your images to Facebook ones.', 'wdfb')  . '</small>';
+		$html .= '</p>';
+
 		echo $html;
 	}
 
@@ -114,6 +121,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$instance['img_w'] = strip_tags($new_instance['img_w']);
 		$instance['img_h'] = strip_tags($new_instance['img_h']);
 		$instance['img_crop'] = isset($new_instance['img_crop']) ? 1 : 0;
+		$instance['fb_open'] = isset($new_instance['fb_open']) ? 1 : 0;
 
 		//$instance['photos'] = empty($instance['photos']) ? $this->model->get_album_photos($instance['album_id'], $limit) : $instance['photos'];
 
@@ -128,22 +136,9 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$img_w = (int)$instance['img_w'];
 		$img_h = (int)$instance['img_h'];
 		$img_crop = (int)$instance['img_crop'];
+		$fb_open = (int)$instance['fb_open'];
 		$album_id = $instance['album_id'];
 
-/*
-		$photos = $this->model->get_album_photos($album_id, $limit);
-		if (!empty($photos['data'])) {
-			// We have a valid FB connection.
-			// Use that to refresh data:
-			// Update the instance with fresh photos
-			$all_instances = $this->get_settings();
-			$all_instances[$this->number]['photos'] = $photos;
-			$this->save_settings($all_instances);
-		} else {
-			$photos = $instance['photos'];
-		}
-		$photos = $photos['data'];
-*/
 		$api = new Wdfb_AlbumPhotosBuffer;
 		$photos = $api->get_for($album_id);
 
@@ -157,8 +152,12 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 			foreach ($photos as $photo) {
 				if ($overall >= $limit) break;
 				$style = $img_crop ? "display:block;float:left;height:{$img_h}px;overflow:hidden" : '';
+				$url = $fb_open
+					? 'http://www.facebook.com/photo.php?fbid=' . $photo['id']
+					: $photo['images'][0]['source']
+				;
 				echo '<td valign="top">' .
-					'<a href="' . $photo['images'][0]['source'] . '" style="' . $style . '">' .
+					'<a href="' . $url . '" style="' . $style . '">' .
 						'<img src="' . $photo['images'][count($photo['images'])-1]['source'] . '" ' .
 						($img_w ? "width='{$img_w}'" : '') .
 						($img_h && !$img_crop ? "height='{$img_h}'" : '') .

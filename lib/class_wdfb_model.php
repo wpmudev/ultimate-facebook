@@ -171,6 +171,18 @@ class Wdfb_Model {
 		$sql = "SELECT * FROM " . $this->db->base_prefix . "usermeta WHERE meta_key='wdfb_api_accounts'";
 		return $this->db->get_results($sql, ARRAY_A);
 	}
+	
+	/**
+	 * Gets an existing app token for the user.
+	 */
+	function get_user_api_token ($fb_uid) {
+		global $current_user;
+		$meta = get_user_meta($current_user->id, 'wdfb_api_accounts', true);
+		$token = isset($meta['auth_tokens']) ? $meta['auth_tokens'] : array();
+		if (!$token) return false;
+		if (!isset($token[$fb_uid])) return false;
+		return $token[$fb_uid];
+	}
 
 	function comment_already_imported ($fb_cid) {
 		if (!$fb_cid) return false;
@@ -348,8 +360,17 @@ class Wdfb_Model {
 
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
 		$post['auth_token'] = $tokens[$fid];
-		if ($as_page) $post['access_token'] = $tokens[$fid];
-		//$post['access_token'] = $tokens[$fid]; // No offline_access
+		if ($as_page) {
+			try {
+				$resp = $this->fb->api($fid, array('auth_token' => $tokens[$fid]));
+			} catch (Exception $e) {
+				$this->log->notice("Unable to post to Facebook as page.");
+			}
+			
+			// can_post checks perms for posting as user
+			if (@$resp['can_post']) $post['access_token'] = $tokens[$fid];
+			else $this->log->notice("Unable to post to Facebook as page.");
+		}
 
 		try {
 			$ret = $this->fb->api('/' . $fid . '/' . $type . '/', 'POST', $post);

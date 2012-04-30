@@ -635,7 +635,7 @@ class Wdfb_AdminFormRenderer {
 		echo '<div><small>' . __("" .
 			"Choose the Facebook user ID from the <em>user</em> box, or leave selection to &quot;Me&quot; to use your own profile. " .
 			"Remember, the plugin needs to be granted <strong>extended permissions</strong> to access the profile. <br />" .
-			"To allow posting to a fan page, you need to be administrator of that page. Also, extended permissions will have to be granted, too".
+			"To post to a fan page as page, you need to be administrator of that page.".
 		"", 'wdfb') . '</small></div>';
 	}
 	function create_allow_post_metabox_box () {

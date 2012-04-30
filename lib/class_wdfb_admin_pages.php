@@ -454,43 +454,48 @@ class Wdfb_AdminPages {
 		$app_id = trim($this->data->get_option('wdfb_api', 'app_key'));
 		$app_secret = trim($this->data->get_option('wdfb_api', 'secret_key'));
 		if (!$app_id || !$app_secret) return false; // Plugin not yet configured
-
-		$url = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}";
-		$page = wp_remote_get($url, array(
-			'method' 		=> 'GET',
-			'timeout' 		=> '5',
-			'redirection' 	=> '5',
-			'user-agent' 	=> 'wdfb',
-			'blocking'		=> true,
-			'compress'		=> false,
-			'decompress'	=> true,
-			'sslverify'		=> false
-		));
-		if(is_wp_error($page)) return false; // Request fail
-		if ((int)$page['response']['code'] != 200) return false; // Request fail
-
-		$token = substr($page['body'], 13);
-		if (!$token) return false;
 		
-		/*
-		// New token
-		$url = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}";
-		$page = wp_remote_get($url, array(
-			'method' 		=> 'GET',
-			'timeout' 		=> '5',
-			'redirection' 	=> '5',
-			'user-agent' 	=> 'wdfb',
-			'blocking'		=> true,
-			'compress'		=> false,
-			'decompress'	=> true,
-			'sslverify'		=> false
-		));
-		if(is_wp_error($page)) return false; // Request fail
-		if ((int)$page['response']['code'] != 200) return false; // Request fail
-
-		$token = substr($page['body'], 13);
-		if (!$token) return false;
-		*/
+		$token = $this->model->get_user_api_token($fb_uid);
+	
+		if (!$token) {
+			// Old token processing
+			// Also, requires the new token
+			$url = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}";
+			$page = wp_remote_get($url, array(
+				'method' 		=> 'GET',
+				'timeout' 		=> '5',
+				'redirection' 	=> '5',
+				'user-agent' 	=> 'wdfb',
+				'blocking'		=> true,
+				'compress'		=> false,
+				'decompress'	=> true,
+				'sslverify'		=> false
+			));
+			if(is_wp_error($page)) return false; // Request fail
+			if ((int)$page['response']['code'] != 200) return false; // Request fail
+	
+			$token = substr($page['body'], 13);
+			if (!$token) return false;
+		} else {
+			// New token processing
+			// Also extends existing token expiry time
+			$url = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}";
+			$page = wp_remote_get($url, array(
+				'method' 		=> 'GET',
+				'timeout' 		=> '5',
+				'redirection' 	=> '5',
+				'user-agent' 	=> 'wdfb',
+				'blocking'		=> true,
+				'compress'		=> false,
+				'decompress'	=> true,
+				'sslverify'		=> false
+			));
+			if(is_wp_error($page)) return false; // Request fail
+			if ((int)$page['response']['code'] != 200) return false; // Request fail
+			
+			$token = substr($page['body'], 13);
+			if (!$token) return false;
+		}
 
 		if (!$this->data->get_option('wdfb_api', 'prevent_linked_accounts_access')) {
 			$page_tokens = $this->model->get_pages_tokens();
@@ -622,12 +627,14 @@ class Wdfb_AdminPages {
 				$permalink = $use_shortlink ? wp_get_shortlink($post_id) : get_permalink($post_id);
 				$permalink = $permalink ? $permalink : get_permalink($post_id);
 				$picture = wdfb_get_og_image($post_id);
+				$description = get_option('blogdescription');
+				$description = $description ? $description : get_bloginfo('name');
 				$send = array(
-					'caption' => substr($post_content, 0, 999),
+					'caption' => preg_replace('/(.{0,950}).*/um', '$1', preg_replace('/\r|\n/', ' ', $post_content)), //substr($post_content, 0, 999),
 					'message' => $post_title,
 					'link' => $permalink,
 					'name' => $post->post_title,
-					'description' => get_option('blogdescription'),
+					'description' => $description,
 					'actions' => array (
 						'name' => __('Share', 'wdfb'),
 						'link' => 'http://www.facebook.com/sharer.php?u=' . rawurlencode($permalink),

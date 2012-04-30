@@ -120,7 +120,7 @@ function wdfb_get_og_image ($id=false) {
 	if ($id) {
 		$post = get_post($id);
 		$html = $post->post_content;
-		if (!function_exists('load_membership_plugins')) $html = apply_filters('the_content', $html);
+		if (!function_exists('load_membership_plugins') && !defined('GRUNION_PLUGIN_DIR')) $html = apply_filters('the_content', $html);
 	} else if (is_home() && $data->get_option('wdfb_opengraph', 'fallback_image')) {
 		return apply_filters(
 			'wdfb-opengraph-image',

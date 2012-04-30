@@ -103,25 +103,6 @@ class Wdfb_MarkerReplacer {
 
 		if (!$atts['for']) return ''; // We don't know whose events to show
 
-		// Attempt to fetch the freshest events
-		// Update cache if we can
-
-/*		
-		$now = time();
-		$last_checked = (int)get_post_meta($post_id, '_wdfb_last_checked_events', true);
-		if (!$last_checked || ($last_checked + WDFB_TRANSIENT_TIMEOUT) < $now) {
-			$new_events = $this->model->get_events_for($atts['for']);
-			if(!empty($new_events['data'])) {
-				$events = $new_events['data'];
-				update_post_meta($post_id, 'wdfb_events', $events);
-				update_post_meta($post_id, '_wdfb_last_checked_events', $now);
-			} else {
-				$events = get_post_meta($post_id, 'wdfb_events', true);
-			}
-		} else {
-				$events = get_post_meta($post_id, 'wdfb_events', true);			
-		}
-*/
 		$api = new Wdfb_EventsBuffer;
 		$events = $api->get_for($atts['for']);
 		if (!is_array($events)) return $content;
@@ -165,12 +146,15 @@ class Wdfb_MarkerReplacer {
 			'photo_width' => 75,
 			'photo_height' => false,
 			'crop' => false,
+			'link_to' => 'source',
 			'columns' => false,
 		), $atts);
 
 		if (!$atts['id']) return ''; // We don't know what album to show
 		$img_w = (int)$atts['photo_width'];
 		$img_h = (int)$atts['photo_height'];
+
+		$fb_open = ('source' != $atts['link_to']);
 		
 		$api = new Wdfb_AlbumPhotosBuffer;
 		$photos = $api->get_for($atts['id']);
@@ -188,7 +172,11 @@ class Wdfb_MarkerReplacer {
 		foreach ($photos as $photo) {
 			$photo_idx = isset($photo['images'][$display_idx]) ? $display_idx : count($photo['images'])-1;
 			$style = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
-			$ret .= '<a href="' . $photo['images'][0]['source'] . 
+			$url = $fb_open
+				? 'http://www.facebook.com/photo.php?fbid=' . $photo['id']
+				: $photo['images'][0]['source']
+			;
+			$ret .= '<a href="' . $url . 
 				'" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' >' .
 					'<img src="' . $photo['images'][$photo_idx]['source'] . '" ' .
 						($img_w ? "width='{$img_w}'" : '') .

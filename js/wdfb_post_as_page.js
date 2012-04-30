@@ -1,15 +1,9 @@
+/*	
 (function ($) {
 $(function () {
-	
+
 $("#post_as_page").change(function () {
-	if ($("#post_as_page").is(":checked")) /*FB.ui({
-		"method": "permissions.request",
-		"scope": "offline_access"
-	}, function (resp) { 
-		if ("offline_access" != resp.perms) $("#post_as_page").attr("checked", false);
-		else FB.Dialog.remove(FB.Dialog._active);
-	});*/
-	FB.getLoginStatus(function (resp) {
+	if ($("#post_as_page").is(":checked")) FB.getLoginStatus(function (resp) {
 		FB.api({
 			"method": "fql.query",
 			"query": "SELECT offline_access FROM permissions WHERE uid=me()"
@@ -22,7 +16,7 @@ $("#post_as_page").change(function () {
 			} catch (e) {
 				all_good = false;
 			}
-			if (!all_good) {//$("#post_as_page").attr("checked", false);
+			if (!all_good) {
 				FB.login(function () {
 					FB.Dialog.remove(FB.Dialog._active);
 					window.location.reload(true);
@@ -37,3 +31,4 @@ $("#post_as_page").change(function () {
 
 });
 })(jQuery);
+*/
