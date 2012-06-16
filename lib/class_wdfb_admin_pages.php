@@ -343,7 +343,7 @@ class Wdfb_AdminPages {
 		'</p></div>';
 	}
 
-	function get_fb_avatar ($avatar, $id_or_email) {
+	function get_fb_avatar ($avatar, $id_or_email, $size=false) {
 		$fb_uid = false;
 		$wp_uid = false;
 		if (is_object($id_or_email)) {
@@ -362,7 +362,13 @@ class Wdfb_AdminPages {
 		$fb_uid = $this->model->get_fb_user_from_wp($wp_uid);
 		if (!$fb_uid) return $avatar;
 
-		return "<img class='avatar' src='" . WDFB_PROTOCOL  . "graph.facebook.com/{$fb_uid}/picture' />";
+		$img_size = $size ? "width='{$size}px'" : '';
+		$fb_size_map = false;
+		if ($size <= 50) $fb_size_map = '?type=small';
+		if ($size > 50 && $size <= 100) $fb_size_map = '?type=normal';
+		if ($size > 100) $fb_size_map = '?type=large';
+
+		return "<img class='avatar' src='" . WDFB_PROTOCOL  . "graph.facebook.com/{$fb_uid}/picture{$fb_size_map}' {$img_size} />";
 	}
 
 	function js_load_scripts () {
@@ -450,36 +456,24 @@ class Wdfb_AdminPages {
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
 
 		$fb_uid = $this->model->fb->getUser();
-
 		$app_id = trim($this->data->get_option('wdfb_api', 'app_key'));
 		$app_secret = trim($this->data->get_option('wdfb_api', 'secret_key'));
 		if (!$app_id || !$app_secret) return false; // Plugin not yet configured
-		
+
+		// Token is now long-term token	
 		$token = $this->model->get_user_api_token($fb_uid);
-	
+		// Make sure it is
+		$token = preg_match('/^' . preg_quote("{$app_id}|") . '/', $token) ? false : $token;
+// Just force the token reset, for now
+$token = false;
+
 		if (!$token) {
-			// Old token processing
-			// Also, requires the new token
-			$url = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}";
-			$page = wp_remote_get($url, array(
-				'method' 		=> 'GET',
-				'timeout' 		=> '5',
-				'redirection' 	=> '5',
-				'user-agent' 	=> 'wdfb',
-				'blocking'		=> true,
-				'compress'		=> false,
-				'decompress'	=> true,
-				'sslverify'		=> false
-			));
-			if(is_wp_error($page)) return false; // Request fail
-			if ((int)$page['response']['code'] != 200) return false; // Request fail
-	
-			$token = substr($page['body'], 13);
+			// Get temporary token
+			$token = $this->model->fb->getAccessToken();
 			if (!$token) return false;
-		} else {
-			// New token processing
-			// Also extends existing token expiry time
-			$url = "https://graph.facebook.com/oauth/access_token?type=client_cred&client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}";
+
+			// Exchange it for the actual long-term token
+			$url = "https://graph.facebook.com/oauth/access_token?client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}";
 			$page = wp_remote_get($url, array(
 				'method' 		=> 'GET',
 				'timeout' 		=> '5',
@@ -492,13 +486,14 @@ class Wdfb_AdminPages {
 			));
 			if(is_wp_error($page)) return false; // Request fail
 			if ((int)$page['response']['code'] != 200) return false; // Request fail
-			
-			$token = substr($page['body'], 13);
+
+			parse_str($page['body'], $response);
+			$token = isset($response['access_token']) ? $response['access_token'] : false;
 			if (!$token) return false;
 		}
 
 		if (!$this->data->get_option('wdfb_api', 'prevent_linked_accounts_access')) {
-			$page_tokens = $this->model->get_pages_tokens();
+			$page_tokens = $this->model->get_pages_tokens($token);
 			$page_tokens = isset($page_tokens['data']) ? $page_tokens['data'] : array();
 		} else {
 			$page_tokens = array();
@@ -508,11 +503,14 @@ class Wdfb_AdminPages {
 		$api['auth_tokens'][$fb_uid] = $token;
 		$api['auth_accounts'][$fb_uid] = sprintf(__("Me (%s)", 'wdfb'), $fb_uid);
 		foreach ($page_tokens as $ptk) {
+			$ptk = (array)$ptk;
 			if (!isset($ptk['id']) || !isset($ptk['access_token'])) continue;
 			if ($this->data->get_option('wdfb_api', 'prevent_linked_accounts_access')) if ($ptk['id'] != $app_id) continue;
+
 			$api['auth_tokens'][$ptk['id']] = $ptk['access_token'];
 			$api['auth_accounts'][$ptk['id']] = $ptk['name'];
 		}
+
 		$user = wp_get_current_user();
 		update_user_meta($user->ID, 'wdfb_api_accounts', $api);
 		$this->merge_api_tokens();
@@ -520,14 +518,24 @@ class Wdfb_AdminPages {
 	}
 
 	function merge_api_tokens () {
+		$user = wp_get_current_user();
 		$api = $this->data->get_key('wdfb_api');
 		$auts_meta = $this->model->get_all_user_tokens();
-
+		$this_guy = false;
 		foreach ($auts_meta as $meta) {
+			if ($meta['user_id'] == $user->ID) {
+				$this_guy = $meta;
+				continue;
+			}
 			$data = unserialize($meta['meta_value']);
 			if (is_array($data['auth_tokens'])) foreach ($data['auth_tokens'] as $fb_uid => $token) $api['auth_tokens'][$fb_uid] = $token;
 			if (is_array($data['auth_accounts'])) foreach ($data['auth_accounts'] as $fb_uid => $acc) $api['auth_accounts'][$fb_uid] = $acc;
 		}
+		// Make sure the current user is processed last - trump other tokens
+		$data = unserialize($this_guy['meta_value']);
+		if (is_array($data['auth_tokens'])) foreach ($data['auth_tokens'] as $fb_uid => $token) $api['auth_tokens'][$fb_uid] = $token;
+		if (is_array($data['auth_accounts'])) foreach ($data['auth_accounts'] as $fb_uid => $acc) $api['auth_accounts'][$fb_uid] = $acc;
+
 		$this->data->set_key('wdfb_api', $api);
 		update_option('wdfb_api', $api);
 	}
@@ -551,7 +559,7 @@ class Wdfb_AdminPages {
 		echo $frm->facebook_publishing_metabox();
 	}
 
-	function publish_post_on_facebook ($id, $new, $old) {
+	function publish_post_on_facebook ($id, $new=false, $old=false) {
 		if (!$id) return false;
 
 		$post_id = $id;
@@ -853,7 +861,7 @@ class Wdfb_AdminPages {
 
 		// Connect
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
-			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 2);
+			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
 			// Single-click registration enabled
 			add_action('wp_ajax_nopriv_wdfb_perhaps_create_wp_user', array($this, 'json_perhaps_create_wp_user'));
 		}

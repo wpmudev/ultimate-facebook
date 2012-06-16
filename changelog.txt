@@ -5,6 +5,15 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.2 - 2012-06-15
+----------------------------------------------------------------------
+- Fix for long-term tokens handling.
+- Fix for autopost warnings.
+- Filtering profile name, with sensible default.
+- Added LikeBox widget filterable hiding logic.
+- Added Facebook avatar size mapping to admin gravatar filters.
+- Added registration postprocessing filter.
+
 2.1 - 2012-04-30
 ----------------------------------------------------------------------
 - Deprecated offline_access.

@@ -19,6 +19,7 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$show_faces = esc_attr($instance['show_faces']);
 		$show_stream = esc_attr($instance['show_stream']);
 		$color_scheme = esc_attr($instance['color_scheme']);
+		$hide_if_logged_out = esc_attr($instance['hide_if_logged_out']);
 
 		// Set defaults
 		// ...
@@ -57,6 +58,11 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$html .= '<label for="' . $this->get_field_id('show_stream') . '">' . __('Show stream:', 'wdfb') . '</label> ';
 		$html .= '<input type="checkbox" name="' . $this->get_field_name('show_stream') . '" id="' . $this->get_field_id('show_stream') . '" value="1" ' . ($show_stream ? 'checked="checked"' : '') . ' />';
 		$html .= '</p>';
+	
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('hide_if_logged_out') . '">' . __('Hide widget if user is not logged into Facebook:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('hide_if_logged_out') . '" id="' . $this->get_field_id('hide_if_logged_out') . '" value="1" ' . ($hide_if_logged_out ? 'checked="checked"' : '') . ' />';
+		$html .= '</p>';
 
 		$html .= '<p>';
 		$html .= '<label for="' . $this->get_field_id('color_scheme') . '">' . __('Color scheme:', 'wdfb') . '</label> ';
@@ -79,6 +85,7 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$instance['show_faces'] = strip_tags($new_instance['show_faces']);
 		$instance['show_stream'] = strip_tags($new_instance['show_stream']);
 		$instance['color_scheme'] = strip_tags($new_instance['color_scheme']);
+		$instance['hide_if_logged_out'] = strip_tags($new_instance['hide_if_logged_out']);
 
 		return $instance;
 	}
@@ -96,23 +103,40 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$show_faces = $show_faces ? 'true' : 'false';
 		$show_stream = (int)@$instance['show_stream'];
 		$show_stream = $show_stream ? 'true' : 'false';
+		$hide_if_logged_out = (int)@$instance['hide_if_logged_out'];
 		$color_scheme = $instance['color_scheme'];
 		$color_scheme = $color_scheme ? $color_scheme : 'light';
 
 		$height = $height ? $height : (('true' == $show_stream || 'true' == $show_faces) ? 427 : 62);
 		
 		$locale = wdfb_get_locale();
+		$id = "wdfb-likebox-" . md5(microtime());
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo '<iframe src="http://www.facebook.com/plugins/likebox.php?href=' . 
+		echo '<iframe id="' . $id . '" src="http://www.facebook.com/plugins/likebox.php?href=' . 
 			$url . '&amp;width=' . $width . '&amp;locale=' . $locale . '&amp;colorscheme=' . 
 			$color_scheme . '&amp;show_faces=' . $show_faces . '&amp;stream=' . 
 			$show_stream . '&amp;header=' . $show_header . '&amp;height='. 
 			$height . '" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . 
 			$width .'px; height:' . $height . 'px;" allowTransparency="true"></iframe>'
 		;
+
+		if ($hide_if_logged_out) {
+			$hide_js = <<<EOWdfbLikeBoxHidingJs
+<script type="text/javascript">
+(function ($) {
+$(function () {
+FB.getLoginStatus(function(response) {
+  if (response.status != 'connected') $('#{$id}').parents(".widget").remove();
+});
+});
+})(jQuery);
+</script>
+EOWdfbLikeBoxHidingJs;
+			echo apply_filters('wdfb-widgets-likebox-hide_js', $hide_js, $id);
+		}
 
 		echo $after_widget;
 	}

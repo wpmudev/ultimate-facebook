@@ -159,11 +159,11 @@ class Wdfb_PublicPages {
 	}
 
 	function inject_fb_login () {
-		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect(true) . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect(true) . '"  onlogin="_wdfb_notifyAndRedirect();">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 	}
 
 	function inject_fb_login_for_bp () {
-		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '"  onlogin="_wdfb_notifyAndRedirect();">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 	}
 
 	function inject_fb_comments_admin_og () {
@@ -201,10 +201,15 @@ class Wdfb_PublicPages {
 		$meta = get_comment_meta($comment->comment_ID, 'wdfb_comment', true);
 		if (!$meta) return $old;
 
-		return '<img src="' . WDFB_PROTOCOL  . 'graph.facebook.com/' . $meta['fb_author_id'] . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
+		$fb_size_map = false;
+		if ($size <= 50) $fb_size_map = '?type=small';
+		if ($size > 50 && $size <= 100) $fb_size_map = '?type=normal';
+		if ($size > 100) $fb_size_map = '?type=large';
+
+		return '<img src="' . WDFB_PROTOCOL  . 'graph.facebook.com/' . $meta['fb_author_id'] . '/picture' . $fb_size_map . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
 	}
 
-	function get_fb_avatar ($avatar, $id_or_email) {
+	function get_fb_avatar ($avatar, $id_or_email, $size=false) {
 		$fb_uid = false;
 		$wp_uid = false;
 		if (is_object($id_or_email)) {
@@ -223,7 +228,13 @@ class Wdfb_PublicPages {
 		$fb_uid = $this->model->get_fb_user_from_wp($wp_uid);
 		if (!$fb_uid) return $avatar;
 
-		return "<img class='avatar' src='" . WDFB_PROTOCOL  . "graph.facebook.com/{$fb_uid}/picture' />";
+		$img_size = $size ? "width='{$size}px'" : '';
+		$fb_size_map = false;
+		if ($size <= 50) $fb_size_map = '?type=small';
+		if ($size > 50 && $size <= 100) $fb_size_map = '?type=normal';
+		if ($size > 100) $fb_size_map = '?type=large';
+
+		return "<img class='avatar' src='" . WDFB_PROTOCOL  . "graph.facebook.com/{$fb_uid}/picture{$fb_size_map}' {$img_size} />";
 	}
 
 	function inject_optional_facebook_registration_button () {
@@ -446,7 +457,7 @@ class Wdfb_PublicPages {
 
 		// Connect
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
-			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 2);
+			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
 
 			add_action('login_head', array($this, 'js_inject_fb_login_script'));
 			add_action('login_head', array($this, 'js_setup_ajaxurl'));

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Facebook Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-30 14:56+0100\n"
-"PO-Revision-Date: 2012-04-30 14:56+0100\n"
+"POT-Creation-Date: 2012-06-15 15:04+0100\n"
+"PO-Revision-Date: 2012-06-15 15:04+0100\n"
 "Last-Translator: \n"
 "Language-Team: Incsub\n"
 "MIME-Version: 1.0\n"
@@ -881,71 +881,71 @@ msgstr ""
 msgid "<b>Ultimate Facebook</b> plugin needs to be configured. <a href=\"%s\">You can do so here.</a>"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:379
+#: lib/class_wdfb_admin_pages.php:385
 #: lib/class_wdfb_widget_albums.php:25
 msgid "Add FB Photo"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:380
+#: lib/class_wdfb_admin_pages.php:386
 #: lib/class_wdfb_widget_albums.php:26
 msgid "Insert album"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:381
+#: lib/class_wdfb_admin_pages.php:387
 #: lib/class_wdfb_widget_albums.php:27
 msgid "Insert album photos"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:382
+#: lib/class_wdfb_admin_pages.php:388
 #: lib/class_wdfb_widget_albums.php:28
 msgid "Insert"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:383
+#: lib/class_wdfb_admin_pages.php:389
 #: lib/class_wdfb_widget_albums.php:29
 msgid "Go back"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:384
+#: lib/class_wdfb_admin_pages.php:390
 #: lib/class_wdfb_widget_albums.php:30
 msgid "Use this image"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:385
+#: lib/class_wdfb_admin_pages.php:391
 #: lib/class_wdfb_widget_albums.php:31
 msgid "Please, wait..."
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:509
+#: lib/class_wdfb_admin_pages.php:543
 #, php-format
 msgid "Me (%s)"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:542
+#: lib/class_wdfb_admin_pages.php:589
 msgid "Facebook Publishing"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:639
+#: lib/class_wdfb_admin_pages.php:686
 msgid "Share"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:655
+#: lib/class_wdfb_admin_pages.php:702
 msgid "Post published on Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:655
+#: lib/class_wdfb_admin_pages.php:702
 msgid "Publishing on Facebook failed"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:685
+#: lib/class_wdfb_admin_pages.php:732
 msgid "On Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:691
+#: lib/class_wdfb_admin_pages.php:738
 msgid "Yes"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:691
+#: lib/class_wdfb_admin_pages.php:738
 msgid "No"
 msgstr ""
 
@@ -954,26 +954,26 @@ msgid "Log in with Facebook"
 msgstr ""
 
 #: lib/class_wdfb_marker_replacer.php:43
-#: lib/class_wdfb_widget_connect.php:111
+#: lib/class_wdfb_widget_connect.php:120
 msgid "Log out"
 msgstr ""
 
 #: lib/class_wdfb_public_pages.php:162
 #: lib/class_wdfb_public_pages.php:166
-#: lib/class_wdfb_widget_connect.php:78
-#: lib/class_wdfb_widget_connect.php:91
+#: lib/class_wdfb_widget_connect.php:87
+#: lib/class_wdfb_widget_connect.php:100
 msgid "Login with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:231
+#: lib/class_wdfb_public_pages.php:242
 msgid "Register with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:283
+#: lib/class_wdfb_public_pages.php:294
 msgid "My new blog"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:312
+#: lib/class_wdfb_public_pages.php:323
 msgid "Could not register such user"
 msgstr ""
 
@@ -1044,7 +1044,7 @@ msgstr ""
 
 #: lib/class_wdfb_widget_activityfeed.php:29
 #: lib/class_wdfb_widget_albums.php:64
-#: lib/class_wdfb_widget_connect.php:33
+#: lib/class_wdfb_widget_connect.php:34
 #: lib/class_wdfb_widget_events.php:63
 msgid "Title:"
 msgstr ""
@@ -1066,7 +1066,7 @@ msgid "Only URLs which contain the filter string in the first two path parameter
 msgstr ""
 
 #: lib/class_wdfb_widget_activityfeed.php:46
-#: lib/class_wdfb_widget_connect.php:38
+#: lib/class_wdfb_widget_connect.php:39
 msgid "Width:"
 msgstr ""
 
@@ -1156,19 +1156,23 @@ msgstr ""
 msgid "Shows Facebook Connect box."
 msgstr ""
 
-#: lib/class_wdfb_widget_connect.php:40
+#: lib/class_wdfb_widget_connect.php:41
 msgid "<p><small>For registration, the recommended width is greater then 240px</small></p>"
 msgstr ""
 
-#: lib/class_wdfb_widget_connect.php:44
+#: lib/class_wdfb_widget_connect.php:45
+msgid "Avatar size:"
+msgstr ""
+
+#: lib/class_wdfb_widget_connect.php:50
 msgid "Show register:"
 msgstr ""
 
-#: lib/class_wdfb_widget_connect.php:86
+#: lib/class_wdfb_widget_connect.php:95
 msgid "Login"
 msgstr ""
 
-#: lib/class_wdfb_widget_connect.php:87
+#: lib/class_wdfb_widget_connect.php:96
 msgid "Register"
 msgstr ""
 
@@ -1228,16 +1232,20 @@ msgstr ""
 msgid "Shows Facebook Like box."
 msgstr ""
 
-#: lib/class_wdfb_widget_likebox.php:32
+#: lib/class_wdfb_widget_likebox.php:33
 msgid "Facebook page URL:"
 msgstr ""
 
-#: lib/class_wdfb_widget_likebox.php:52
+#: lib/class_wdfb_widget_likebox.php:53
 msgid "Show faces:"
 msgstr ""
 
-#: lib/class_wdfb_widget_likebox.php:57
+#: lib/class_wdfb_widget_likebox.php:58
 msgid "Show stream:"
+msgstr ""
+
+#: lib/class_wdfb_widget_likebox.php:63
+msgid "Hide widget if user is not logged into Facebook:"
 msgstr ""
 
 #: lib/class_wdfb_widget_recent_comments.php:8
@@ -1250,10 +1258,6 @@ msgstr ""
 
 #: lib/class_wdfb_widget_recent_comments.php:38
 msgid "Display only this many comments:"
-msgstr ""
-
-#: lib/class_wdfb_widget_recent_comments.php:47
-msgid "Avatar size:"
 msgstr ""
 
 #: lib/class_wdfb_widget_recent_comments.php:56

@@ -24,6 +24,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 	function form($instance) {
 		$title = esc_attr($instance['title']);
 		$width = esc_attr($instance['width']);
+		$avatar_size = esc_attr($instance['avatar_size']);
 		$register = esc_attr($instance['register']);
 
 		// Set defaults
@@ -36,8 +37,13 @@ class Wdfb_WidgetConnect extends WP_Widget {
 
 		$html .= '<p>';
 		$html .= '<label for="' . $this->get_field_id('width') . '">' . __('Width:', 'wdfb') . '</label>';
-		$html .= '<input type="text" name="' . $this->get_field_name('width') . '" id="' . $this->get_field_id('width') . '" size="3" value="' . $width . '"/>';
+		$html .= '<input type="text" name="' . $this->get_field_name('width') . '" id="' . $this->get_field_id('width') . '" size="3" value="' . $width . '"/>px';
 		$html .= __('<p><small>For registration, the recommended width is greater then 240px</small></p>', 'wdfb');
+		$html .= '</p>';
+
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('avatar_size') . '">' . __('Avatar size:', 'wdfb') . '</label>';
+		$html .= '<input type="text" name="' . $this->get_field_name('avatar_size') . '" id="' . $this->get_field_id('avatar_size') . '" size="3" value="' . $avatar_size . '"/>px';
 		$html .= '</p>';
 
 		$html .= '<p>';
@@ -52,6 +58,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['width'] = strip_tags($new_instance['width']);
+		$instance['avatar_size'] = strip_tags($new_instance['avatar_size']);
 		$instance['register'] = strip_tags($new_instance['register']);
 
 		return $instance;
@@ -63,6 +70,8 @@ class Wdfb_WidgetConnect extends WP_Widget {
 		$register = (int)@$instance['register'];
 		$width = $instance['width'];
 		$width = $width ? $width : 250;
+		$avatar_size = $instance['avatar_size'];
+		$avatar_size = $avatar_size ? $avatar_size : 32;
 
 		$opts = Wdfb_OptionsRegistry::get_instance();
 		$register = ($register && get_option('users_can_register')) ? $register : false;
@@ -75,7 +84,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 
 			if (!$user->ID) {
 				if (!$register) { // Do the simple thing first
-					echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+					echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '" onlogin="_wdfb_notifyAndRedirect();">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 				} else {
 					$fields = wdfb_get_registration_fields();
 					$force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $opts->get_option('wdfb_connect', 'require_facebook_account'))
@@ -88,7 +97,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 					echo '	</ul></div>';
 					echo '	<div style="clear:both"></div>';
 					echo '	<div class="wdfb_connect_target" id="wdfb_connect_widget_login">';
-					echo '		<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+					echo '		<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '" onlogin="_wdfb_notifyAndRedirect();">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 					echo '	</div>';
 					echo '	<div class="wdfb_connect_target" id="wdfb_connect_widget_register">';
 					echo '	<iframe src="http://www.facebook.com/plugins/registration.php?' . $force .
@@ -107,7 +116,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 				}
 			} else {
 				$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
-				echo get_avatar($user->ID, 32);
+				echo get_avatar($user->ID, $avatar_size);
 				echo "<p><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a></p>";
 			}
 

@@ -36,7 +36,7 @@ class Wdfb_MarkerReplacer {
 		$user = wp_get_current_user();
 		$html = '';
 		if (!$user->ID) {
-			$html = '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '">' . $content . '</fb:login-button></p>';
+			$html = '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '"  onlogin="_wdfb_notifyAndRedirect();">' . $content . '</fb:login-button></p>';
 		} else {
 			$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
 			$html .= get_avatar($user->ID, 32);

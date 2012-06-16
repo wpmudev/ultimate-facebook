@@ -275,6 +275,9 @@ class Wdfb_Model {
 		// Allow others to process the fields
 		do_action('wdfb-user_registered', $user_id, $registration);
 
+		// Allow other actions - e.g. posting to Facebook, upon registration
+		do_action('wdfb-user_registered-postprocess', $user_id, $me, $registration, $this);
+
 		if (defined('BP_VERSION')) $this->populate_bp_fields_from_fb($user_id, $me); // BuddyPress
 		else $this->populate_wp_fields_from_fb($user_id, $me); // WordPress
 
@@ -335,31 +338,60 @@ class Wdfb_Model {
 		return $fb_uid;
 	}
 
-	function get_pages_tokens () {
+	function get_pages_tokens ($token=false) {
 		$fid = $this->get_current_user_fb_id();
 		if (!$fid) return false;
-		
+
+		$token = $token ? $token : $this->get_user_api_token($fid);
+		/*
+		$token = $token ? "?access_token={$token}" : '';
 		try {
-			$ret = $this->fb->api('/' . $fid . '/accounts/');
+			//$ret = $this->fb->api('/' . $fid . '/accounts/');
+			$ret = $this->fb->api('/' . $fid . '/accounts/' . $token);
 		} catch (Exception $e) {
 			return false;
 		}
 		return $ret;
+		*/
+		$url = "https://graph.facebook.com/{$fid}/accounts?access_token={$token}";
+		$page = wp_remote_get($url, array(
+			'method' 		=> 'GET',
+			'timeout' 		=> '5',
+			'redirection' 	=> '5',
+			'user-agent' 	=> 'wdfb',
+			'blocking'		=> true,
+			'compress'		=> false,
+			'decompress'	=> true,
+			'sslverify'		=> false
+		));
+
+		if(is_wp_error($page)) return false; // Request fail
+		if ((int)$page['response']['code'] != 200) return false; // Request fail
+
+		return (array)@json_decode($page['body']);
 	}
 
 	function post_on_facebook ($type, $fid, $post, $as_page=false) {
 		$type = $type ? $type : 'feed';
-		$fid = $fid ? $fid : $this->get_current_user_fb_id();
 		
+		$fid = $fid ? $fid : $this->get_current_user_fb_id();
+		$token = $this->get_user_api_token($fid);
+
 		// Events sanity check
 		if ('events' == $type && (!@$post['start_time'] || !@$post['end_time'])) return false;
 
+		//$post['auth_token'] = $tokens[$fid];
+		if (!$token) {
+			$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
+			$token = $tokens[$fid];
+		}
+		$post['access_token'] = $token;
+		
 		$title = ('feed' == $type) ? @$post['message'] : '';
 		$_ap = $as_page ? 'as page' : '';
-		$this->log->notice("Posting {$title} to Facebook [{$type}] - [{$fid}] {$_ap}.");
+		$this->log->notice("Posting {$title} to Facebook [{$type}] - [{$fid}] {$_ap} [{$token}].");
 
-		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
-		$post['auth_token'] = $tokens[$fid];
+		/*
 		if ($as_page) {
 			try {
 				$resp = $this->fb->api($fid, array('auth_token' => $tokens[$fid]));
@@ -371,6 +403,7 @@ class Wdfb_Model {
 			if (@$resp['can_post']) $post['access_token'] = $tokens[$fid];
 			else $this->log->notice("Unable to post to Facebook as page.");
 		}
+		*/
 
 		try {
 			$ret = $this->fb->api('/' . $fid . '/' . $type . '/', 'POST', $post);

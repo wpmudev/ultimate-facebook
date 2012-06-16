@@ -1,3 +1,5 @@
+var  _wdfb_notifyAndRedirect;
+
 (function ($) {
 $(function () {
 	
@@ -36,16 +38,18 @@ function notifyAndRedirect () {
 	}
 	do_redirect_when_cookie_is_set();
 }
+_wdfb_notifyAndRedirect = notifyAndRedirect;
 
+/*
 $('fb\\:login-button').click(function () {
 	FB.Event.subscribe('auth.login', function (r) {
 		if (r.authResponse && r.authResponse.userID) notifyAndRedirect();
 	});
 	FB.getLoginStatus(function (resp) {
 		if (resp.authResponse && resp.authResponse.userID) notifyAndRedirect();
-	});	
+	});
 });
+*/
 
-	
 });
 })(jQuery);
