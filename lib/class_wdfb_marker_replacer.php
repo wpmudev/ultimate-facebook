@@ -68,6 +68,11 @@ class Wdfb_MarkerReplacer {
 		$layout = $this->data->get_option('wdfb_button', 'button_appearance');
 		$url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
+		$width = ("standard" == $layout) ? 300 : (
+			("button_count" == $layout) ? 150 : 60
+		); 
+		$width = apply_filters('wdfb-like_button-width', $width); 
+		
 		if (is_home() && $this->data->get_option('wdfb_button', 'show_on_front_page')) {
 			$tmp_url = get_permalink();
 			$url = $tmp_url ? $tmp_url : $url;
@@ -76,10 +81,6 @@ class Wdfb_MarkerReplacer {
 			$height = ("box_count" == $layout) ? 60 : 25;
 			$height = apply_filters('wdfb-like_button-height', $height); 
 			
-			$width = ("standard" == $layout) ? 300 : (
-				("button_count" == $layout) ? 150 : 60
-			); 
-			$width = apply_filters('wdfb-like_button-width', $width); 
 			return "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height={$height}&amp;width={$width}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>";
 		}
 

@@ -100,6 +100,7 @@ class Wdfb_PublicPages {
 		}
 
 		// Type
+		$type = false;
 		if ($this->data->get_option('wdfb_opengraph', 'og_custom_type')) {
 			if (!is_singular()) {
 				$type = $this->data->get_option('wdfb_opengraph', 'og_custom_type_not_singular');

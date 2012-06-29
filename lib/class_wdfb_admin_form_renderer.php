@@ -214,6 +214,8 @@ class Wdfb_AdminFormRenderer {
 			__('Site URL', 'wdfb') => 'site_url',
 			__('Admin URL', 'wdfb') => 'admin_url',
 		);
+		$url = @$opt['login_redirect_url'] ? '<code>' . $base(@$opt['login_redirect_url']) . '</code>' : __('current page, or plugin default', 'wdfb');
+
 		echo "<select name='wdfb_connect[login_redirect_base]'>";
 		foreach ($allowed as $label => $item) {
 			$checked = ($base == $item) ? 'selected="selected"' : '';
@@ -221,9 +223,8 @@ class Wdfb_AdminFormRenderer {
 		}
 		echo "</select><span id='wdfb-login_redirect_base-help'></span>";
 		echo '<div><small>' . sprintf(__('Select your site area (above), then fill in the relative URL fragment:', 'wdfb'), $url) . '</small></div>';
+		
 		echo $this->_create_text_box('connect', 'login_redirect_url', @$opt['login_redirect_url']);
-
-		$url = @$opt['login_redirect_url'] ? '<code>' . $base(@$opt['login_redirect_url']) . '</code>' : __('current page, or plugin default', 'wdfb');
 		echo '<div><small>' . sprintf(__('This is what will happen upon login: my users will be redirected to %s.', 'wdfb'), $url) . '</small></div>';
 	}
 	function create_captcha_box () {

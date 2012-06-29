@@ -34,17 +34,11 @@ function check_perms () {
 $(".wdfb_perms_root").append('<img src="' + _wdfb_root_url + '/img/waiting.gif" class="wdfb_perms_waiting" />').show();
 $(".wdfb_grant_perms, .wdfb_perms_granted, .wdfb_perms_not_granted").hide();
 
-if (typeof FB == 'object' && FB._apiKey) {
+if (typeof FB == 'object'/* && FB._apiKey*/) {
 	FB.getLoginStatus(function (resp) {
 		check_perms();
 	});
 }
-
-/*
-FB.getLoginStatus(function (resp) {
-	check_perms();
-});	
-*/	
 	
 $(".wdfb_grant_perms").click(function () { 
 	var $me = $(this);

@@ -131,7 +131,7 @@ function wdfb_get_og_image ($id=false) {
 		if (!function_exists('load_membership_plugins')) $html = apply_filters('the_content', $html);
 	}
 	preg_match_all('/<img .*src=["\']([^ ^"^\']*)["\']/', $html, $matches);
-	if ($matches[1][0]) return apply_filters(
+	if (@$matches[1][0]) return apply_filters(
 		'wdfb-opengraph-image',
 		apply_filters('wdfb-opengraph-image-post_image', $matches[1][0])
 	);
