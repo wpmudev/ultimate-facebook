@@ -88,7 +88,7 @@ class Wdfb_AdminPages {
 		register_setting('wdfb', 'wdfb_autopost');
 		add_settings_section('wdfb_autopost', __('Autopost to Facebook', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_show_button', __('Allow autoposting new posts to Facebook', 'wdfb'), array($form, 'create_allow_autopost_box'), 'wdfb_options_page', 'wdfb_autopost');
-		add_settings_field('wdfb_allow_frontend_autopost', __('Allow fontend autoposting to Facebook', 'wdfb'), array($form, 'create_allow_frontend_autopost_box'), 'wdfb_options_page', 'wdfb_autopost');
+		add_settings_field('wdfb_allow_frontend_autopost', __('Allow frontend autoposting to Facebook', 'wdfb'), array($form, 'create_allow_frontend_autopost_box'), 'wdfb_options_page', 'wdfb_autopost');
 		add_settings_field('wdfb_show_status_column', __('Show post Facebook status column', 'wdfb'), array($form, 'create_show_status_column_box'), 'wdfb_options_page', 'wdfb_autopost');
 		add_settings_field('wdfb_autopost_types', __('Map WordPress types to Facebook locations', 'wdfb'), array($form, 'create_autopost_map_box'), 'wdfb_options_page', 'wdfb_autopost');
 		add_settings_field('wdfb_allow_post_metabox', __('Do not allow individual posts to Facebook', 'wdfb'), array($form, 'create_allow_post_metabox_box'), 'wdfb_options_page', 'wdfb_autopost');
@@ -187,7 +187,7 @@ class Wdfb_AdminPages {
 		register_setting('wdfb', 'wdfb_autopost');
 		add_settings_section('wdfb_autopost', __('Autopost to Facebook', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_allow_autopost', __('Allow autoposting new posts to Facebook', 'wdfb'), array($form, 'create_allow_autopost_box'), 'wdfb_options_page', 'wdfb_autopost');
-		add_settings_field('wdfb_allow_frontend_autopost', __('Allow fontend autoposting to Facebook', 'wdfb'), array($form, 'create_allow_frontend_autopost_box'), 'wdfb_options_page', 'wdfb_autopost');
+		add_settings_field('wdfb_allow_frontend_autopost', __('Allow frontend autoposting to Facebook', 'wdfb'), array($form, 'create_allow_frontend_autopost_box'), 'wdfb_options_page', 'wdfb_autopost');
 		add_settings_field('wdfb_show_status_column', __('Show post Facebook status column', 'wdfb'), array($form, 'create_show_status_column_box'), 'wdfb_options_page', 'wdfb_autopost');
 		add_settings_field('wdfb_autopost_types', __('Map WordPress types to Facebook locations', 'wdfb'), array($form, 'create_autopost_map_box'), 'wdfb_options_page', 'wdfb_autopost');
 		add_settings_field('wdfb_allow_post_metabox', __('Do not allow individual posts to Facebook', 'wdfb'), array($form, 'create_allow_post_metabox_box'), 'wdfb_options_page', 'wdfb_autopost');
