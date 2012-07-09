@@ -24,8 +24,8 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		wp_enqueue_style('wdfb_jquery_ui_style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css');
 	}
 	function js_load_scripts () {
-		wp_enqueue_script('wdfb_jquery_ui', 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js');
-		wp_enqueue_script('wdfb_widget_events', WDFB_PLUGIN_URL . '/js/wdfb_widget_events.js', array('jquery', 'wdfb_jquery_ui'));
+		wp_enqueue_script('jquery-ui-datepicker');
+		wp_enqueue_script('wdfb_widget_events', WDFB_PLUGIN_URL . '/js/wdfb_widget_events.js', array('jquery', 'jquery-ui-datepicker'));
 		wp_localize_script('wdfb_widget_events', 'l10nWdfbEventsEditor', array(
 			'insuficient_perms' => __("Your app doesn't have enough permissions to access your events", 'wdfb'),
 			'grant_perms' => __("Grant needed permissions now", 'wdfb'),

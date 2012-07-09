@@ -5,6 +5,14 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.2.2 - 2012-07-09
+----------------------------------------------------------------------
+- Using bundled datepicker in events widget.
+- Replacing deprecated calls, typo fixes, silencing notices.
+- Added filtering for login redirection URL.
+- Added macro expansion for URL redirection.
+- Added avatar size attribute to connect shortcode.
+
 2.2.1 - 2012-06-29
 ----------------------------------------------------------------------
 - Fix for permissions check procedure.

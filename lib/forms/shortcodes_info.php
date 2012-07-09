@@ -42,7 +42,7 @@
 <p>
 	<em>Attributes:</em>
 	<ul>
-		<li>None</li>
+		<li><code>avatar_size</code> - <em>optional.<em> Size of the avatar shown, in pixels. Default size is <code>32</code>.</li>
 		<li>Any text you supply between <code>[wdfb_connect]</code> and <code>[/wdfb_connect]</code> tags will be used as button text.</li>
 	</ul>
 </p>
@@ -50,6 +50,7 @@
 	<em>Examples:</em>
 	<ul>
 		<li><code>[wdfb_connect]</code> - will create a Facebook Connect button with default text (&quot;Log in with Facebook&quot;)</li>
+		<li><code>[wdfb_connect avatar_size="98"]</code> - will create a Facebook Connect button. Once logged in with Facebook, the displayed avatar will be 98px large.</li>
 		<li><code>[wdfb_connect]Get in![/wdfb_connect]</code> - will create a a Facebook Connect button that says &quot;Get in!&quot;.</li>
 	</ul>
 </p>

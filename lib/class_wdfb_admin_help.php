@@ -122,6 +122,15 @@ class Wdfb_AdminHelp {
 				__('You will have to both select your site area, then enter the URL fragment relative to that area', 'wdfb'), 
 				'#wdfb-login_redirect_base-help'
 			);
+			$this->$tip->bind_tip(
+				sprintf(
+					__('You can also use some of the supported macros: <br />%s', 'wdfb'),
+					defined('BP_VERSION') 
+						? '<code>USER_ID</code><br /> <code>USER_LOGIN</code><br /> <code>BP_ACTIVITY_SLUG</code><br /> <code>BP_GROUPS_SLUG</code><br /> <code>BP_MEMBERS_SLUG</code><br />'
+						: '<code>USER_ID</code><br /> <code>USER_LOGIN</code><br />'
+				),
+				'#wdfb-login_redirect_base-url_fragment'
+			);
 		}
 	}
 	

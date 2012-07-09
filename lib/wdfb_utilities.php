@@ -80,14 +80,44 @@ function wdfb_get_locale () {
  * Helper function for getting the login redirect URL.
  */
 function wdfb_get_login_redirect ($force_admin_redirect=false) {
+	$redirect_url = false;
 	$data = Wdfb_OptionsRegistry::get_instance();
 	$url = $data->get_option('wdfb_connect', 'login_redirect_url');
 	if ($url) {
 		$base = $data->get_option('wdfb_connect', 'login_redirect_base');
 		$base = ('admin_url' == $base) ? 'admin_url' : 'site_url';
-		return $base($url);
-	} else return defined('BP_VERSION') ? home_url() : $force_admin_redirect ? admin_url() : home_url();
-}// @TODO: EXPOSE FOR FILTERING AND ADD IN SOME MACRO EXPANSION
+		$redirect_url = $base($url);
+	} else $redirect_url = defined('BP_VERSION') ? home_url() : $force_admin_redirect ? admin_url() : home_url();
+
+	return apply_filters('wdfb-login-redirect_url', $redirect_url);
+}
+
+/**
+ * Expands some basic supported user macros.
+ */
+function wdfb_expand_user_macros ($str) {
+	$user = wp_get_current_user();
+	$str = preg_replace('/\bUSER_ID\b/', $user->ID, $str);
+	$str = preg_replace('/\bUSER_LOGIN\b/', $user->user_login, $str);
+	return $str;
+}
+add_filter('wdfb-login-redirect_url', 'wdfb_expand_user_macros', 1);
+
+/**
+ * Expands some basic supported BuddyPress macros.
+ */
+function wdfb_expand_buddypress_macros ($str) {
+	if (!defined('BP_VERSION')) return $str;
+
+	if (function_exists('bp_get_activity_root_slug')) $str = preg_replace('/\bBP_ACTIVITY_SLUG\b/', bp_get_activity_root_slug(), $str);
+	if (function_exists('bp_get_groups_slug')) $str = preg_replace('/\bBP_GROUPS_SLUG\b/', bp_get_groups_slug(), $str);
+	if (function_exists('bp_get_members_slug')) $str = preg_replace('/\bBP_MEMBERS_SLUG\b/', bp_get_members_slug(), $str);
+
+	return $str;
+}
+add_filter('wdfb-login-redirect_url', 'wdfb_expand_buddypress_macros', 1);
+
+
 
 /**
  * Helper function for fetching the image for OpenGraph info.

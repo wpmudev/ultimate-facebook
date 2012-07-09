@@ -29,6 +29,9 @@ class Wdfb_MarkerReplacer {
 
 	function process_connect_code ($atts, $content='') {
 		if (!$this->data->get_option('wdfb_connect', 'allow_facebook_registration')) return $content;
+		$atts = shortcode_atts(array(
+			'avatar_size' => 32,
+		), $atts);
 		$content = $content ? $content : __('Log in with Facebook', 'wdfb');
 		if (!class_exists('Wdfb_WidgetConnect')) {
 			echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
@@ -39,7 +42,7 @@ class Wdfb_MarkerReplacer {
 			$html = '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '"  onlogin="_wdfb_notifyAndRedirect();">' . $content . '</fb:login-button></p>';
 		} else {
 			$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
-			$html .= get_avatar($user->ID, 32);
+			$html .= get_avatar($user->ID, $atts['avatar_size']);
 			$html .= "<br /><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a>";
 		}
 		return $html;

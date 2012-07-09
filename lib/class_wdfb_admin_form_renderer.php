@@ -214,7 +214,7 @@ class Wdfb_AdminFormRenderer {
 			__('Site URL', 'wdfb') => 'site_url',
 			__('Admin URL', 'wdfb') => 'admin_url',
 		);
-		$url = @$opt['login_redirect_url'] ? '<code>' . $base(@$opt['login_redirect_url']) . '</code>' : __('current page, or plugin default', 'wdfb');
+		$url = @$opt['login_redirect_url'] ? '<code>' . apply_filters('wdfb-login-redirect_url', $base(@$opt['login_redirect_url'])) . '</code>' : __('current page, or plugin default', 'wdfb');
 
 		echo "<select name='wdfb_connect[login_redirect_base]'>";
 		foreach ($allowed as $label => $item) {
@@ -222,7 +222,7 @@ class Wdfb_AdminFormRenderer {
 			echo "<option value='{$item}' {$checked}>{$label}</option>";
 		}
 		echo "</select><span id='wdfb-login_redirect_base-help'></span>";
-		echo '<div><small>' . sprintf(__('Select your site area (above), then fill in the relative URL fragment:', 'wdfb'), $url) . '</small></div>';
+		echo '<div><small id="wdfb-login_redirect_base-url_fragment">' . sprintf(__('Select your site area (above), then fill in the relative URL fragment:', 'wdfb'), $url) . '</small></div>';
 		
 		echo $this->_create_text_box('connect', 'login_redirect_url', @$opt['login_redirect_url']);
 		echo '<div><small>' . sprintf(__('This is what will happen upon login: my users will be redirected to %s.', 'wdfb'), $url) . '</small></div>';
@@ -577,7 +577,7 @@ class Wdfb_AdminFormRenderer {
 	function create_allow_frontend_autopost_box () {
 		$opt = $this->_get_option('wdfb_autopost');
 		echo $this->_create_checkbox('autopost', 'allow_frontend_autopost',  @$opt['allow_frontend_autopost']);
-		echo '<div><small>' . __('Enable this option to allow auto-publishing on Facebook with frontent posting plugins', 'wdfb') . '</small></div>';
+		echo '<div><small>' . __('Enable this option to allow auto-publishing on Facebook with frontend posting plugins', 'wdfb') . '</small></div>';
 	}
 	function create_show_status_column_box () {
 		$opt = $this->_get_option('wdfb_autopost');

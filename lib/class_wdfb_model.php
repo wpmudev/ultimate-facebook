@@ -222,7 +222,7 @@ class Wdfb_Model {
 
 	function map_fb_to_wp_user ($wp_uid) {
 		if (!$wp_uid) return false;
-		update_usermeta($wp_uid, 'wdfb_fb_uid', $this->fb->getUser());
+		update_user_meta($wp_uid, 'wdfb_fb_uid', $this->fb->getUser());
 		return $wp_uid;
 	}
 
@@ -249,7 +249,7 @@ class Wdfb_Model {
 
 	function create_new_wp_user_from_fb () {
 		$send_email = false;
-		$reg = (array)($this->fb->registration ? $this->fb : $this->fb->getSignedRequest());
+		$reg = (array)((isset($this->fb->registration) && $this->fb->registration) ? $this->fb : $this->fb->getSignedRequest());
 		$registration = isset($reg['registration']) ? $reg['registration'] : array();
 		try {
 			$me = $this->fb->api('/me');
@@ -321,7 +321,7 @@ class Wdfb_Model {
 			if (is_array(@$me[$map['fb']]) && isset($me[$map['fb']]['name'])) $data = @$me[$map['fb']]['name'];
 			else if (is_array(@$me[$map['fb']]) && isset($me[$map['fb']][0])) $data = join(', ', array_map(create_function('$m', 'return $m["name"];'), $me[$map['fb']]));
 			else $data = @$me[$map['fb']];
-			update_usermeta($user_id, $map['wp'], $data);
+			update_user_meta($user_id, $map['wp'], $data);
 		}
 
 		return true;

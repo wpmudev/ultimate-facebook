@@ -53,8 +53,8 @@ function init () {
 		}
 	});
 }
-//init();
-if (typeof FB == 'object' && FB._apiKey) {
+
+if (typeof FB == 'object') {
 	FB.getLoginStatus(function (resp) {
 		init();
 	});

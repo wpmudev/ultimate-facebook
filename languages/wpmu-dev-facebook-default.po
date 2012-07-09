@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Facebook Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-15 15:04+0100\n"
-"PO-Revision-Date: 2012-06-15 15:04+0100\n"
+"POT-Creation-Date: 2012-07-09 14:28+0100\n"
+"PO-Revision-Date: 2012-07-09 14:29+0100\n"
 "Last-Translator: \n"
 "Language-Team: Incsub\n"
 "MIME-Version: 1.0\n"
@@ -80,429 +80,429 @@ msgstr ""
 msgid "Admin URL"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:223
-msgid "Select your site area (above), then fill in the relative URL fragment:"
-msgstr ""
-
-#: lib/class_wdfb_admin_form_renderer.php:226
+#: lib/class_wdfb_admin_form_renderer.php:217
 msgid "current page, or plugin default"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:227
+#: lib/class_wdfb_admin_form_renderer.php:225
+msgid "Select your site area (above), then fill in the relative URL fragment:"
+msgstr ""
+
+#: lib/class_wdfb_admin_form_renderer.php:228
 #, php-format
 msgid "This is what will happen upon login: my users will be redirected to %s."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:236
-#: lib/class_wdfb_admin_form_renderer.php:275
-msgid "Nothing"
-msgstr ""
-
 #: lib/class_wdfb_admin_form_renderer.php:237
 #: lib/class_wdfb_admin_form_renderer.php:276
-msgid "Name"
+msgid "Nothing"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:238
 #: lib/class_wdfb_admin_form_renderer.php:277
-msgid "First name"
+msgid "Name"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:239
 #: lib/class_wdfb_admin_form_renderer.php:278
-msgid "Middle name"
+msgid "First name"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:240
 #: lib/class_wdfb_admin_form_renderer.php:279
-msgid "Last name"
+msgid "Middle name"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:241
 #: lib/class_wdfb_admin_form_renderer.php:280
-msgid "Gender"
+msgid "Last name"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:242
 #: lib/class_wdfb_admin_form_renderer.php:281
-msgid "Bio"
+msgid "Gender"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:243
 #: lib/class_wdfb_admin_form_renderer.php:282
-msgid "Birthday"
+msgid "Bio"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:244
 #: lib/class_wdfb_admin_form_renderer.php:283
-msgid "About"
+msgid "Birthday"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:245
 #: lib/class_wdfb_admin_form_renderer.php:284
-msgid "Hometown"
+msgid "About"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:246
 #: lib/class_wdfb_admin_form_renderer.php:285
-msgid "Location"
+msgid "Hometown"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:247
 #: lib/class_wdfb_admin_form_renderer.php:286
-msgid "Facebook profile"
+msgid "Location"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:248
 #: lib/class_wdfb_admin_form_renderer.php:287
-msgid "Locale"
+msgid "Facebook profile"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:249
 #: lib/class_wdfb_admin_form_renderer.php:288
-msgid "Languages"
+msgid "Locale"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:250
 #: lib/class_wdfb_admin_form_renderer.php:289
-msgid "Facebook username"
+msgid "Languages"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:251
 #: lib/class_wdfb_admin_form_renderer.php:290
-msgid "Email"
+msgid "Facebook username"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:252
 #: lib/class_wdfb_admin_form_renderer.php:291
-msgid "Relationship status"
+msgid "Email"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:253
 #: lib/class_wdfb_admin_form_renderer.php:292
-msgid "Significant other"
+msgid "Relationship status"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:254
 #: lib/class_wdfb_admin_form_renderer.php:293
-msgid "Political view"
+msgid "Significant other"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:255
 #: lib/class_wdfb_admin_form_renderer.php:294
-msgid "Religion"
+msgid "Political view"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:256
 #: lib/class_wdfb_admin_form_renderer.php:295
-msgid "Favorite teams"
+msgid "Religion"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:257
 #: lib/class_wdfb_admin_form_renderer.php:296
+msgid "Favorite teams"
+msgstr ""
+
+#: lib/class_wdfb_admin_form_renderer.php:258
+#: lib/class_wdfb_admin_form_renderer.php:297
 msgid "Favorite quotes"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:318
+#: lib/class_wdfb_admin_form_renderer.php:319
 #, php-format
 msgid "Map %s to %s"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:323
+#: lib/class_wdfb_admin_form_renderer.php:324
 msgid "Add another mapping"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:361
+#: lib/class_wdfb_admin_form_renderer.php:362
 msgid "Before"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:361
+#: lib/class_wdfb_admin_form_renderer.php:362
 msgid "After"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:361
+#: lib/class_wdfb_admin_form_renderer.php:362
 msgid "Before and after"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:361
+#: lib/class_wdfb_admin_form_renderer.php:362
 msgid "Manual, use shortcodes in "
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:365
+#: lib/class_wdfb_admin_form_renderer.php:366
 #, php-format
 msgid "%s the contents of your post <br />"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:396
+#: lib/class_wdfb_admin_form_renderer.php:397
 msgid "OpenGraph allows you better control over what is shared on Facebook when someone clicks \"Like/Send\" button."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:402
-#: lib/class_wdfb_admin_form_renderer.php:410
+#: lib/class_wdfb_admin_form_renderer.php:403
+#: lib/class_wdfb_admin_form_renderer.php:411
 #, php-format
 msgid "<p>Preview:<br /><img src=\"%s\" /></p>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:404
+#: lib/class_wdfb_admin_form_renderer.php:405
 msgid "Please, use full URL to image (e.g. <code>http://example.com/images/example.jpg</code>). If set, this image will <b>always</b> be used on Facebook for content sharing"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:412
+#: lib/class_wdfb_admin_form_renderer.php:413
 msgid "By default, we will attempt to use featured image or first image from the post for sharing on Facebook."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:413
+#: lib/class_wdfb_admin_form_renderer.php:414
 msgid "If we fail, this image will be used instead. Please, use full URL to image (e.g. <code>http://example.com/images/example.jpg</code>)."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:419
+#: lib/class_wdfb_admin_form_renderer.php:420
 msgid "Do not autodetect my OpenGraph type, I will set it manually"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:420
+#: lib/class_wdfb_admin_form_renderer.php:421
 msgid "If you check this option the plugin will not autodetect your OpenGraph type and you'll be able to set it manually."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:423
+#: lib/class_wdfb_admin_form_renderer.php:424
 msgid "OpenGraph type on my front page"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:426
+#: lib/class_wdfb_admin_form_renderer.php:427
 msgid "OpenGraph type on my taxonomies pages"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:428
+#: lib/class_wdfb_admin_form_renderer.php:429
 msgid "This type will be used on your pages that show multiple content (e.g. archives, tags, categories)."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:430
+#: lib/class_wdfb_admin_form_renderer.php:431
 msgid "OpenGraph type on my content pages"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:432
+#: lib/class_wdfb_admin_form_renderer.php:433
 msgid "This type will be used on your pages that show individual content pieces (e.g. posts and pages)."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:445
-#: lib/class_wdfb_admin_form_renderer.php:456
+#: lib/class_wdfb_admin_form_renderer.php:446
+#: lib/class_wdfb_admin_form_renderer.php:457
 msgid "OpenGraph name:"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:448
-#: lib/class_wdfb_admin_form_renderer.php:459
+#: lib/class_wdfb_admin_form_renderer.php:449
+#: lib/class_wdfb_admin_form_renderer.php:460
 msgid "OpenGraph value:"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:451
+#: lib/class_wdfb_admin_form_renderer.php:452
 msgid "Remove"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:463
+#: lib/class_wdfb_admin_form_renderer.php:464
 msgid "Add header"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:469
+#: lib/class_wdfb_admin_form_renderer.php:470
 msgid "If checked, comments on your posts on Facebook will be periodically imported and merged with your regular comments."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:489
+#: lib/class_wdfb_admin_form_renderer.php:490
 msgid "Comments on your posts on Facebook will <b>ONLY</b> be imported for the checked IDs."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:490
+#: lib/class_wdfb_admin_form_renderer.php:491
 msgid "Comments on your posts on Facebook will <b>NOT</b> be imported for any of the checked IDs."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:494
+#: lib/class_wdfb_admin_form_renderer.php:495
 msgid "Reverse checking logic:"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:498
+#: lib/class_wdfb_admin_form_renderer.php:499
 msgid "Togglig this option will reverse import skipping options."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:509
+#: lib/class_wdfb_admin_form_renderer.php:510
 msgid "This value is applied to number of Facebook posts inspected for comments. Set the limit to lower value if you experience performance issues."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:514
+#: lib/class_wdfb_admin_form_renderer.php:515
 msgid "If checked, post authors will be notified when new comments from Facebook are added to their posts."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:517
+#: lib/class_wdfb_admin_form_renderer.php:518
 msgid "Import comments now (this can take a while)"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:524
+#: lib/class_wdfb_admin_form_renderer.php:525
 msgid "If checked, <a href=\"http://developers.facebook.com/blog/post/472\">Facebook comments</a> will be used instead of, or in addition to, regular WordPress comments."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:530
+#: lib/class_wdfb_admin_form_renderer.php:531
 msgid "<p>By default, Facebook comments will appear <em>in addition</em> to WordPress comments.</p><p>Check this box if you wish to disable WordPress comments, but still allow Facebook Comments.</p><p><strong>Note:</strong> if you enable this option, Facebook Comments will always appear, disregarding any WordPress settings.</p>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:563
+#: lib/class_wdfb_admin_form_renderer.php:564
 msgid "<p><b>Warning:</b> You should leave this box empty unless you know what you&#039;re doing."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:564
+#: lib/class_wdfb_admin_form_renderer.php:565
 msgid "<p>Themes can use different approaches to showing comments, which can cause Facebook Comments not to appear in some cases."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:565
+#: lib/class_wdfb_admin_form_renderer.php:566
 msgid "<p>If you experience such a conflict between Facebook Comments and your theme, you can enter a custom hook for Facebook Comments here."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:566
+#: lib/class_wdfb_admin_form_renderer.php:567
 msgid "<p>If everything else fails, you can enter this code in your theme where you want your comments to appear: <code>&lt;?php do_action(\"my_action_name\");?&gt;</code>, then enter \"my_action_name\" (without quotes) in this box."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:573
+#: lib/class_wdfb_admin_form_renderer.php:574
 msgid "If you haven't done so already, you will need to <a href=\"#\" class=\"wdfb_skip_to_step_1\">grant <strong>extended permissions</strong> to the plugin</a> for this to work."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:579
-msgid "Enable this option to allow auto-publishing on Facebook with frontent posting plugins"
+#: lib/class_wdfb_admin_form_renderer.php:580
+msgid "Enable this option to allow auto-publishing on Facebook with frontend posting plugins"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:584
+#: lib/class_wdfb_admin_form_renderer.php:585
 msgid "Enabling this will add a new column that shows if the post has already been published on Facebook to your post management pages."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:589
+#: lib/class_wdfb_admin_form_renderer.php:590
 msgid "Don't post this type to Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:590
+#: lib/class_wdfb_admin_form_renderer.php:591
 msgid "Facebook wall"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:591
+#: lib/class_wdfb_admin_form_renderer.php:592
 msgid "Facebook events"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:592
+#: lib/class_wdfb_admin_form_renderer.php:593
 msgid "Facebook notes"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:623
+#: lib/class_wdfb_admin_form_renderer.php:624
 msgid "Use shortlink"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:627
+#: lib/class_wdfb_admin_form_renderer.php:628
 #, php-format
 msgid "<li>Autopost %s to %s of this user: %s %s </li>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:632
-#: lib/class_wdfb_admin_form_renderer.php:754
+#: lib/class_wdfb_admin_form_renderer.php:633
+#: lib/class_wdfb_admin_form_renderer.php:755
 msgid "If posting to a page, post <b>AS</b> page"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:635
+#: lib/class_wdfb_admin_form_renderer.php:636
 msgid "Choose the Facebook user ID from the <em>user</em> box, or leave selection to &quot;Me&quot; to use your own profile. Remember, the plugin needs to be granted <strong>extended permissions</strong> to access the profile. <br />To post to a fan page as page, you need to be administrator of that page."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:644
+#: lib/class_wdfb_admin_form_renderer.php:645
 msgid "If you check this box, your users will <b>NOT</b> be able to make individual posts to Facebook using the post editor metabox."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:649
+#: lib/class_wdfb_admin_form_renderer.php:650
 msgid "If you check this box, all your users individual Facebook settings will be deleted and replaced with what you set here."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:653
+#: lib/class_wdfb_admin_form_renderer.php:654
 msgid "If you check this box, your users individual Facebook API settings will be <em>preserved</em> when replacing their options."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:659
+#: lib/class_wdfb_admin_form_renderer.php:660
 msgid "If you check this box, your users will <b>NOT</b> be able to make individual changes to plugin settings from now on."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:660
+#: lib/class_wdfb_admin_form_renderer.php:661
 msgid "Also, if you want to use this option, you may want to allow your subsites to use your global FB app credentials in <a href=\"#\" class=\"wdfb_skip_to_step_0\">Facebook API settings</a>."
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:664
+#: lib/class_wdfb_admin_form_renderer.php:665
 #, php-format
 msgid "Easily display Facebook Connect options on your front page. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/connect_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/connect_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:668
+#: lib/class_wdfb_admin_form_renderer.php:669
 #, php-format
 msgid "Easily display Facebook Albums. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/albums_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/albums_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:672
+#: lib/class_wdfb_admin_form_renderer.php:673
 #, php-format
 msgid "Easily display Facebook Events. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/events_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/events_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:676
+#: lib/class_wdfb_admin_form_renderer.php:677
 #, php-format
 msgid "Easily display Facebook Facepile. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/facepile_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/facepile_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:680
+#: lib/class_wdfb_admin_form_renderer.php:681
 #, php-format
 msgid "Easily display Facebook Like Box. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/likebox_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/likebox_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:684
+#: lib/class_wdfb_admin_form_renderer.php:685
 #, php-format
 msgid "Easily display Facebook Recommendations. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/recommendations_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/recommendations_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:688
+#: lib/class_wdfb_admin_form_renderer.php:689
 #, php-format
 msgid "Easily display Facebook Activity Feed. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/activityfeed_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/activityfeed_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:692
+#: lib/class_wdfb_admin_form_renderer.php:693
 #, php-format
 msgid "Easily display your recently imported Facebook comments. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/recent_comments_allowed.jpg\" /></td><td valign=\"top\"><img src=\"%s/img/recent_comments_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:696
+#: lib/class_wdfb_admin_form_renderer.php:697
 #, php-format
 msgid "Display extended permissions granting box for your users in the Dashboard. <table> <th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/dashboard_permissions_allowed.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:710
+#: lib/class_wdfb_admin_form_renderer.php:711
 msgid "This post has already been published on Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:716
+#: lib/class_wdfb_admin_form_renderer.php:717
 msgid "Publish on Facebook with different title:"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:718
+#: lib/class_wdfb_admin_form_renderer.php:719
 msgid "<p><small>Leave this value blank to use the post title.</small></p>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:725
+#: lib/class_wdfb_admin_form_renderer.php:726
 msgid "I want to publish this post to Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:726
+#: lib/class_wdfb_admin_form_renderer.php:727
 msgid "<p><small>If checked, the post will be unconditionally published on Facebook</small></p>"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:732
+#: lib/class_wdfb_admin_form_renderer.php:733
 msgid "Your app doesn't have enough permissions to publish on Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:736
+#: lib/class_wdfb_admin_form_renderer.php:737
 #: lib/class_wdfb_widget_albums.php:33
 #: lib/class_wdfb_widget_events.php:31
 msgid "Grant needed permissions now"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:747
+#: lib/class_wdfb_admin_form_renderer.php:748
 msgid "Publish to wall of this Facebook account:"
 msgstr ""
 
-#: lib/class_wdfb_admin_form_renderer.php:758
+#: lib/class_wdfb_admin_form_renderer.php:759
 msgid "Please make sure that you granted extended permissions to your Facebook App"
 msgstr ""
 
@@ -584,6 +584,11 @@ msgstr ""
 
 #: lib/class_wdfb_admin_help.php:122
 msgid "You will have to both select your site area, then enter the URL fragment relative to that area"
+msgstr ""
+
+#: lib/class_wdfb_admin_help.php:127
+#, php-format
+msgid "You can also use some of the supported macros: <br />%s"
 msgstr ""
 
 #: lib/class_wdfb_admin_pages.php:29
@@ -916,64 +921,64 @@ msgstr ""
 msgid "Please, wait..."
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:543
+#: lib/class_wdfb_admin_pages.php:504
 #, php-format
 msgid "Me (%s)"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:589
+#: lib/class_wdfb_admin_pages.php:550
 msgid "Facebook Publishing"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:686
+#: lib/class_wdfb_admin_pages.php:647
 msgid "Share"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:702
+#: lib/class_wdfb_admin_pages.php:663
 msgid "Post published on Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:702
+#: lib/class_wdfb_admin_pages.php:663
 msgid "Publishing on Facebook failed"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:732
+#: lib/class_wdfb_admin_pages.php:693
 msgid "On Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:738
+#: lib/class_wdfb_admin_pages.php:699
 msgid "Yes"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:738
+#: lib/class_wdfb_admin_pages.php:699
 msgid "No"
 msgstr ""
 
-#: lib/class_wdfb_marker_replacer.php:32
+#: lib/class_wdfb_marker_replacer.php:35
 msgid "Log in with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_marker_replacer.php:43
+#: lib/class_wdfb_marker_replacer.php:46
 #: lib/class_wdfb_widget_connect.php:120
 msgid "Log out"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:162
-#: lib/class_wdfb_public_pages.php:166
+#: lib/class_wdfb_public_pages.php:163
+#: lib/class_wdfb_public_pages.php:167
 #: lib/class_wdfb_widget_connect.php:87
 #: lib/class_wdfb_widget_connect.php:100
 msgid "Login with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:242
+#: lib/class_wdfb_public_pages.php:243
 msgid "Register with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:294
+#: lib/class_wdfb_public_pages.php:295
 msgid "My new blog"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:323
+#: lib/class_wdfb_public_pages.php:324
 msgid "Could not register such user"
 msgstr ""
 
@@ -1285,7 +1290,7 @@ msgstr ""
 msgid "Your blog address (%s)"
 msgstr ""
 
-#: lib/wdfb_utilities.php:164
+#: lib/wdfb_utilities.php:194
 msgid "<p>An email with your login credentails has been sent to your email address.</p>"
 msgstr ""
 
