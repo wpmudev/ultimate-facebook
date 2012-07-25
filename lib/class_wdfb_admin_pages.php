@@ -446,8 +446,14 @@ class Wdfb_AdminPages {
 				wp_set_auth_cookie($user->ID); // Logged in with Facebook, yay
 				do_action('wp_login', $user->user_login);
 				$this->handle_fb_auth_tokens();
-				wp_redirect(admin_url());
-				exit();
+				if (!(
+					defined('DOING_AJAX') 
+					&& isset($_REQUEST['action']) 
+					&& 'wdfb_perhaps_create_wp_user' == $_REQUEST['action']
+				)) {
+					wp_redirect(admin_url());
+					exit();
+				}
 			}
 		}
 	}

@@ -173,6 +173,7 @@ class Wdfb_MarkerReplacer {
 		;
 		
 		$columns = (int)$atts['columns'];
+		$current = 1;
 		foreach ($photos as $photo) {
 			$photo_idx = isset($photo['images'][$display_idx]) ? $display_idx : count($photo['images'])-1;
 			$style = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
@@ -188,6 +189,8 @@ class Wdfb_MarkerReplacer {
 					' />' .
 			'</a>';
 			if ($columns && (++$i % $columns) == 0) $ret .= '<br ' . ($style ? 'style="clear:left"' : '') . '/>';
+			if ((int)$atts['limit'] && $current >= (int)$atts['limit']) break;
+			$current++;
 		}
 		return "<div class='{$atts['album_class']}'>{$ret}</div>";
 	}

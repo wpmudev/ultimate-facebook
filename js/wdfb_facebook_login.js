@@ -29,9 +29,15 @@ function notifyAndRedirect () {
 	 */
 	function do_redirect_when_cookie_is_set () {
 		if (document.cookie.match(/fbsr_\d+/)) {
-			$.post(_wdfb_ajaxurl, {"action": "wdfb_perhaps_create_wp_user"}, function () {
-				window.location = redir;
-			});
+			if (_wdfb_ajaxurl.match(/^https:/) && 'https:' != window.location.protocol) {
+				$.getScript(_wdfb_ajaxurl + '?action=wdfb_perhaps_create_wp_user', function () {
+					window.location = redir;
+				});
+			} else {
+				$.post(_wdfb_ajaxurl, {"action": "wdfb_perhaps_create_wp_user"}, function () {
+					window.location = redir;
+				});
+			}
 		} else {
 			setTimeout(do_redirect_when_cookie_is_set, 200);
 		}
@@ -39,17 +45,6 @@ function notifyAndRedirect () {
 	do_redirect_when_cookie_is_set();
 }
 _wdfb_notifyAndRedirect = notifyAndRedirect;
-
-/*
-$('fb\\:login-button').click(function () {
-	FB.Event.subscribe('auth.login', function (r) {
-		if (r.authResponse && r.authResponse.userID) notifyAndRedirect();
-	});
-	FB.getLoginStatus(function (resp) {
-		if (resp.authResponse && resp.authResponse.userID) notifyAndRedirect();
-	});
-});
-*/
 
 });
 })(jQuery);
