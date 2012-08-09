@@ -94,7 +94,7 @@ class Wdfb_PublicPages {
 		if (!defined('WDFB_APP_ID_OG_SET')) {
 			$app_id = trim($this->data->get_option('wdfb_api', 'app_key'));
 			if ($app_id) {
-				echo "<meta property='fb:app_id' content='{$app_id}' />\n";
+				echo wdfb_get_opengraph_property('fb:app_id', $app_id, false);
 				define('WDFB_APP_ID_OG_SET', true);
 			}
 		}
@@ -116,7 +116,7 @@ class Wdfb_PublicPages {
 		}
 		$type = $type ? $type : (is_singular() ? 'article' : 'website');
 		$type = apply_filters('wdfb-opengraph-type', $type);
-		echo "<meta property='og:type' content='{$type}' />\n";
+		echo wdfb_get_opengraph_property('type', $type);
 
 		// Defaults
 		$title = apply_filters('wdfb-opengraph-title', $title);
@@ -124,11 +124,11 @@ class Wdfb_PublicPages {
 		$site_name = apply_filters('wdfb-opengraph-site_name', $site_name);
 		$description = apply_filters('wdfb-opengraph-description', $description);
 
-		if ($title) echo "<meta property='og:title' content='{$title}' />\n";
-		if ($url) echo "<meta property='og:url' content='{$url}' />\n";
-		if ($site_name) echo "<meta property='og:site_name' content='{$site_name}' />\n";
-		if ($description) echo "<meta property='og:description' content='{$description}' />\n";
-		if ($image) echo "<meta property='og:image' content='{$image}' />\n";
+		if ($title) echo wdfb_get_opengraph_property('title', $title);
+		if ($url) echo wdfb_get_opengraph_property('url', $url);
+		if ($site_name) echo wdfb_get_opengraph_property('site_name', $site_name);
+		if ($description) echo wdfb_get_opengraph_property('description', $description);
+		if ($image) echo wdfb_get_opengraph_property('image', $image);
 
 		$extras = $this->data->get_option('wdfb_opengraph', 'og_extra_headers');
 		$extras = $extras ? $extras : array();
@@ -136,8 +136,9 @@ class Wdfb_PublicPages {
 			$name = apply_filters('wdfb-opengraph-extra_headers-name', @$extra['name']);
 			$value = apply_filters('wdfb-opengraph-extra_headers-value', @$extra['value'], @$extra['name']);
 			if (!$name || !$value) continue;
-			echo "<meta property='{$name}' content='{$value}' />\n";
+			echo wdfb_get_opengraph_property($name, $title, false);
 		}
+		do_action('wdfb-opengraph-after_extra_headers');
 	}
 
 	function inject_fb_init_js () {
@@ -171,7 +172,7 @@ class Wdfb_PublicPages {
 		if (defined('WDFB_APP_ID_OG_SET')) return false;
 		$app_id = trim($this->data->get_option('wdfb_api', 'app_key'));
 		if (!$app_id) return false;
-		echo "<meta property='fb:app_id' content='{$app_id}' />\n";
+		echo wdfb_get_opengraph_property('fb:app_id', $app_id, false);
 		define('WDFB_APP_ID_OG_SET', true);
 	}
 
@@ -261,11 +262,12 @@ class Wdfb_PublicPages {
 		$wp_grant_blog = false;
 		if (is_multisite()) {
 			$reg = get_site_option('registration');
-			if ('all' == $reg) $wp_grant_blog = true;
+			if ('all' == $reg) $wp_grant_blog =  true;
 			else if ('user' != $reg) return false;
 		} else {
 			if (!(int)get_option('users_can_register')) return false;
 		}
+		$wp_grant_blog = apply_filters('wdfb-registration-allow_blog_creation', $wp_grant_blog);
 
 		// We're here, so registration is allowed
 		$registration_success = false;
@@ -335,6 +337,7 @@ class Wdfb_PublicPages {
 			//: WDFB_PLUGIN_BASE_DIR . '/lib/forms/registration_page.php'
 			: $this->get_template_page('registration_page.php')
 		;
+
 		require_once $page;
 		exit();
 	}

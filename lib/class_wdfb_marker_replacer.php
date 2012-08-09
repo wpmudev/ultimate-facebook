@@ -41,7 +41,8 @@ class Wdfb_MarkerReplacer {
 		if (!$user->ID) {
 			$html = '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '"  onlogin="_wdfb_notifyAndRedirect();">' . $content . '</fb:login-button></p>';
 		} else {
-			$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
+			//$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
+			$logout = wp_logout_url(home_url()); // Props jmoore2026
 			$html .= get_avatar($user->ID, $atts['avatar_size']);
 			$html .= "<br /><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a>";
 		}

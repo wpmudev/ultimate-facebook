@@ -115,7 +115,8 @@ class Wdfb_WidgetConnect extends WP_Widget {
 					echo '</div>';
 				}
 			} else {
-				$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
+				//$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
+				$logout = wp_logout_url(home_url()); // Props jmoore2026
 				echo get_avatar($user->ID, $avatar_size);
 				echo "<p><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a></p>";
 			}

@@ -174,6 +174,19 @@ function wdfb_get_og_image ($id=false) {
 	);
 }
 
+/**
+ * Construct OpenGraph properties from name/value pairs.
+ *
+ * @param string $name Property identifier
+ * @param string $value Property value
+ */
+function wdfb_get_opengraph_property ($name, $value, $auto_prefix=true) {
+	$name = esc_attr($name);
+	$name = $auto_prefix ? "og:{$name}" : $name;
+	$value = esc_attr($value);
+	return apply_filters('wdfb-opengraph-property', "<meta property='{$name}' content='{$value}' />\n", $name, $value);
+}
+
 
 
 /**

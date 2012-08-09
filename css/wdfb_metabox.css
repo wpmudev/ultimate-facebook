@@ -1,0 +1,17 @@
+.wdfb_metabox_container {
+	margin-bottom: 1em;
+}
+.wdfb_metabox_field {
+	border: 1px solid #eee;
+	padding: 1em;
+}
+a.wdfb_metabox_field_trigger {
+	color: #333;
+	text-decoration: none;
+}
+a.wdfb_metabox_field_trigger:before {
+	content: "[+] ";
+}
+a.wdfb_metabox_field_trigger.wdfb_metabox_field_trigger-active:before {
+	content: "[-] ";
+}

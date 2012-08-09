@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall and notes, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.2.3
+Version: 2.3
 Text Domain: wdfb
 Author: Ve Bailovity (Incsub)
 Author URI: http://premium.wpmudev.org
@@ -41,22 +41,23 @@ if ( !function_exists( 'wdp_un_check' ) ) {
 
 define ('WDFB_PLUGIN_SELF_DIRNAME', basename(dirname(__FILE__)), true);
 define ('WDFB_PROTOCOL', (@$_SERVER["HTTPS"] == 'on' ? 'https://' : 'http://'), true);
+define ('WDFB_PLUGIN_CORE_URL', plugins_url(), true);
 
 //Setup proper paths/URLs and load text domains
 if (is_multisite() && defined('WPMU_PLUGIN_URL') && defined('WPMU_PLUGIN_DIR') && file_exists(WPMU_PLUGIN_DIR . '/' . basename(__FILE__))) {
 	define ('WDFB_PLUGIN_LOCATION', 'mu-plugins', true);
 	define ('WDFB_PLUGIN_BASE_DIR', WPMU_PLUGIN_DIR, true);
-	define ('WDFB_PLUGIN_URL', str_replace('http://', WDFB_PROTOCOL, WPMU_PLUGIN_URL), true);
+	define ('WDFB_PLUGIN_URL', apply_filters('wdfb-core-plugin_url', str_replace('http://', WDFB_PROTOCOL, WPMU_PLUGIN_URL)), true);
 	$textdomain_handler = 'load_muplugin_textdomain';
 } else if (defined('WP_PLUGIN_URL') && defined('WP_PLUGIN_DIR') && file_exists(WP_PLUGIN_DIR . '/' . WDFB_PLUGIN_SELF_DIRNAME . '/' . basename(__FILE__))) {
 	define ('WDFB_PLUGIN_LOCATION', 'subfolder-plugins', true);
 	define ('WDFB_PLUGIN_BASE_DIR', WP_PLUGIN_DIR . '/' . WDFB_PLUGIN_SELF_DIRNAME, true);
-	define ('WDFB_PLUGIN_URL', str_replace('http://', WDFB_PROTOCOL, WP_PLUGIN_URL) . '/' . WDFB_PLUGIN_SELF_DIRNAME, true);
+	define ('WDFB_PLUGIN_URL', apply_filters('wdfb-core-plugin_url', str_replace('http://', WDFB_PROTOCOL, WP_PLUGIN_URL) . '/' . WDFB_PLUGIN_SELF_DIRNAME), true);
 	$textdomain_handler = 'load_plugin_textdomain';
 } else if (defined('WP_PLUGIN_URL') && defined('WP_PLUGIN_DIR') && file_exists(WP_PLUGIN_DIR . '/' . basename(__FILE__))) {
 	define ('WDFB_PLUGIN_LOCATION', 'plugins', true);
 	define ('WDFB_PLUGIN_BASE_DIR', WP_PLUGIN_DIR, true);
-	define ('WDFB_PLUGIN_URL', str_replace('http://', WDFB_PROTOCOL, WP_PLUGIN_URL), true);
+	define ('WDFB_PLUGIN_URL', apply_filters('wdfb-core-plugin_url', str_replace('http://', WDFB_PROTOCOL, WP_PLUGIN_URL)), true);
 	$textdomain_handler = 'load_plugin_textdomain';
 } else {
 	// No textdomain is loaded because we can't determine the plugin location.
@@ -168,6 +169,9 @@ function wdfb_comment_import () {
 add_action('wdfb_import_comments', 'wdfb_comment_import');//array($importer, 'serve'));
 if (!wp_next_scheduled('wdfb_import_comments')) wp_schedule_event(time()+600, 'hourly', 'wdfb_import_comments');
 
+
+require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_metabox.php');
+$og = new Wdfb_Metabox_OpenGraph;
 
 if (is_admin() || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) || (defined('DOING_CRON') && DOING_CRON)) {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_help.php');

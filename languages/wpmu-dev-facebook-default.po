@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ultimate Facebook Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-09 14:28+0100\n"
-"PO-Revision-Date: 2012-07-09 14:29+0100\n"
+"POT-Creation-Date: 2012-08-09 15:30+0100\n"
+"PO-Revision-Date: 2012-08-09 15:30+0100\n"
 "Last-Translator: \n"
 "Language-Team: Incsub\n"
 "MIME-Version: 1.0\n"
@@ -294,6 +294,8 @@ msgid "OpenGraph value:"
 msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:452
+#: lib/class_wdfb_metabox.php:191
+#: lib/class_wdfb_metabox.php:212
 msgid "Remove"
 msgstr ""
 
@@ -494,7 +496,6 @@ msgstr ""
 
 #: lib/class_wdfb_admin_form_renderer.php:737
 #: lib/class_wdfb_widget_albums.php:33
-#: lib/class_wdfb_widget_events.php:31
 msgid "Grant needed permissions now"
 msgstr ""
 
@@ -793,7 +794,7 @@ msgstr ""
 
 #: lib/class_wdfb_admin_pages.php:91
 #: lib/class_wdfb_admin_pages.php:190
-msgid "Allow fontend autoposting to Facebook"
+msgid "Allow frontend autoposting to Facebook"
 msgstr ""
 
 #: lib/class_wdfb_admin_pages.php:92
@@ -921,36 +922,36 @@ msgstr ""
 msgid "Please, wait..."
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:504
+#: lib/class_wdfb_admin_pages.php:510
 #, php-format
 msgid "Me (%s)"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:550
+#: lib/class_wdfb_admin_pages.php:556
 msgid "Facebook Publishing"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:647
+#: lib/class_wdfb_admin_pages.php:653
 msgid "Share"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:663
+#: lib/class_wdfb_admin_pages.php:669
 msgid "Post published on Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:663
+#: lib/class_wdfb_admin_pages.php:669
 msgid "Publishing on Facebook failed"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:693
+#: lib/class_wdfb_admin_pages.php:699
 msgid "On Facebook"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:699
+#: lib/class_wdfb_admin_pages.php:705
 msgid "Yes"
 msgstr ""
 
-#: lib/class_wdfb_admin_pages.php:699
+#: lib/class_wdfb_admin_pages.php:705
 msgid "No"
 msgstr ""
 
@@ -958,27 +959,88 @@ msgstr ""
 msgid "Log in with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_marker_replacer.php:46
-#: lib/class_wdfb_widget_connect.php:120
+#: lib/class_wdfb_marker_replacer.php:47
+#: lib/class_wdfb_widget_connect.php:121
 msgid "Log out"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:163
-#: lib/class_wdfb_public_pages.php:167
+#: lib/class_wdfb_metabox.php:133
+msgid "OpenGraph Settings"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:137
+msgid "Type"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:137
+msgid "Common values include \"article\", \"book\", \"profile\", etc."
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:138
+msgid "Title"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:138
+msgid "Leave empty to use post title"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:139
+msgid "Description"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:139
+msgid "Type in your OpenGraph description"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:140
+msgid "Add a set of custom OpenGraph images which will be used in addition to default ones. Please, use the full image URL"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:141
+msgid "Add a set of custom OpenGraph properties"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:185
+msgid "Custom OpenGraph images"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:190
+msgid "Image URL"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:194
+#: lib/class_wdfb_metabox.php:215
+msgid "Add another"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:204
+msgid "Custom OpenGraph properties"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:210
+msgid "Property name"
+msgstr ""
+
+#: lib/class_wdfb_metabox.php:211
+msgid "Property value"
+msgstr ""
+
+#: lib/class_wdfb_public_pages.php:164
+#: lib/class_wdfb_public_pages.php:168
 #: lib/class_wdfb_widget_connect.php:87
 #: lib/class_wdfb_widget_connect.php:100
 msgid "Login with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:243
+#: lib/class_wdfb_public_pages.php:244
 msgid "Register with Facebook"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:295
+#: lib/class_wdfb_public_pages.php:297
 msgid "My new blog"
 msgstr ""
 
-#: lib/class_wdfb_public_pages.php:324
+#: lib/class_wdfb_public_pages.php:326
 msgid "Could not register such user"
 msgstr ""
 
@@ -1050,7 +1112,6 @@ msgstr ""
 #: lib/class_wdfb_widget_activityfeed.php:29
 #: lib/class_wdfb_widget_albums.php:64
 #: lib/class_wdfb_widget_connect.php:34
-#: lib/class_wdfb_widget_events.php:63
 msgid "Title:"
 msgstr ""
 
@@ -1112,7 +1173,6 @@ msgid "Your app doesn't have enough permissions to access your albums"
 msgstr ""
 
 #: lib/class_wdfb_widget_albums.php:57
-#: lib/class_wdfb_widget_events.php:54
 #, php-format
 msgid "You should be logged into your Facebook account when adding this widget. <a href=\"%s\">Click here to do so now</a>, then refresh this page."
 msgstr ""
@@ -1290,7 +1350,7 @@ msgstr ""
 msgid "Your blog address (%s)"
 msgstr ""
 
-#: lib/wdfb_utilities.php:194
+#: lib/wdfb_utilities.php:207
 msgid "<p>An email with your login credentails has been sent to your email address.</p>"
 msgstr ""
 
@@ -1343,11 +1403,6 @@ msgstr ""
 #: lib/forms/error_log.php:19
 #: lib/forms/error_log.php:28
 msgid "Area"
-msgstr ""
-
-#: lib/forms/error_log.php:20
-#: lib/forms/error_log.php:29
-msgid "Type"
 msgstr ""
 
 #: lib/forms/error_log.php:21
