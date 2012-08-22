@@ -68,7 +68,7 @@
 		<li><code>photo_width</code> - <em>optional.</em> Width of your images in the album.</li>
 		<li><code>photo_height</code> - <em>optional.</em> Height of your images in the album.</li>
 		<li><code>crop</code> - <em>optional.</em> Crop images to fit height.</li>
-		<li><code>limit</code> - <em>optional.</em> Limit output to this may photos.</li>
+		<li><code>limit</code> - <em>optional.</em> Limit output to this many photos.</li>
 	</ul>
 </p>
 <p>

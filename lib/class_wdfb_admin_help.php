@@ -123,6 +123,10 @@ class Wdfb_AdminHelp {
 				'#wdfb-login_redirect_base-help'
 			);
 			$this->$tip->bind_tip(
+				__('Allows your users to reset their WordPress-to-Facebook identity mapping.', 'wdfb') . '<br />' . __('Identity renewal options will be available in your Profile section.', 'wdfb'), 
+				'#wdfb-identity_help_anchor'
+			);
+			$this->$tip->bind_tip(
 				sprintf(
 					__('You can also use some of the supported macros: <br />%s', 'wdfb'),
 					defined('BP_VERSION') 

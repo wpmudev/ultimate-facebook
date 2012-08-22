@@ -198,15 +198,40 @@ class Wdfb_PublicPages {
 		return $defaults;
 	}
 
+	function bp_inject_form_checkbox () {
+		echo '<span id="wdfb_send_activity-container"><input type="checkbox" name="wdfb_send_activity" id="wdfb_send_activity" value="1" />&nbsp;<label for="wdfb_send_activity">' . __('Publish on Facebook', 'wdfb') . '</label></span>';
+		echo <<<EOBpFormInjection
+<script>
+(function ($) {
+$(function () {
+	if (!$("#whats-new-post-in-box").length) return false;
+	$("#whats-new-post-in-box").append($("#wdfb_send_activity-container"));
+
+});
+$.ajaxSetup({
+	"beforeSend": function (jqxhr, settings) {
+		if ($("#wdfb_send_activity").is(":checked")) settings.data += '&wdfb_send_activity=1';
+		return settings;
+	}
+});
+})(jQuery);
+</script>
+EOBpFormInjection;
+	}
+
 	function get_commenter_avatar ($old, $comment, $size) {
 		if (!is_object($comment)) return $old;
 		$meta = get_comment_meta($comment->comment_ID, 'wdfb_comment', true);
 		if (!$meta) return $old;
 
 		$fb_size_map = false;
-		if ($size <= 50) $fb_size_map = '?type=small';
-		if ($size > 50 && $size <= 100) $fb_size_map = '?type=normal';
-		if ($size > 100) $fb_size_map = '?type=large';
+		if ($size <= 50) $fb_size_map = 'square';
+		if ($size > 50 && $size <= 100) $fb_size_map = 'normal';
+		if ($size > 100) $fb_size_map = 'large';
+		$fb_size_map = $fb_size_map 
+			? '?type=' . apply_filters('wdfb-avatar-fb_size_map', $fb_size_map, $size) 
+			: false
+		;
 
 		return '<img src="' . WDFB_PROTOCOL  . 'graph.facebook.com/' . $meta['fb_author_id'] . '/picture' . $fb_size_map . '" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
 	}
@@ -232,9 +257,13 @@ class Wdfb_PublicPages {
 
 		$img_size = $size ? "width='{$size}px'" : '';
 		$fb_size_map = false;
-		if ($size <= 50) $fb_size_map = '?type=small';
-		if ($size > 50 && $size <= 100) $fb_size_map = '?type=normal';
-		if ($size > 100) $fb_size_map = '?type=large';
+		if ($size <= 50) $fb_size_map = 'square';
+		if ($size > 50 && $size <= 100) $fb_size_map = 'normal';
+		if ($size > 100) $fb_size_map = 'large';
+		$fb_size_map = $fb_size_map 
+			? '?type=' . apply_filters('wdfb-avatar-fb_size_map', $fb_size_map, $size) 
+			: false
+		;
 
 		return "<img class='avatar' src='" . WDFB_PROTOCOL  . "graph.facebook.com/{$fb_uid}/picture{$fb_size_map}' {$img_size} />";
 	}
@@ -427,12 +456,22 @@ class Wdfb_PublicPages {
 					'link' => $permalink,
 					'name' => $post->post_title,
 					'description' => get_option('blogdescription'),
+					'actions' => array (
+						'name' => __('Share', 'wdfb'),
+						'link' => 'http://www.facebook.com/sharer.php?u=' . rawurlencode($permalink),
+					),
 				);
 				if ($picture) $send['picture'] = $picture;
 				break;
 		}
+		$send = apply_filters('wdfb-autopost-post_update', $send, $post_id);
+		$send = apply_filters('wdfb-autopost-send', $send, $post_as, $post_to);
 		$res = $this->model->post_on_facebook($post_as, $post_to, $send, $as_page);
-		if ($res) update_post_meta($post_id, 'wdfb_published_on_fb', 1);
+		if ($res) {
+			update_post_meta($post_id, 'wdfb_published_on_fb', 1);
+			do_action('wdfb-autopost-posting_successful', $post_id);
+		}
+		do_action('wdfb-autopost-posting_complete', $res);
 	}
 
 	/**
@@ -516,6 +555,12 @@ class Wdfb_PublicPages {
 		// Autopost for front pages
 		if ($this->data->get_option('wdfb_autopost', 'allow_autopost') && $this->data->get_option('wdfb_autopost', 'allow_frontend_autopost')) {
 			add_action('save_post', array($this, 'publish_post_on_facebook'));
+			if (defined('BP_VERSION')) {
+				if (!$this->data->get_option('wdfb_autopost', "prevent_bp_activity_switch")) {
+					// Semi-auto-publish switch for BuddyPress Activities
+					add_filter('bp_activity_post_form_options', array($this, 'bp_inject_form_checkbox'));
+				}
+			}
 		}
 
 		$rpl = $this->replacer->register();

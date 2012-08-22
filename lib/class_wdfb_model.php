@@ -103,7 +103,7 @@ class Wdfb_Model {
 		} 
 		if (!function_exists('xprofile_avatar_upload_dir') || empty($path)) {
 			$object = 'user';
-			$avatar_dir = apply_filters( 'bp_core_avatar_dir', 'avatars', $object );
+			$avatar_dir = apply_filters('bp_core_avatar_dir', 'avatars', $object);
 			$path = bp_core_avatar_upload_path() . "/{$avatar_dir}/" . $user_id;
 			$path = apply_filters('bp_core_avatar_folder_dir', $path, $user_id, $object, $avatar_dir);
 			if (!realpath($path)) @wp_mkdir_p($path);
@@ -153,18 +153,55 @@ class Wdfb_Model {
 			@unlink($filepath);
 			return false;
 		}
+		$extension = 'jpeg' == strtolower($extension) ? 'jpg' : $extension; // Forcing .jpg extension for JPEGs
 
 		// Clear old avatars
 		$imgs = glob($path . '/*.{gif,png,jpg}', GLOB_BRACE);
 		if (is_array($imgs)) foreach ($imgs as $old) {
 			@unlink($old);
 		}
-		// Create new avatar
-		copy($filepath, "{$filepath}-bpthumb.{$extension}");
-		copy($filepath, "{$filepath}-bpfull.{$extension}");
-		
-		@unlink($filepath);
-		return true;
+
+		// Create and set new avatar
+		if (defined('WDFB_BP_AVATAR_AUTO_CROP') && WDFB_BP_AVATAR_AUTO_CROP) {
+			// Explicitly requested thumbnail processing
+			// First, determine the centering position for cropping
+			if ($info && isset($info[0]) && $info[0] && isset($info[1]) && $info[1]) {
+				$full = apply_filters('wdfb-avatar-auto_crop', array(
+					'x' => (int)(($info[0] - bp_core_avatar_full_width()) / 2),
+					'y' => (int)(($info[1] - bp_core_avatar_full_height()) / 2),
+					'width' => bp_core_avatar_full_width(),
+					'height' => bp_core_avatar_full_height(),
+				), $filepath, $info);
+			}
+			$crop = $full
+				? wp_crop_image($filepath, $full['x'], $full['y'], $full['width'], $full['height'], bp_core_avatar_full_width(), bp_core_avatar_full_height(), false, "{$filepath}-bpfull.{$extension}")
+				: false
+			;
+			if (!$crop) {
+				@unlink($filepath);
+				return false;
+			}
+			// Now, the thumbnail. First, try to resize the full avatar
+			$thumb_file = wp_create_thumbnail("{$filepath}-bpfull.{$extension}", bp_core_avatar_thumb_width());
+			if (!is_wp_error($thumb_file)) {
+				// All good! We're done - clean up
+				copy($thumb_file, "{$filepath}-bpthumb.{$extension}");
+				@unlink($thumb_file);
+			} else {
+				// Sigh. Let's just fake it by using the original file then.
+				copy("{$filepath}-bpfull.{$extension}", "{$filepath}-bpthumb.{$extension}");
+			}
+			@unlink($filepath);
+			return true;
+		} else {
+			// No auto-crop, move on
+			copy($filepath, "{$filepath}-bpfull.{$extension}");
+			copy($filepath, "{$filepath}-bpthumb.{$extension}");
+			@unlink($filepath);
+			return true;
+		}
+
+		return false;
 	}
 
 	function get_all_user_tokens () {
@@ -325,6 +362,27 @@ class Wdfb_Model {
 		}
 
 		return true;
+	}
+
+	function get_user_data_for ($for=false) {
+		if (!$for) return false;
+		try {
+			$data = $this->fb->api("/{$for}");
+		} catch (Exception $e) {
+			return false;
+		}
+		return $data;
+	}
+
+	function get_current_wp_user_data () {
+		$user = wp_get_current_user();
+		if (!$user || !$user->ID) return false; // User not logged into WP, skip
+		$fb_uid = get_user_meta($user->ID, 'wdfb_fb_uid', true);
+		return $this->get_user_data_for($fb_uid);
+	}
+
+	function get_current_fb_user_data () {
+		return $this->get_user_data_for('me');
 	}
 
 	function get_current_user_fb_id () {

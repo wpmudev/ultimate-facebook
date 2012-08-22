@@ -5,6 +5,14 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.4 - 2012-08-22
+----------------------------------------------------------------------
+- Deprecated simple redirection logic.
+- Added optional exact redirect url fallback.
+- Resizing avatars to thumbnail size, added optional auto-crop.
+- Activity updates publishing to personal and sitewide feed.
+- Optional identity renewal link.
+
 2.3 - 2012-08-09
 ----------------------------------------------------------------------
 - Added OpenGraph metabox and augmented per-post overrides.

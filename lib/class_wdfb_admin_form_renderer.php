@@ -270,6 +270,12 @@ class Wdfb_AdminFormRenderer {
 			echo '</select><br />';
 		}
 	}
+	function create_identity_renewal_box () {
+		$opt = $this->_get_option('wdfb_connect');
+		echo $this->_create_checkbox('connect', 'allow_identity_renewal',  @$opt['allow_identity_renewal']);
+		echo '<span id="wdfb-identity_help_anchor"></span>';
+		echo '<div><small>' . __('Enabling this option will allow your users to change their associated Facebook profiles to ones they\'re currently actively using.', 'wdfb') . '</small></div>';
+	}
 	function create_wordpress_registration_fields_box () {
 		$opt = $this->_get_option('wdfb_connect');
 		$fb_fields = array (
@@ -629,6 +635,31 @@ class Wdfb_AdminFormRenderer {
 				ucfirst($pval), $box, $fb_user, $shortlink
 			);
 		}
+
+		// BP Activities mappings
+		if (defined('BP_VERSION')) {
+			$pname = 'bp_activity';
+			$pval = __('BuddyPress Activity update', 'wdfb');
+			$fb_action = @$opts["type_{$pname}_fb_type"];
+			$box = '<select name="wdfb_autopost[type_' . $pname . '_fb_type]">';
+			foreach ($fb_locations as $fbk=>$fbv) {
+				$box .= "<option value='{$fbk}' " . (($fbk == $fb_action) ? 'selected="selected"' : '') . ">{$fbv}</option>";
+			}
+			$box .= '</select>';
+
+			$fb_user_val = @$opts["type_{$pname}_fb_user"];
+			$fb_user = '<select name="wdfb_autopost[type_' . $pname . '_fb_user]">';
+			foreach ($fb_accounts as $aid=>$aval) {
+				$fb_user .= "<option value='{$aid}' " . (($fb_user_val == $aid) ? 'selected="selected"' : '') . ">{$aval}</option>";
+			}
+			$fb_user .= '</select>';
+			
+			printf(
+				__("<li>Autopost %s to %s of this user: %s </li>", 'wdfb'),
+				ucfirst($pval), $box, $fb_user, $shortlink
+			);
+		}
+
 		echo "</ul>";
 		echo '<label for="post_as_page">' . __("If posting to a page, post <b>AS</b> page", "wdfb") . '</label> ' .
 			$this->_create_checkbox('autopost', 'post_as_page', @$opts['post_as_page'])
@@ -643,6 +674,11 @@ class Wdfb_AdminFormRenderer {
 		$opt =  $this->_get_option('wdfb_autopost');
 		echo $this->_create_checkbox('autopost', 'prevent_post_metabox',  @$opt['prevent_post_metabox']);
 		echo '<div><small>' . __('If you check this box, your users will <b>NOT</b> be able to make individual posts to Facebook using the post editor metabox.', 'wdfb') . '</small></div>';
+	}
+	function create_allow_bp_activity_switch_box () {
+		$opt =  $this->_get_option('wdfb_autopost');
+		echo $this->_create_checkbox('autopost', 'prevent_bp_activity_switch',  @$opt['prevent_bp_activity_switch']);
+		echo '<div><small>' . __('If you check this box, your users will <b>NOT</b> be able to make individual posts to Facebook using the Activities form switch.', 'wdfb') . '</small></div>';
 	}
 
 	function create_override_all_box () {

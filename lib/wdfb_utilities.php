@@ -87,7 +87,23 @@ function wdfb_get_login_redirect ($force_admin_redirect=false) {
 		$base = $data->get_option('wdfb_connect', 'login_redirect_base');
 		$base = ('admin_url' == $base) ? 'admin_url' : 'site_url';
 		$redirect_url = $base($url);
-	} else $redirect_url = defined('BP_VERSION') ? home_url() : $force_admin_redirect ? admin_url() : home_url();
+	} else {
+		if (!defined('BP_VERSION') && $force_admin_redirect) {
+			// Forcing admin url redirection
+			$redirect_url = admin_url();
+		} else {
+			// Non-admin URL redirection, no specific settings
+			global $post, $wp;
+			if (is_singular() && is_object($post) && isset($post->ID)) {
+				// Set to permalink for current item, if possible
+				$redirect_url = apply_filters('wdfb-login-redirect_url-item_url', get_permalink($post->ID));
+			}
+			$fallback_url = (defined('WDFB_EXACT_REDIRECT_URL_FALLBACK') && WDFB_EXACT_REDIRECT_URL_FALLBACK) ? site_url($wp->request) : home_url();
+			// Default to home URL otherwise
+			$redirect_url = $redirect_url ? $redirect_url : $fallback_url;
+		}
+		//$redirect_url = defined('BP_VERSION') ? home_url() : $force_admin_redirect ? admin_url() : home_url(); // Deprecated simple logic
+	}
 
 	return apply_filters('wdfb-login-redirect_url', $redirect_url);
 }
@@ -181,6 +197,7 @@ function wdfb_get_og_image ($id=false) {
  * @param string $value Property value
  */
 function wdfb_get_opengraph_property ($name, $value, $auto_prefix=true) {
+	if (!$name && !$value) return false; // Zero out empty tags
 	$name = esc_attr($name);
 	$name = $auto_prefix ? "og:{$name}" : $name;
 	$value = esc_attr($value);
@@ -242,3 +259,10 @@ class Wdfb_ErrorRegistry {
 		;
 	}
 }
+
+function wdfb_cleanup_admin_pages ($list) {
+	return array_merge($list, array(
+		'tools_page_codestyling-localization/codestyling-localization',
+	));
+}
+add_filter('wdfb-scripts-prevent_inclusion_ids', 'wdfb_cleanup_admin_pages');
