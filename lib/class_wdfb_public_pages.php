@@ -523,7 +523,12 @@ EOBpFormInjection;
 			// New login/register
 			// First, do optionals
 			if (is_multisite()) add_action('before_signup_form', array($this, 'inject_optional_facebook_registration_button'));
-			else if (isset($_GET['action']) && 'register' == $_GET['action']) {
+			
+			add_action('signup_hidden_fields', array($this, 'inject_optional_facebook_registration_button'));
+			add_action('bp_before_account_details_fields', array($this, 'inject_optional_facebook_registration_button'));
+			add_action('signup_extra_fields', array($this, 'inject_fb_login'));
+			
+			if (isset($_GET['action']) && 'register' == $_GET['action']) {
 				add_action('login_head', create_function('', 'echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"' . WDFB_PLUGIN_URL . '/css/wdfb.css\" />";'));
 				// Better registration button placement for single site
 				// Fix by riyaku

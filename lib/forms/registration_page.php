@@ -2,10 +2,11 @@
 
 <?php
 $redirect_url = is_multisite() ?
-	'/wp-signup.php?action=register&fb_register=1'
+	site_url('/wp-signup.php?action=register&fb_register=1')
 	:
-	'/wp-login.php?action=register&fb_register=1'
+	site_url('/wp-login.php?action=register&fb_register=1')
 ;
+$redirect_url = apply_filters('wdfb_registration_redirect_url',$redirect_url);
 $opts = Wdfb_OptionsRegistry::get_instance();
 $force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $opts->get_option('wdfb_connect', 'require_facebook_account'))
 	? 'fb_only=true&' : ''
@@ -26,7 +27,7 @@ $force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $o
 	?>client_id=<?php
 		echo $this->data->get_option('wdfb_api', 'app_key');
 	?>&redirect_uri=<?php
-		echo urlencode(site_url($redirect_url));
+		echo urlencode($redirect_url);
 	?>&fields=<?php
 		echo wdfb_get_registration_fields();
 	?>&locale=<?php echo wdfb_get_locale();?>"
