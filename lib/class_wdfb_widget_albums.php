@@ -140,7 +140,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$album_id = $instance['album_id'];
 
 		$api = new Wdfb_AlbumPhotosBuffer;
-		$photos = $api->get_for($album_id);
+		$photos = $api->get_for($album_id, $limit);
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
@@ -153,7 +153,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 				if ($overall >= $limit) break;
 				$style = $img_crop ? "display:block;float:left;height:{$img_h}px;overflow:hidden" : '';
 				$url = $fb_open
-					? 'http://www.facebook.com/photo.php?fbid=' . $photo['id']
+					? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id']
 					: $photo['images'][0]['source']
 				;
 				echo '<td valign="top">' .

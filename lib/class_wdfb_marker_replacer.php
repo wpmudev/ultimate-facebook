@@ -162,7 +162,7 @@ class Wdfb_MarkerReplacer {
 		$fb_open = ('source' != $atts['link_to']);
 		
 		$api = new Wdfb_AlbumPhotosBuffer;
-		$photos = $api->get_for($atts['id']);
+		$photos = $api->get_for($atts['id'], $atts['limit']);
 		if (!is_array($photos)) return $content;
 		
 		$ret = false;
@@ -179,7 +179,7 @@ class Wdfb_MarkerReplacer {
 			$photo_idx = isset($photo['images'][$display_idx]) ? $display_idx : count($photo['images'])-1;
 			$style = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
 			$url = $fb_open
-				? 'http://www.facebook.com/photo.php?fbid=' . $photo['id']
+				? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id']
 				: $photo['images'][0]['source']
 			;
 			$ret .= '<a href="' . $url . 

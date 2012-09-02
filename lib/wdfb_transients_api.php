@@ -7,7 +7,7 @@ abstract class Wdfb_TransientBuffer {
 	
 	const TRANSIENT_TIMEOUT = 21600; // 6 hours timeout by default;
 	
-	abstract public function get_for ($id);
+	abstract public function get_for ($id, $limit=false);
 	
 	protected function get_transient_name ($type, $id) {
 		return "wdfb-{$type}-{$id}";
@@ -18,7 +18,7 @@ abstract class Wdfb_TransientBuffer {
 	}
 
 	protected function store ($transient, $value) {
-		return set_transient($transient, $value, self::TRANSIENT_TIMEOUT);
+		return set_transient($transient, $value, apply_filters('wdfb-transients-buffer_timeout', self::TRANSIENT_TIMEOUT));
 	}
 }
 
@@ -27,7 +27,7 @@ abstract class Wdfb_TransientBuffer {
  */
 class Wdfb_EventsBuffer extends Wdfb_TransientBuffer {
 	
-	public function get_for ($fbid) {
+	public function get_for ($fbid, $limit=false) {
 		if (!$fbid) return false;
 		$transient = $this->get_transient_name('events', $fbid);
 		
@@ -49,7 +49,7 @@ class Wdfb_EventsBuffer extends Wdfb_TransientBuffer {
  */
 class Wdfb_AlbumPhotosBuffer extends Wdfb_TransientBuffer {
 	
-	public function get_for ($album_id) {
+	public function get_for ($album_id, $limit=false) {
 		if (!$album_id) return false;
 		$transient = $this->get_transient_name('album_photos', $album_id);
 		
@@ -57,7 +57,7 @@ class Wdfb_AlbumPhotosBuffer extends Wdfb_TransientBuffer {
 		if ($result) return $result;
 		
 		$model = new Wdfb_Model;
-		$photos = $model->get_album_photos($album_id);
+		$photos = $model->get_album_photos($album_id, $limit);
 		if (!$photos) return false;
 		
 		$this->store($transient, $photos['data']);

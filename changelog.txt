@@ -5,6 +5,12 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.4.1 - 2012-09-02
+----------------------------------------------------------------------
+- Fix for BuddyPress activity items logic in OpenGraph url.
+- Fix for cursor-based paging items fetching through batch requests.
+- Added color scheme selection for Facebook Comments.
+
 2.4 - 2012-08-22
 ----------------------------------------------------------------------
 - Deprecated simple redirection logic.

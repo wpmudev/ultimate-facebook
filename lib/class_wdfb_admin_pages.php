@@ -83,6 +83,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_fb_comments_width', __('Facebook Comments box width', 'wdfb'), array($form, 'create_fb_comments_width_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_reverse', __('Show Facebook Comments in reverse order?', 'wdfb'), array($form, 'create_fb_comments_reverse_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_number', __('Show this many Facebook Comments', 'wdfb'), array($form, 'create_fb_comments_number_box'), 'wdfb_options_page', 'wdfb_comments');
+		add_settings_field('wdfb_fb_color_scheme', __('Color scheme', 'wdfb'), array($form, 'create_fb_comments_color_scheme_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_custom_hook', __('Use a custom hook <small>(advanced)</small>', 'wdfb'), array($form, 'create_fb_comments_custom_hook_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_comments');
 
@@ -184,6 +185,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_fb_comments_width', __('Facebook Comments box width', 'wdfb'), array($form, 'create_fb_comments_width_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_reverse', __('Show Facebook Comments in reverse order?', 'wdfb'), array($form, 'create_fb_comments_reverse_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_number', __('Show this many Facebook Comments', 'wdfb'), array($form, 'create_fb_comments_number_box'), 'wdfb_options_page', 'wdfb_comments');
+		add_settings_field('wdfb_fb_color_scheme', __('Color scheme', 'wdfb'), array($form, 'create_fb_comments_color_scheme_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_custom_hook', __('Use a custom hook <small>(advanced)</small>', 'wdfb'), array($form, 'create_fb_comments_custom_hook_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_comments');
 
@@ -905,6 +907,15 @@ $token = false;
 		}
 	}
 
+	function inject_settings_link ($links) {
+		$settings = '<a href="' .
+			(is_network_admin() ? network_admin_url('admin.php?page=wdfb') : admin_url('admin.php?page=wdfb')) .
+			'">' . __('Settings', 'wdfb') . 
+		'</a>';
+		array_unshift($links, $settings);
+		return $links;
+	}
+
 	/**
 	 * Hooks to appropriate places and adds stuff as needed.
 	 *
@@ -915,9 +926,13 @@ $token = false;
 		if (defined('WP_NETWORK_ADMIN') && WP_NETWORK_ADMIN) {
 			add_action('admin_init', array($this, 'register_site_settings'));
 			add_action('network_admin_menu', array($this, 'create_site_admin_menu_entry'));
+			
+			add_filter('plugin_action_links_' . WDFB_PLUGIN_CORE_BASENAME, array($this, 'inject_settings_link'));
+			add_filter('network_admin_plugin_action_links_' . WDFB_PLUGIN_CORE_BASENAME, array($this, 'inject_settings_link'));
 		} else {
 			$opt = get_site_option('wdfb_network', array());
 			if (!@$opt['prevent_blog_settings']) {
+				add_filter('plugin_action_links_' . WDFB_PLUGIN_CORE_BASENAME, array($this, 'inject_settings_link'));
 				add_action('admin_init', array($this, 'register_blog_settings'));
 				add_action('admin_menu', array($this, 'create_blog_admin_menu_entry'));
 			}

@@ -508,7 +508,7 @@ class Wdfb_AdminFormRenderer {
 	}
 	function create_fb_comments_limit_box () {
 		$opt = $this->_get_option('wdfb_comments');
-		echo "<select name='wdfb_comments[comment_limit]>";
+		echo "<select name='wdfb_comments[comment_limit]'>";
 		for ($i=0; $i<110; $i+=10) {
 			echo "<option value='{$i}' " . (($i == @$opt['comment_limit']) ? 'selected="selected"' : '') . ">{$i}</option>";
 		}
@@ -563,6 +563,18 @@ class Wdfb_AdminFormRenderer {
 			echo "<option value='{$i}' {$selected}>{$i}</option>";
 		}
 		echo '</select>';
+	}
+	function create_fb_comments_color_scheme_box () {
+		$opt = $this->_get_option('wdfb_comments');
+		$_schemes = array(
+			'light' => __('Light', 'wdfb'),
+			'dark' => __('Dark', 'wdfb'),
+		);
+		echo "<select name='wdfb_comments[fb_color_scheme]'>";
+		foreach ($_schemes as $idx => $lbl) {
+			echo "<option value='{$idx}' " . (($idx == @$opt['fb_color_scheme']) ? 'selected="selected"' : '') . ">{$lbl}</option>";
+		}
+		echo "</select>";	
 	}
 	function create_fb_comments_custom_hook_box () {
 		$opt = $this->_get_option('wdfb_comments');

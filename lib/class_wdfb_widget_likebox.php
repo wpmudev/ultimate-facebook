@@ -115,7 +115,7 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo '<iframe id="' . $id . '" src="http://www.facebook.com/plugins/likebox.php?href=' . 
+		echo '<iframe id="' . $id . '" src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/likebox.php?href=' . 
 			$url . '&amp;width=' . $width . '&amp;locale=' . $locale . '&amp;colorscheme=' . 
 			$color_scheme . '&amp;show_faces=' . $show_faces . '&amp;stream=' . 
 			$show_stream . '&amp;header=' . $show_header . '&amp;height='. 

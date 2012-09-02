@@ -77,6 +77,13 @@ class Wdfb_PublicPages {
 			$id = $post->ID;
 			$title = $post->post_title;
 			$url = get_permalink($id);
+			if (defined('BP_VERSION') && function_exists('bp_current_component') && bp_current_component()) {
+				global $wp, $bp;
+				$url = function_exists('bp_is_user_profile_edit') && bp_is_user_profile_edit() 
+					? bp_core_get_user_domain($bp->displayed_user->id)
+					: site_url($wp->request)
+				;
+			}
 			$site_name = get_option('blogname');
 			$content = $post->post_excerpt ? $post->post_excerpt : strip_shortcodes($post->post_content);
 			$text = htmlspecialchars(wp_strip_all_tags($content), ENT_QUOTES);
@@ -186,14 +193,17 @@ class Wdfb_PublicPages {
 		$width = $width ? $width : '550';
 
 		$num_posts = (int)$this->data->get_option('wdfb_comments', 'fb_comments_number');
-
 		$reverse = $this->data->get_option('wdfb_comments', 'fb_comments_reverse') ? 'true' : 'false';
+
+		$scheme = $this->data->get_option('wdfb_comments', 'fb_color_scheme');
+		$scheme = $scheme ? $scheme : 'light';
 
 		echo "<fb:comments href='{$link}' " .
 			"xid='{$xid}' " .
 			"num_posts='{$num_posts}' " .
 			"width='{$width}px' " .
 			"reverse='{$reverse}' " .
+			"colorscheme='{$scheme}' " .
 			"publish_feed='true'></fb:comments>";
 		return $defaults;
 	}
@@ -523,22 +533,23 @@ EOBpFormInjection;
 			// New login/register
 			// First, do optionals
 			if (is_multisite()) add_action('before_signup_form', array($this, 'inject_optional_facebook_registration_button'));
+			// Cole's changeset
+			if (WDFB_MEMBERSHIP_INSTALLED) {
+				add_action('signup_hidden_fields', array($this, 'inject_optional_facebook_registration_button'));
+				add_action('bp_before_account_details_fields', array($this, 'inject_optional_facebook_registration_button'));
+				add_action('signup_extra_fields', array($this, 'inject_fb_login'));
+			} else {
+				// BuddyPress
+				add_filter('bp_before_register_page', array($this, 'inject_optional_facebook_registration_button')); // BuddyPress
+			}
 			
-			add_action('signup_hidden_fields', array($this, 'inject_optional_facebook_registration_button'));
-			add_action('bp_before_account_details_fields', array($this, 'inject_optional_facebook_registration_button'));
-			add_action('signup_extra_fields', array($this, 'inject_fb_login'));
-			
-			if (isset($_GET['action']) && 'register' == $_GET['action']) {
+			if (!is_multisite() && isset($_GET['action']) && 'register' == $_GET['action']) {
 				add_action('login_head', create_function('', 'echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"' . WDFB_PLUGIN_URL . '/css/wdfb.css\" />";'));
 				// Better registration button placement for single site
 				// Fix by riyaku
 				// Thank you so much!
-				//add_action('login_message', array($this, 'inject_optional_facebook_registration_button'));
 				add_action('register_form', array($this, 'inject_optional_facebook_registration_button'));
 			}
-
-			// BuddyPress
-			add_filter('bp_before_register_page', array($this, 'inject_optional_facebook_registration_button')); // BuddyPress
 
 			// Jack the signup
 			add_action('init', array($this, 'process_facebook_registration'), 20);

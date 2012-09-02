@@ -100,7 +100,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 					echo '		<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '" onlogin="_wdfb_notifyAndRedirect();">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
 					echo '	</div>';
 					echo '	<div class="wdfb_connect_target" id="wdfb_connect_widget_register">';
-					echo '	<iframe src="http://www.facebook.com/plugins/registration.php?' . $force .
+					echo '	<iframe src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/registration.php?' . $force .
 						        'client_id=' . trim($opts->get_option('wdfb_api', 'app_key')) . '&' .
 						        'redirect_uri=' . urlencode(site_url('/wp-signup.php?action=register&fb_register=1')) . '&' .
 						        'fields=' . $fields . '&width=' . $width . '&locale=' . wdfb_get_locale() . '"

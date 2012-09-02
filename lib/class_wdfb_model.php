@@ -515,16 +515,45 @@ class Wdfb_Model {
 		return $albums ? $albums : false;
 	}
 
-	function get_album_photos ($aid, $limit=false) {
+	function get_album_photos ($aid, $limit=false, $offset=false) {
 		if (!$aid) return false;
-		$limit = $limit ? '?limit=' . $limit : '';
-		try {
-			$res = $this->fb->api('/' . $aid . '/photos/' . $limit);
-		} catch (Exception $e) {
-			$this->log->error(__FUNCTION__, $e);
-			return false;
+		$page_size = 25;
+		$max_limit = apply_filters('wdfb-albums-max_photos_limit', 
+			(defined('WDFB_ALBUMS_MAX_PHOTOS_LIMIT') && WDFB_ALBUMS_MAX_PHOTOS_LIMIT ? WDFB_ALBUMS_MAX_PHOTOS_LIMIT : 200)
+		);
+
+		if ($limit && $limit > $page_size) {
+			$limit = $limit > $max_limit ? $max_limit : $limit;
+			$batch = array();
+			for ($i=0; $i<$limit; $i+=$page_size) {
+				$batch[] = json_encode(array(
+					'method' => 'GET',
+					'relative_url' => "/{$aid}/photos/?limit={$page_size}&offset={$i}&fields=id,name,picture,source,height,width,images,link,icon,created_time,updated_time"
+				));
+			}
+			try {
+				$res = $this->fb->api('/', 'POST', array('batch' => '[' . implode(',',$batch) . ']'));
+			} catch (Exception $e) {
+				$this->log->error(__FUNCTION__, $e);
+				return false;
+			}
+			$return = array();
+			foreach ($res as $key => $data) {
+				if (!$data || !isset($data['body'])) continue;
+				$data = json_decode($data['body'],true);
+				$return = array_merge($return, $data['data']);
+			}
+			return array('data' => $return);
+		} else {
+			$limit = $limit ? '?limit=' . $limit : '';
+			try {
+				$res = $this->fb->api('/' . $aid . '/photos/' . $limit);
+			} catch (Exception $e) {
+				$this->log->error(__FUNCTION__, $e);
+				return false;
+			}
+			return $res;
 		}
-		return $res;
 	}
 
 	function get_feed_for ($uid, $limit=false) {
@@ -571,6 +600,6 @@ class Wdfb_Model {
 		while (username_exists($username)) {
 			$username .= rand();
 		}
-		return $username;
+		return apply_filters('wdfb-registration-username', $username, $me);
 	}
 }

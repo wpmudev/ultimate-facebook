@@ -73,7 +73,7 @@ class Wdfb_WidgetFacepile extends WP_Widget {
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo '<iframe src="http://www.facebook.com/plugins/facepile.php?href=' . 
+		echo '<iframe src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/facepile.php?href=' . 
 			$url . '&amp;width=' . $width . '&amp;locale=' . $locale . '&amp;max_rows=' . 
 			$rows . '" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . 
 			$width . 'px;" allowTransparency="true"></iframe>'
