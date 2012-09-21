@@ -33,7 +33,7 @@ function init () {
 			);
 			$(".wdfb_grant_events_perms").live("click", function () { 
 				var $me = $(this);
-				var locale = $me.attr("wdfb:locale");
+				var locale = $me.attr("data-wdfb_locale");
 				FB.login(function () {
 					window.location.reload(true);
 				}, {

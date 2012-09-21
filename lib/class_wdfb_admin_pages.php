@@ -45,6 +45,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_easy_facebook_registration', __('Allow single-click registration', 'wdfb'), array($form, 'create_easy_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_login_redirect', __('Redirect on login', 'wdfb'), array($form, 'create_login_redirect_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_captcha', __('Do not show CAPTCHA on registration pages', 'wdfb'), array($form, 'create_captcha_box'), 'wdfb_options_page', 'wdfb_connect');
+		add_settings_field('wdfb_autologin', __('Auto-login after registration', 'wdfb'), array($form, 'create_autologin_box'), 'wdfb_options_page', 'wdfb_connect');
 		if (defined('BP_VERSION')) { // BuddyPress
 			add_settings_field('wdfb_buddypress_registration_fields', __('Map BuddyPress profile to Facebook', 'wdfb'), array($form, 'create_buddypress_registration_fields_box'), 'wdfb_options_page', 'wdfb_connect');
 		} else {
@@ -145,6 +146,7 @@ class Wdfb_AdminPages {
 			add_settings_field('wdfb_easy_facebook_registration', __('Allow single-click registration', 'wdfb'), array($form, 'create_easy_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_login_redirect', __('Redirect on login', 'wdfb'), array($form, 'create_login_redirect_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_captcha', __('Do not show CAPTCHA on registration pages', 'wdfb'), array($form, 'create_captcha_box'), 'wdfb_options_page', 'wdfb_connect');
+			add_settings_field('wdfb_autologin', __('Auto-login after registration', 'wdfb'), array($form, 'create_autologin_box'), 'wdfb_options_page', 'wdfb_connect');
 			if (defined('BP_VERSION')) { // BuddyPress
 				add_settings_field('wdfb_buddypress_registration_fields', __('Map BuddyPress profile to Facebook', 'wdfb'), array($form, 'create_buddypress_registration_fields_box'), 'wdfb_options_page', 'wdfb_connect');
 			} else {
@@ -641,9 +643,12 @@ $token = false;
 				break;
 			case "events":
 				$time = time();
-				$start_time = apply_filters('wdfb-autopost-events-start_time', $time, $post);
-				$end_time = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
+				$start_timestamp = apply_filters('wdfb-autopost-events-start_time', $time, $post);
+				$end_timestamp = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
 				$location = apply_filters('wdfb-autopost-events-location', false, $post);
+				
+				$start_time = date('Y-m-d\TH:i:s', $start_timestamp);
+				$end_time = date('Y-m-d\TH:i:s', $end_timestamp);
 				$send = array(
 					'name' => $post_title,
 					'description' => $post_content,
@@ -1004,5 +1009,8 @@ $token = false;
 
 		// Register the shortcodes, so Membership picks them up
 		$rpl = new Wdfb_MarkerReplacer; $rpl->register();
+
+		// Allow unhooking actions and post-init behavior.
+		do_action('wdfb-core-hooks_added-admin', $this);
 	}
 }

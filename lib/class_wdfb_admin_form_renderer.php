@@ -65,7 +65,7 @@ class Wdfb_AdminFormRenderer {
 				'<span class="wdfb_message">' . __('You already granted extended permissions', 'wdfb') . '</span> ' .
 			'</p>' .
 			'<p class="wdfb_perms_not_granted">' .
-				'<a href="#" class="wdfb_grant_perms" wdfb:locale="' . wdfb_get_locale() . '" wdfb:perms="' . Wdfb_Permissions::get_permissions() . '">' . __('Grant extended permissions', 'wdfb') . '</a>' .
+				'<a href="#" class="wdfb_grant_perms" data-wdfb_locale="' . wdfb_get_locale() . '" data-wdfb_perms="' . Wdfb_Permissions::get_permissions() . '">' . __('Grant extended permissions', 'wdfb') . '</a>' .
 			'</p>' .
 		'</div>';
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
@@ -231,6 +231,10 @@ class Wdfb_AdminFormRenderer {
 		$opt = $this->_get_option('wdfb_connect');
 		echo $this->_create_checkbox('connect', 'no_captcha',  @$opt['no_captcha']);
 	}
+	function create_autologin_box () {
+		$opt = $this->_get_option('wdfb_connect');
+		echo $this->_create_checkbox('connect', 'autologin_after_registration',  @$opt['autologin_after_registration']);
+	}
 	function create_buddypress_registration_fields_box () {
 		$opt = $this->_get_option('wdfb_connect');
 		$fb_fields = array (
@@ -362,6 +366,14 @@ class Wdfb_AdminFormRenderer {
 			echo $this->_create_subcheckbox('button', 'not_in_post_types',  $type->name, @in_array($type->name, $opt['not_in_post_types']));
 			echo '<label>' . ucfirst($type->labels->name) . '</label><br />';
 		}
+		echo '<div id="wdfb-like_button-special_cases">';
+		if (defined('BP_VERSION')) {
+			echo '<div id="wdfb-like_button-bp_activity-anchor">';
+			echo '<label for="not_in_post_types-_buddypress_activity">' . __('Allow &quot;Like&quot; button for BuddyPress Activities', 'wdfb') . '</label>: ';
+			echo $this->_create_subcheckbox('button', 'not_in_post_types',  '_buddypress_activity', @in_array('_buddypress_activity', $opt['not_in_post_types']));
+			echo '</div>';
+		}
+		echo '</div>';
 	}
 	function create_button_position_box () {
 		$opt = $this->_get_option('wdfb_button');
@@ -779,9 +791,9 @@ class Wdfb_AdminFormRenderer {
 				'<div class="error below-h2">' .
 					'<p>' .
 						__("Your app doesn't have enough permissions to publish on Facebook", 'wdfb') . '<br />' .
-						'<a class="wdfb_grant_perms" href="#" wdfb:perms="' .
+						'<a class="wdfb_grant_perms" href="#" data-wdfb_perms="' .
 						Wdfb_Permissions::get_publisher_permissions() .
-						'" wdfb:locale="' . wdfb_get_locale() . '" >' .
+						'" data-wdfb_locale="' . wdfb_get_locale() . '" >' .
 							__('Grant needed permissions now', 'wdfb') .
 						'</a>' .
 					'</p>' .

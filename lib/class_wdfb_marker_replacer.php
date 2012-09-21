@@ -39,9 +39,14 @@ class Wdfb_MarkerReplacer {
 		$user = wp_get_current_user();
 		$html = '';
 		if (!$user->ID) {
-			$html = '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '"  onlogin="_wdfb_notifyAndRedirect();">' . $content . '</fb:login-button></p>';
+			$html = '<p class="wdfb_login_button">' . 
+				wdfb_get_fb_plugin_markup('login-button', array(
+					'scope' => Wdfb_Permissions::get_permissions(),
+					'redirect-url' => wdfb_get_login_redirect(),
+					'content' => $content,
+				)) .
+			'</p>';
 		} else {
-			//$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
 			$logout = wp_logout_url(home_url()); // Props jmoore2026
 			$html .= get_avatar($user->ID, $atts['avatar_size']);
 			$html .= "<br /><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a>";
@@ -68,6 +73,9 @@ class Wdfb_MarkerReplacer {
 		$in_types = $this->data->get_option('wdfb_button', 'not_in_post_types');
 		if (@in_array(get_post_type(), $in_types) && !$forced) return '';
 
+		$is_activity = defined('BP_VERSION') && isset($filters['bp_get_activity_content_body']);
+		if ($is_activity && !@in_array('_buddypress_activity', $in_types)) return ''; // Reverse logic for BuddyPress Activity check.
+
 		$send = $this->data->get_option('wdfb_button', 'show_send_button');
 		$layout = $this->data->get_option('wdfb_button', 'button_appearance');
 		$url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -77,8 +85,12 @@ class Wdfb_MarkerReplacer {
 		); 
 		$width = apply_filters('wdfb-like_button-width', $width); 
 		
-		if (is_home() && $this->data->get_option('wdfb_button', 'show_on_front_page')) {
-			$tmp_url = get_permalink();
+		if (
+			(is_home() && $this->data->get_option('wdfb_button', 'show_on_front_page'))
+			||
+			(defined('BP_VERSION') && $is_activity && !wdfb_is_single_bp_activity())
+		) {
+			$tmp_url = $is_activity && function_exists('bp_activity_get_permalink') ? bp_activity_get_permalink(bp_get_activity_id()) : get_permalink();
 			$url = $tmp_url ? $tmp_url : $url;
 			$url = rawurlencode($url);
 			
@@ -88,7 +100,12 @@ class Wdfb_MarkerReplacer {
 			return "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height={$height}&amp;width={$width}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>";
 		}
 
-		return '<div class="wdfb_like_button"><fb:like href="' . WDFB_PROTOCOL  . $url . '" send="' . ($send ? 'true' : 'false') . '" layout="' . $layout . '" width="' . $width . '" show_faces="true" font=""></fb:like></div>';
+		$href = WDFB_PROTOCOL  . $url;
+		return '<div class="wdfb_like_button">' .
+			wdfb_get_fb_plugin_markup('like', compact(array(
+				'href', 'send', 'layout', 'width'
+			))) .
+		'</div>';
 	}
 
 	function process_events_code ($atts, $content='') {
@@ -213,7 +230,6 @@ class Wdfb_MarkerReplacer {
 	 */
 	function register () {
 		foreach ($this->buttons as $key=>$shortcode) {
-			//var_export("process_{$key}_code");
 			add_shortcode($shortcode, array($this, "process_{$key}_code"));
 		}
 	}

@@ -125,7 +125,7 @@ function init () {
 			);
 			$(".wdfb_grant_albums_perms").live("click", function () { 
 				var $me = $(this);
-				var locale = $me.attr("wdfb:locale");
+				var locale = $me.attr("data-wdfb_locale");
 				/*
 				FB.ui({ 
 					"method": "permissions.request", 

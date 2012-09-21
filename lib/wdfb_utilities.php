@@ -93,16 +93,22 @@ function wdfb_get_login_redirect ($force_admin_redirect=false) {
 			$redirect_url = admin_url();
 		} else {
 			// Non-admin URL redirection, no specific settings
-			global $post, $wp;
-			if (is_singular() && is_object($post) && isset($post->ID)) {
-				// Set to permalink for current item, if possible
-				$redirect_url = apply_filters('wdfb-login-redirect_url-item_url', get_permalink($post->ID));
+
+			if (isset($_GET['redirect_to'])) {
+				// ... via GET parameter
+				$redirect_url = $_GET['redirect_to'];
+			} else {
+				// ... via heuristics and settings
+				global $post, $wp;
+				if (is_singular() && is_object($post) && isset($post->ID)) {
+					// Set to permalink for current item, if possible
+					$redirect_url = apply_filters('wdfb-login-redirect_url-item_url', get_permalink($post->ID));
+				}
+				$fallback_url = (defined('WDFB_EXACT_REDIRECT_URL_FALLBACK') && WDFB_EXACT_REDIRECT_URL_FALLBACK) ? site_url($wp->request) : home_url();
+				// Default to home URL otherwise
+				$redirect_url = $redirect_url ? $redirect_url : $fallback_url;
 			}
-			$fallback_url = (defined('WDFB_EXACT_REDIRECT_URL_FALLBACK') && WDFB_EXACT_REDIRECT_URL_FALLBACK) ? site_url($wp->request) : home_url();
-			// Default to home URL otherwise
-			$redirect_url = $redirect_url ? $redirect_url : $fallback_url;
 		}
-		//$redirect_url = defined('BP_VERSION') ? home_url() : $force_admin_redirect ? admin_url() : home_url(); // Deprecated simple logic
 	}
 
 	return apply_filters('wdfb-login-redirect_url', $redirect_url);
@@ -202,6 +208,158 @@ function wdfb_get_opengraph_property ($name, $value, $auto_prefix=true) {
 	$name = $auto_prefix ? "og:{$name}" : $name;
 	$value = esc_attr($value);
 	return apply_filters('wdfb-opengraph-property', "<meta property='{$name}' content='{$value}' />\n", $name, $value);
+}
+
+/**
+ * Facebook XFBML tag format utility function (default).
+ * Called by dispatcher, @see wdfb_get_fb_plugin_markup for parameters.
+ * @return string
+ */
+function wdfb_get_fb_plugin_markup_xfbml ($type, $args) {
+	$markup = '';
+	switch ($type) {
+		case "like":
+			$markup = '<fb:like href="' . 
+				$args['href'] . '" send="' . 
+				($args['send'] ? 'true' : 'false') . '" layout="' . 
+				$args['layout'] . '" width="' . 
+				$args['width'] . 
+			'" show_faces="true" font=""></fb:like>';
+			break;
+
+		case "login-button":
+			$markup = '<fb:login-button scope="' . 
+				$args['scope'] . 
+				'" redirect-url="' . 
+				$args['redirect-url'] . '"  onlogin="_wdfb_notifyAndRedirect();">' . 
+					$args['content'] . 
+			'</fb:login-button>';
+			break;
+
+		case "comments":
+			$markup = '<fb:comments href="' . $args['link'] . '" '.
+				'xid="' . $args['xid'] . '"  ' .
+				'num_posts="' . $args['num_posts'] . '"  ' .
+				'width="' . $args['width'] . 'px"  ' .
+				'reverse="' . $args['reverse'] . '"  ' .
+				'colorscheme="' . $args['scheme'] . '"  ' .
+			'publish_feed="true"></fb:comments>';
+			break;
+
+		case "activity":
+			$markup = '<fb:activity site="' . 
+				$args['url'] . '" width="' . 
+				$args['width'] . '" height="' . 
+				$args['height'] . '" header="' . 
+				$args['show_header'] . '" colorscheme="' . 
+				$args['color_scheme'] . '" recommendations="' . 
+				$args['recommendations'] . '" linktarget="' . 
+			$args['links'] . '"></fb:activity>';
+			break;
+	}
+	return $markup;
+}
+
+/**
+ * Facebook HTML5 tag format utility function.
+ * Called by dispatcher, @see wdfb_get_fb_plugin_markup for parameters.
+ * @return string
+ */
+function wdfb_get_fb_plugin_markup_html5 ($type, $args) {
+	$markup = '';
+	switch ($type) {
+		case "like":
+			$markup = '<div class="fb-like" data-href="' . 
+				$args['href'] . '" data-send="' . 
+				($args['send'] ? 'true' : 'false') . '" data-layout="' . 
+				$args['layout'] . '" data-width="' . 
+				$args['width'] . 
+			'" data-show-faces="true"></div>';
+			break;
+
+		case "login-button":
+			$markup = '<div class="fb-login-button" data-scope="' . 
+				$args['scope'] . 
+				'" data-redirect-url="' . 
+				$args['redirect-url'] . '"  data-onlogin="_wdfb_notifyAndRedirect();">' . 
+					$args['content'] . 
+			'</div>';
+			break;
+
+		case "comments":
+			$markup = '<div class="fb-comments" data-href="' . $args['link'] . '" '.
+				'data-xid="' . $args['xid'] . '"  ' .
+				'data-num-posts="' . $args['num_posts'] . '"  ' .
+				'data-width="' . $args['width'] . '"  ' .
+				'data-reverse="' . $args['reverse'] . '"  ' .
+				'data-colorscheme="' . $args['scheme'] . '"  ' .
+			'data-publish-feed="true"></div>';
+			break;
+
+		case "activity":
+			$markup = '<div class="fb-activity" data-site="' . 
+				$args['url'] . '" data-width="' . 
+				$args['width'] . '" data-height="' . 
+				$args['height'] . '" data-header="' . 
+				$args['show_header'] . '" data-recommendations="' . 
+				$args['recommendations'] . '" data-colorscheme="' . 
+				$args['color_scheme'] . '" data-linktarget="' . 
+			$args['links'] . '"></div>';
+			break;
+	}
+
+	return $markup;
+}
+
+/**
+ * Facebook markup dispatcher.
+ * Allows for multiple tag formats support.
+ * @param string $type Tag type to render.
+ * @param array $args A hash of arguments to use in rendering.
+ * @param string $forced_format Optional output format to force.
+ * @return string Tag output.
+ */
+function wdfb_get_fb_plugin_markup ($type, $args, $forced_format=false) {
+	$_formats = array('html5', 'xfbml');
+	$is_html5 = false;
+	if ($forced_format && in_array($forced_format, $_formats)) {
+		$is_html5 = ('html5' == $forced_format);
+	} else {
+		$is_html5 = defined('WDFB_USE_HTML5_TAGS') && WDFB_USE_HTML5_TAGS;
+	}
+	return apply_filters('wdfb-tags-use_html5', $is_html5) 
+		? wdfb_get_fb_plugin_markup_html5($type, $args)
+		: wdfb_get_fb_plugin_markup_xfbml($type, $args)
+	;
+}
+
+
+/**
+ * BuddyPress singular activity boolean flag.
+ * Because `bp_is_single_item()` is basically broken.
+ * Hence using the modified heuristic attrocity from bp-activity-screens.php.
+ */
+function wdfb_is_single_bp_activity () {
+	if (!defined('BP_VERSION')) return false;
+	if (!function_exists('bp_is_activity_component') || !bp_is_activity_component()) return false;
+	if (!bp_current_action() || !is_numeric(bp_current_action())) return false;
+	return true;
+}
+
+/**
+ * Description abstraction, to make sure we sugarcoat the BP uglyness.
+ */
+function wdfb_get_singular_description () {
+	$content = '';
+	if (wdfb_is_single_bp_activity()) {
+		$activity = bp_activity_get_specific( array( 'activity_ids' => bp_current_action(), 'show_hidden' => true, 'spam' => 'ham_only', ) );
+		$activity = empty( $activity['activities'][0] ) || bp_action_variables() ? '' : $activity['activities'][0];
+		$content = apply_filters_ref_array('bp_get_activity_content_body', array($activity->content, &$activity));
+	} else {
+		global $post;
+		$content = $post->post_excerpt ? $post->post_excerpt : strip_shortcodes($post->post_content);
+	}
+	return htmlspecialchars(wp_strip_all_tags($content), ENT_QUOTES);
 }
 
 

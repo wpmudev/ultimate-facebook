@@ -68,6 +68,18 @@ class Wdfb_PublicPages {
 	}
 
 	/**
+	 * Activities don't use the_content filter, and doesn't understand shortcodes.
+	 * Make sure we're ready.
+	 */
+	function inject_facebook_button_bp ($body) {
+		if (false) return $body;
+		// Disregard position
+		// ...
+		$body .= " " . do_shortcode($this->replacer->get_button_tag('like_button'));
+		return $body;
+	}
+
+	/**
 	 * Inject OpenGraph info in the HEAD
 	 */
 	function inject_opengraph_info () {
@@ -85,9 +97,12 @@ class Wdfb_PublicPages {
 				;
 			}
 			$site_name = get_option('blogname');
+			$text = wdfb_get_singular_description();
+			/*
 			$content = $post->post_excerpt ? $post->post_excerpt : strip_shortcodes($post->post_content);
 			$text = htmlspecialchars(wp_strip_all_tags($content), ENT_QUOTES);
-			if (strlen($text) > 250) $description = preg_replace('/(.{0,247}).*/um', '$1', preg_replace('/\r|\n/', ' ', $text)) . '...'; //substr($text, 0, 250) . "...";
+			*/
+			if (strlen($text) > 250) $description = preg_replace('/(.{0,247}).*/um', '$1', preg_replace('/\r|\n/', ' ', $text)) . '...';
 			else $description = $text;
 		} else {
 			$title = get_option('blogname');
@@ -168,11 +183,25 @@ class Wdfb_PublicPages {
 	}
 
 	function inject_fb_login () {
-		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect(true) . '"  onlogin="_wdfb_notifyAndRedirect();">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+		if (!apply_filters('wdfb-login-show_wordpress_login_button', apply_filters('wdfb-login-show_login_button', true))) return false;
+		echo '<p class="wdfb_login_button">' .
+			wdfb_get_fb_plugin_markup('login-button', array(
+				'scope' => Wdfb_Permissions::get_permissions(),
+				'redirect-url' => wdfb_get_login_redirect(true),
+				'content' => __("Login with Facebook", 'wdfb'),
+			)) .
+		'</p>';
 	}
 
 	function inject_fb_login_for_bp () {
-		echo '<p class="wdfb_login_button"><fb:login-button scope="' . Wdfb_Permissions::get_permissions() . '" redirect-url="' . wdfb_get_login_redirect() . '"  onlogin="_wdfb_notifyAndRedirect();">' . __("Login with Facebook", 'wdfb') . '</fb:login-button></p>';
+		if (!apply_filters('wdfb-login-show_buddypress_login_button', apply_filters('wdfb-login-show_login_button', true))) return false;
+		echo '<p class="wdfb_login_button">' .
+			wdfb_get_fb_plugin_markup('login-button', array(
+				'scope' => Wdfb_Permissions::get_permissions(),
+				'redirect-url' => wdfb_get_login_redirect(),
+				'content' => __("Login with Facebook", 'wdfb'),
+			)) .
+		'</p>';
 	}
 
 	function inject_fb_comments_admin_og () {
@@ -198,13 +227,7 @@ class Wdfb_PublicPages {
 		$scheme = $this->data->get_option('wdfb_comments', 'fb_color_scheme');
 		$scheme = $scheme ? $scheme : 'light';
 
-		echo "<fb:comments href='{$link}' " .
-			"xid='{$xid}' " .
-			"num_posts='{$num_posts}' " .
-			"width='{$width}px' " .
-			"reverse='{$reverse}' " .
-			"colorscheme='{$scheme}' " .
-			"publish_feed='true'></fb:comments>";
+		echo wdfb_get_fb_plugin_markup('comments', compact(array('link', 'xid', 'num_posts', 'width', 'reverse', 'scheme')));
 		return $defaults;
 	}
 
@@ -310,6 +333,7 @@ EOBpFormInjection;
 
 		// We're here, so registration is allowed
 		$registration_success = false;
+		$user_id = false;
 		$errors = array();
 		// Process registration data
 		if (isset($_GET['fb_register'])) {
@@ -367,13 +391,22 @@ EOBpFormInjection;
 			}
 		}
 
+		// Attempt to auto-login the user
+		if ($this->data->get_option('wdfb_connect', 'autologin_after_registration') && isset($_GET['fb_register']) && $registration_success) {
+			$fb_user = $this->model->fb->getUser();
+			if ($fb_user && $user_id) { // Don't try too hard
+				$user = get_userdata($user_id);
+				wp_set_current_user($user->ID, $user->user_login);
+				wp_set_auth_cookie($user->ID); // Logged in with Facebook, yay
+				do_action('wp_login', $user->user_login);
+			}
+		}
+
 		// Allow registration page templating
 		// By KFUK-KFUM
 		// Thank you so much!
 		$page = (isset($_GET['fb_register']) && $registration_success)
-			//? WDFB_PLUGIN_BASE_DIR . '/lib/forms/registration_page_success.php'
 			? $this->get_template_page('registration_page_success.php')
-			//: WDFB_PLUGIN_BASE_DIR . '/lib/forms/registration_page.php'
 			: $this->get_template_page('registration_page.php')
 		;
 
@@ -441,9 +474,12 @@ EOBpFormInjection;
 				break;
 			case "events":
 				$time = time();
-				$start_time = apply_filters('wdfb-autopost-events-start_time', $time, $post);
-				$end_time = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
+				$start_timestamp = apply_filters('wdfb-autopost-events-start_time', $time, $post);
+				$end_timestamp = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
 				$location = apply_filters('wdfb-autopost-events-location', false, $post);
+				
+				$start_time = date('Y-m-d\TH:i:s', $start_timestamp);
+				$end_time = date('Y-m-d\TH:i:s', $end_timestamp);
 				$send = array(
 					'name' => $post_title,
 					'description' => $post_content,
@@ -495,12 +531,17 @@ EOBpFormInjection;
 		add_action('wp_print_styles', array($this, 'css_load_styles'));
 		add_action('wp_head', array($this, 'js_setup_ajaxurl'));
 
-		add_action('get_footer', array($this, 'inject_fb_root_div'));
-		add_action('get_footer', array($this, 'inject_fb_init_js'));
+		$footer_hook = 'get_footer';
+		if (defined('WDFB_FOOTER_HOOK')) {
+			$footer_hook = is_string(WDFB_FOOTER_HOOK) ? WDFB_FOOTER_HOOK : 'wp_footer';
+		}
+		add_action($footer_hook, array($this, 'inject_fb_root_div'));
+		add_action($footer_hook, array($this, 'inject_fb_init_js'));
 
 		// Automatic Facebook button
 		if ('manual' != $this->data->get_option('wdfb_button', 'button_position')) {
 			add_filter('the_content', array($this, 'inject_facebook_button'), 10);
+			if (defined('BP_VERSION')) add_filter('bp_get_activity_content_body', array($this, 'inject_facebook_button_bp'));
 		}
 
 		// OpenGraph
@@ -528,6 +569,7 @@ EOBpFormInjection;
 				remove_action('wp', 'bp_core_wpsignup_redirect');
 				remove_action('init', 'bp_core_wpsignup_redirect');
 				add_action('bp_include', create_function('', "remove_action('bp_init', 'bp_core_wpsignup_redirect');"), 99); // Untangle for BP 1.5
+				remove_action('bp_init', 'bp_core_wpsignup_redirect'); // Die already, will you? Pl0x?
 			}
 
 			// New login/register
@@ -582,5 +624,8 @@ EOBpFormInjection;
 		}
 
 		$rpl = $this->replacer->register();
+
+		// Allow unhooking actions and post-init behavior.
+		do_action('wdfb-core-hooks_added-public', $this);
 	}
 }

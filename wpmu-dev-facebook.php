@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall and notes, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.4.1
+Version: 2.5
 Text Domain: wdfb
 Author: Ve Bailovity (Incsub)
 Author URI: http://premium.wpmudev.org
@@ -78,7 +78,7 @@ function wdfb_dashboard_permissions_widget () {
 			'<span class="wdfb_message">' . __('You already granted extended permissions', 'wdfb') . '</span> ' .
 		'</p>' .
 		'<p class="wdfb_perms_not_granted">' .
-			'<a href="#" class="wdfb_grant_perms" wdfb:locale="' . wdfb_get_locale() . '" wdfb:perms="' . Wdfb_Permissions::get_permissions() . '">' . __('Grant extended permissions', 'wdfb') . '</a>' .
+			'<a href="#" class="wdfb_grant_perms" data-wdfb_locale="' . wdfb_get_locale() . '" data-wdfb_perms="' . Wdfb_Permissions::get_permissions() . '">' . __('Grant extended permissions', 'wdfb') . '</a>' .
 		'</p>' .
 	'</div>';
 	echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
@@ -175,14 +175,20 @@ if (!wp_next_scheduled('wdfb_import_comments')) wp_schedule_event(time()+600, 'h
 require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_metabox.php');
 $og = new Wdfb_Metabox_OpenGraph;
 
-if (is_admin() || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) || (defined('DOING_CRON') && DOING_CRON)) {
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_help.php');
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_form_renderer.php');
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_pages.php');
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_tutorial.php');
-	Wdfb_Tutorial::serve();
-	Wdfb_AdminPages::serve();
-} else {
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_public_pages.php');
-	Wdfb_PublicPages::serve();
+
+define("WDFB_CORE_IS_ADMIN", (is_admin() || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) || (defined('DOING_CRON') && DOING_CRON)), true);
+
+function _wdfb_initialize () {
+	if (apply_filters('wdfb-core-is_admin', WDFB_CORE_IS_ADMIN)) {
+		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_help.php');
+		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_form_renderer.php');
+		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_pages.php');
+		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_tutorial.php');
+		Wdfb_Tutorial::serve();
+		Wdfb_AdminPages::serve();
+	} else {
+		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_public_pages.php');
+		Wdfb_PublicPages::serve();
+	}
 }
+add_action('plugins_loaded', '_wdfb_initialize');

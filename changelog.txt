@@ -5,6 +5,14 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.5 - 2012-09-21
+----------------------------------------------------------------------
+- Fix for BuddyPress heuristics.
+- BuddyPress activity native button support.
+- Allowed footer hook in a define, for WP-incompatible themes.
+- Added HTML5 vs XFBML tag format dispatcher.
+- Added auto-login on registration option.
+
 2.4.1 - 2012-09-02
 ----------------------------------------------------------------------
 - Fix for BuddyPress activity items logic in OpenGraph url.

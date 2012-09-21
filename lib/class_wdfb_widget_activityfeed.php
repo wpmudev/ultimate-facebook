@@ -80,7 +80,7 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 		$html .= '</p>';
 		
 		$html .= '<p>';
-		$html .= '<label for="' . $this->get_field_id('iframe') . '">' . __('Do not use xfbml tag:', 'wdfb') . '</label> ';
+		$html .= '<label for="' . $this->get_field_id('iframe') . '">' . __('Do not use xfbml/html5 tag:', 'wdfb') . '</label> ';
 		$html .= '<input type="checkbox" name="' . $this->get_field_name('iframe') . '" id="' . $this->get_field_id('iframe') . '" value="1" ' . ($iframe ? 'checked="checked"' : '') . ' />';
 		$html .= '<div><small>' . __("If you're experiencing issues with your Activity Feeds, try checking this option", 'wdfb') . '</small></div>';
 		$html .= '</p>';
@@ -128,7 +128,7 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 		if ($title) echo $before_title . $title . $after_title;
 
 		if (!$iframe) {
-			echo "<fb:activity site='{$url}' width='{$width}' height='{$height}' header='{$show_header}' recommendations='{$recommendations}' linktarget='{$links}'></fb:activity>";
+			echo wdfb_get_fb_plugin_markup('activity', compact(array('url', 'width', 'height', 'recommendations', 'links', 'color_scheme')));
 		} else {
 			$data = Wdfb_OptionsRegistry::get_instance();
 			$key = $data->get_option('wdfb_api', 'app_key');
