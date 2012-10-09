@@ -158,7 +158,7 @@ class Wdfb_PublicPages {
 			$name = apply_filters('wdfb-opengraph-extra_headers-name', @$extra['name']);
 			$value = apply_filters('wdfb-opengraph-extra_headers-value', @$extra['value'], @$extra['name']);
 			if (!$name || !$value) continue;
-			echo wdfb_get_opengraph_property($name, $title, false);
+			echo wdfb_get_opengraph_property($name, $value, false);
 		}
 		do_action('wdfb-opengraph-after_extra_headers');
 	}

@@ -5,6 +5,13 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.5.1 - 2012-10-09
+----------------------------------------------------------------------
+- Multi-values BuddyPress fields query returns only top-level choices.
+- Exposing per-field WP profile syncing filter.
+- Events widget reverse order setting.
+- Fix for OpenGraph custom header increments.
+
 2.5 - 2012-09-21
 ----------------------------------------------------------------------
 - Fix for BuddyPress heuristics.

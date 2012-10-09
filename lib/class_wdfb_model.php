@@ -57,7 +57,7 @@ class Wdfb_Model {
 	function get_bp_xprofile_fields () {
 		if (!defined('BP_VERSION')) return true;
 		$tbl_pfx = function_exists('bp_core_get_table_prefix') ? bp_core_get_table_prefix() : apply_filters('bp_core_get_table_prefix', $this->db->base_prefix);
-		$sql = "SELECT id, name FROM {$tbl_pfx}bp_xprofile_fields";
+		$sql = "SELECT id, name FROM {$tbl_pfx}bp_xprofile_fields WHERE parent_id=0";
 		return $this->db->get_results($sql, ARRAY_A);
 	}
 
@@ -72,6 +72,7 @@ class Wdfb_Model {
 		if (!$field_id || !$user_id) return false;
 
 		if (is_array($data)) $data = $data['name']; // For complex FB fields that return JSON objects
+		$data = apply_filters('wdfb-profile_sync-bp-field_value', $data, $field_id, $user_id);
 		if (!$data) return false; // Don't waste cycles if we don't need to
 
 		$tbl_pfx = function_exists('bp_core_get_table_prefix') ? bp_core_get_table_prefix() : apply_filters('bp_core_get_table_prefix', $this->db->base_prefix);
@@ -358,6 +359,7 @@ class Wdfb_Model {
 			if (is_array(@$me[$map['fb']]) && isset($me[$map['fb']]['name'])) $data = @$me[$map['fb']]['name'];
 			else if (is_array(@$me[$map['fb']]) && isset($me[$map['fb']][0])) $data = join(', ', array_map(create_function('$m', 'return $m["name"];'), $me[$map['fb']]));
 			else $data = @$me[$map['fb']];
+			$data = apply_filters('wdfb-profile_sync-wp-field_value', $data, $map['wp'], $user_id);
 			update_user_meta($user_id, $map['wp'], $data);
 		}
 

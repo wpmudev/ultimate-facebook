@@ -333,6 +333,32 @@ function wdfb_get_fb_plugin_markup ($type, $args, $forced_format=false) {
 	;
 }
 
+/**
+ * Template tag for FB comments.
+ * @return string Facebook comments markup.
+ * @example
+ * <code>
+ * // In e.g. single.php
+ * if (function_exists('wdfb_get_fb_comments')) echo wdfb_get_fb_comments();
+ * </code>
+ */
+function wdfb_get_fb_comments () {
+	$data = Wdfb_OptionsRegistry::get_instance();
+	$link = get_permalink();
+	$xid = rawurlencode($link);
+
+	$width = (int)$data->get_option('wdfb_comments', 'fb_comments_width');
+	$width = $width ? $width : '550';
+
+	$num_posts = (int)$data->get_option('wdfb_comments', 'fb_comments_number');
+	$reverse = $data->get_option('wdfb_comments', 'fb_comments_reverse') ? 'true' : 'false';
+
+	$scheme = $data->get_option('wdfb_comments', 'fb_color_scheme');
+	$scheme = $scheme ? $scheme : 'light';
+
+	return wdfb_get_fb_plugin_markup('comments', compact(array('link', 'xid', 'num_posts', 'width', 'reverse', 'scheme')));
+}
+
 
 /**
  * BuddyPress singular activity boolean flag.

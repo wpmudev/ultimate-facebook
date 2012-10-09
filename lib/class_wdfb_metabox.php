@@ -161,7 +161,7 @@ class Wdfb_Metabox_OpenGraph extends Wdfb_Metabox {
 
 	public function apply_custom_images () {
 		$images = $this->_has_field_value('images', array());
-		foreach ($images as $image) echo wdfb_get_opengraph_property('image', $image);
+		foreach ($images as $image) if ($image) echo wdfb_get_opengraph_property('image', $image);
 	}
 
 	private function _has_field_value ($field, $default=false) {

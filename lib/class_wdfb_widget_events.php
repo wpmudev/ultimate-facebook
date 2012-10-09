@@ -41,6 +41,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$show_end_date = esc_attr($instance['show_end_date']);
 		$date_threshold = esc_attr($instance['date_threshold']);
 		$only_future = esc_attr($instance['only_future']);
+		$reverse_order = esc_attr($instance['reverse_order']);
 
 		// Set defaults
 		// ...
@@ -96,6 +97,11 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$html .= '</p>';
 
 		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('reverse_order') . '">' . __('Reverse order:', 'wdfb') . '</label>';
+		$html .= ' <input type="checkbox" name="' . $this->get_field_name('reverse_order') . '" id="' . $this->get_field_id('reverse_order') . '" value="1" ' . ($reverse_order ? 'checked="checked"' : '') . '/>';
+		$html .= '</p>';
+
+		$html .= '<p>';
 		$html .= '<label for="' . $this->get_field_id('date_threshold') . '">' . __('Show events starting from this date:', 'wdfb') . '</label>';
 		$html .= ' <input type="text" class="widefat wdfb_date_threshold" name="' . $this->get_field_name('date_threshold') . '" id="' . $this->get_field_id('date_threshold') . '" value="' . $date_threshold . '"/>';
 		$html .= '<br /><small>(YYYY-mm-dd, e.g. 2011-06-09)</small>';
@@ -117,6 +123,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$instance['show_end_date'] = strip_tags($new_instance['show_end_date']);
 		$instance['date_threshold'] = strip_tags($new_instance['date_threshold']);
 		$instance['only_future'] = strip_tags($new_instance['only_future']);
+		$instance['reverse_order'] = strip_tags($new_instance['reverse_order']);
 
 		//$instance['events'] = empty($instance['events']) ? $this->model->get_events_for($instance['for']) : $instance['events'];
 
@@ -133,6 +140,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$show_end_date = (int)$instance['show_end_date'];
 		$date_threshold = $instance['date_threshold'];
 		$only_future = $instance['only_future'];
+		$reverse_order = $instance['reverse_order'];
 
 		$date_threshold = $date_threshold ? strtotime($date_threshold) : false;
 		$now = time();
@@ -164,6 +172,8 @@ class Wdfb_WidgetEvents extends WP_Widget {
 */
 		$api = new Wdfb_EventsBuffer;
 		$events = $api->get_for($for);
+		usort($events, array($this, 'sort_events_by_start_time'));
+		if ($reverse_order) $events = array_reverse($events);
 
 		$timestamp_format = get_option('date_format') . ' ' . get_option('time_format');
 
@@ -180,5 +190,12 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		}
 
 		echo $after_widget;
+	}
+
+	function sort_events_by_start_time ($a, $b) {
+		$a_time = strtotime($a['start_time']);
+		$b_time = strtotime($b['start_time']);
+		if ($a_time == $b_time) return 0;
+		return $a_time > $b_time ? -1 : 1;
 	}
 }
