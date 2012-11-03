@@ -1,5 +1,5 @@
 /**
- * Responsible for hooking Maps to the WP editor interface. 
+ * Responsible for hooking Facebook album to the WP editor interface. 
  */
 
 
@@ -91,29 +91,6 @@ function loadAlbumPhotos ($me) {
 
 function insertAlbum ($me) {
 	var albumId = parseAlbumIdHref($me.attr('href'));
-	/*
-	var markup = '';
-	$("#wdfb_album_container").html(l10nWdfbEditor.please_wait + ' <img src="' + _wdfb_root_url + '/img/waiting.gif">');
-	$.post(ajaxurl, {"action": "wdfb_list_fb_album_photos", "album_id": albumId}, function (response) {
-		var status = parseInt(response.status);
-		if (!status) return false;
-		markup += '<div class="wdfb_fb_album">';
-		markup += '<ul>';
-		$.each(response.photos.data, function (idx, photo) {
-			var iconSrc = photo.images[photo.images.length-1].source;
-			var imgSrc = photo.images[0].source;
-			markup += '<li>';
-			markup += '<a href="' + imgSrc + '">';
-			markup += '<img src="' + iconSrc + '" />';
-			markup += '</a>';
-			markup += '</li>';
-		});
-		markup += '</ul>';
-		markup += '</div>';
-		updateEditorContents(markup);
-		wdfbCloseAlbumEditor();
-	});
-	*/
 	updateEditorContents('[wdfb_album id="' + albumId + '"]');
 	wdfbCloseAlbumEditor();
 	return false;
@@ -216,7 +193,7 @@ function init () {
 	});
 }
 
-if (typeof FB == 'object' && FB._apiKey) {
+if (typeof FB == 'object') {
 	FB.getLoginStatus(function (resp) {
 		init();
 	});

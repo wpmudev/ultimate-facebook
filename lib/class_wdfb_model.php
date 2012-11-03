@@ -8,17 +8,26 @@ class Wdfb_Model {
 	var $data;
 	var $log;
 
+	private $_batch_page_size;
+
 	function __construct () {
 		global $wpdb;
 		$this->data =& Wdfb_OptionsRegistry::get_instance();
 		$this->db = $wpdb;
+
+		Facebook::$CURL_OPTS = apply_filters('wdfb-fb_core-facebook_curl_options', Facebook::$CURL_OPTS);
 		$this->fb = new Facebook(array(
 			'appId' => trim($this->data->get_option('wdfb_api', 'app_key')),
 			'secret' => trim($this->data->get_option('wdfb_api', 'secret_key')),
 			'cookie' => true,
 		));
 		$this->fb->getLoginUrl(); // Generate the CSRF sig stuff yay
+
 		$this->log = new Wdfb_ErrorLog;
+
+		$this->_batch_page_size = apply_filters('wdfb-fb_core-batch_request-page_size', 
+			(defined('WDFB_BATCH_REQUEST_PAGE_SIZE') && WDFB_BATCH_REQUEST_PAGE_SIZE ? WDFB_BATCH_REQUEST_PAGE_SIZE : 25)
+		);
 	}
 
 	function Wdfb_Model () {
@@ -519,7 +528,7 @@ class Wdfb_Model {
 
 	function get_album_photos ($aid, $limit=false, $offset=false) {
 		if (!$aid) return false;
-		$page_size = 25;
+		$page_size = $this->_batch_page_size;
 		$max_limit = apply_filters('wdfb-albums-max_photos_limit', 
 			(defined('WDFB_ALBUMS_MAX_PHOTOS_LIMIT') && WDFB_ALBUMS_MAX_PHOTOS_LIMIT ? WDFB_ALBUMS_MAX_PHOTOS_LIMIT : 200)
 		);
@@ -570,6 +579,7 @@ class Wdfb_Model {
 		try {
 			$res = $this->fb->api('/' . $uid . '/feed/' . $req);
 		} catch (Exception $e) {
+			$this->log->error(__FUNCTION__, $e);
 			return false;
 		}
 		return $res;
@@ -577,17 +587,47 @@ class Wdfb_Model {
 
 	function get_item_comments ($for) {
 		$uid = $this->get_current_user_fb_id();
-
+		
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
-		$token = $tokens[$uid];
+		$token = isset($tokens[$uid]) ? $tokens[$uid] : false;
 
-		try {
-			$res = $this->fb->api('/' . $for . '/comments/?auth_token=' . $token);
-		} catch (Exception $e) {
-			$this->log->error(__FUNCTION__, $e);
-			return false;
+		$page_size = $this->_batch_page_size;
+		$max_limit = apply_filters('wdfb-comments-max_comments_limit', 
+			(defined('WDFB_COMMENTS_MAX_COMMENTS_LIMIT') && WDFB_COMMENTS_MAX_COMMENTS_LIMIT ? WDFB_COMMENTS_MAX_COMMENTS_LIMIT : 200)
+		);
+
+		if ($max_limit < $page_size) {
+			$token = $token ? "?auth_token={$token}" : '';
+			try {
+				$res = $this->fb->api('/' . $for . '/comments/' . $token);
+			} catch (Exception $e) {
+				$this->log->error(__FUNCTION__, $e);
+				return false;
+			}
+			return $res;
+		} else {
+			$token = $token ? "&auth_token={$token}" : '';
+			$batch = array();
+			for ($i=0; $i<$max_limit; $i+=$page_size) {
+				$batch[] = json_encode(array(
+					'method' => 'GET',
+					'relative_url' => "/{$for}/comments/?limit={$page_size}&offset={$i}{$token}"
+				));
+			}
+			try {
+				$res = $this->fb->api('/', 'POST', array('batch' => '[' . implode(',',$batch) . ']'));
+			} catch (Exception $e) {
+				$this->log->error(__FUNCTION__, $e);
+				return false;
+			}
+			$return = array();
+			foreach ($res as $key => $data) {
+				if (!$data || !isset($data['body'])) continue;
+				$data = json_decode($data['body'],true);
+				$return = array_merge($return, $data['data']);
+			}
+			return array('data' => $return);
 		}
-		return $res;
 	}
 
 	function _create_username_from_fb_response ($me) {

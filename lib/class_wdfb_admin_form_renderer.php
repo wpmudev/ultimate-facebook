@@ -779,7 +779,6 @@ class Wdfb_AdminFormRenderer {
 		echo __('<p><small>Leave this value blank to use the post title.</small></p>', 'wdfb');
 		echo '</div>';
 
-
 		if (!@$opt['allow_autopost']) {
 			echo '<div>';
 			echo '	<input type="checkbox" name="wdfb_metabox_publishing_publish" id="wdfb_metabox_publishing_publish" value="1" />';

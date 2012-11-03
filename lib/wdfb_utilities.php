@@ -389,6 +389,16 @@ function wdfb_get_singular_description () {
 }
 
 
+/**
+ * Wrapper for URL to post ID matching.
+ */
+function wdfb_url_to_postid ($url) {
+	$post_id = url_to_postid($url);
+	if (!$post_id) $post_id = apply_filters('wdfb-comments-url_to_post_id-fallback', $url);
+	return apply_filters('wdfb-comments-url_to_post_id-post_id', $post_id);
+}
+
+
 
 /**
  * Applying the proper message for registration email notification.
@@ -443,6 +453,17 @@ class Wdfb_ErrorRegistry {
 		;
 	}
 }
+
+/**
+ * Allow for default curlopt timeout define.
+ */
+function wdfb_fb_core_curlopt_increase_timeout ($options) {
+	if (!(defined('WDFB_FACEBOOK_CURLOPT_TIMEOUT') && WDFB_FACEBOOK_CURLOPT_TIMEOUT)) return $options;
+	$options[CURLOPT_CONNECTTIMEOUT] = WDFB_FACEBOOK_CURLOPT_TIMEOUT;
+	return $options;
+}
+add_filter('wdfb-fb_core-facebook_curl_options', 'wdfb_fb_core_curlopt_increase_timeout');
+
 
 function wdfb_cleanup_admin_pages ($list) {
 	return array_merge($list, array(

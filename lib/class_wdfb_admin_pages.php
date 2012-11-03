@@ -921,6 +921,16 @@ $token = false;
 		return $links;
 	}
 
+	function allow_default_avatars_selection ($defaults) {
+		if (!function_exists('get_current_screen')) return $defaults;
+
+		$screen = get_current_screen();
+		if (!isset($screen->id) || 'options-discussion' != $screen->id) return $defaults;
+
+		remove_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
+		return $defaults;
+	}
+
 	/**
 	 * Hooks to appropriate places and adds stuff as needed.
 	 *
@@ -973,7 +983,10 @@ $token = false;
 
 		// Connect
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
+			// Add admin gravatars support
 			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
+			// ... but allow avatars selection in the admin > Settings > Discussion
+			add_filter('avatar_defaults', array($this, 'allow_default_avatars_selection'));
 			// Single-click registration enabled
 			add_action('wp_ajax_nopriv_wdfb_perhaps_create_wp_user', array($this, 'json_perhaps_create_wp_user'));
 		}

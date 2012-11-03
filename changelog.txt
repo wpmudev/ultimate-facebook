@@ -5,6 +5,14 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.5.2 - 2012-11-03
+----------------------------------------------------------------------
+- Fix for overzealous avatar override.
+- Fix for non-BuddyPress sites tooltip help item.
+- Added feed fetching error log entry and url-to-post ID map wrapper.
+- Branching out for comments import.
+- Added pre-initialization FB curlopts filtering.
+
 2.5.1 - 2012-10-09
 ----------------------------------------------------------------------
 - Multi-values BuddyPress fields query returns only top-level choices.

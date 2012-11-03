@@ -15,7 +15,7 @@
  * under the License.
  */
 
-require_once "base_facebook.php";
+if (!class_exists('FacebookApiException')) require_once "base_facebook.php";
 
 /**
  * Extends the BaseFacebook class with the intent of using

@@ -42,7 +42,7 @@ class Wdfb_CommentsImporter {
 	function process_commented_posts ($posts) {
 		if (!count($posts)) return false;
 		foreach ($posts as $post) {
-			$post_id = url_to_postid($post['link']);
+			$post_id = wdfb_url_to_postid($post['link']);
 			if (!$post_id) continue; // Not a post on this blog. Continue.
 			$this->process_comments($post_id, $post['id']);
 		}

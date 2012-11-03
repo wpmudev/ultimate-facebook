@@ -135,10 +135,12 @@ class Wdfb_AdminHelp {
 				),
 				'#wdfb-login_redirect_base-url_fragment'
 			);
-			$this->$tip->bind_tip(
-				__('This may clash with your theme, in case your theme adds a button on its own.', 'wdfb'), 
-				'#wdfb-like_button-bp_activity-anchor'
-			);
+			if (defined('BP_VERSION')) {
+				$this->$tip->bind_tip(
+					__('This may clash with your theme, in case your theme adds a button on its own.', 'wdfb'), 
+					'#wdfb-like_button-bp_activity-anchor'
+				);
+			}
 		}
 	}
 	
