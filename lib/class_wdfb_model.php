@@ -34,6 +34,52 @@ class Wdfb_Model {
 		$this->__construct();
 	}
 
+	function get_known_fb_fields_map () {
+		return apply_filters('wdfb-profile_sync-known_fb_fields', array (
+			'_nothing' => __('Nothing', 'wdfb'),
+			'name' => __('Name', 'wdfb'),
+			'first_name' => __('First name', 'wdfb'),
+			'middle_name' => __('Middle name', 'wdfb'),
+			'last_name' => __('Last name', 'wdfb'),
+			'gender' => __('Gender', 'wdfb'),
+			'bio' => __('Bio', 'wdfb'),
+			'birthday' => __('Birthday', 'wdfb'),
+			'about' => __('About', 'wdfb'),
+			'hometown' => __('Hometown', 'wdfb'),
+			'location' => __('Location', 'wdfb'),
+			'link' => __('Facebook profile', 'wdfb'),
+			'locale' => __('Locale', 'wdfb'),
+			'languages' => __('Languages', 'wdfb'),
+			'username' => __('Facebook username', 'wdfb'),
+			'email' => __('Email', 'wdfb'),
+			'interested_in' => __('Gender interest', 'wdfb'),
+			'relationship_status' => __('Relationship status', 'wdfb'),
+			'significant_other' => __('Significant other', 'wdfb'),
+			'political' => __('Political view', 'wdfb'),
+			'religion' => __('Religion', 'wdfb'),
+			'favorite_athletes' => __('Favorite athletes', 'wdfb'),
+			'favorite_teams' => __('Favorite teams', 'wdfb'),
+			'quotes' => __('Favorite quotes', 'wdfb'),
+		/* Complex fields - Education */
+			'education/schools' => __('Education history (schools)', 'wdfb'),
+			'education/graduation_dates' => __('Education history (with graduation years)', 'wdfb'),
+			'education/subjects' => __('Education history (subjects)', 'wdfb'),
+		/* Complex fields - Work history */
+			'work/employers' => __('Work history (employers)', 'wdfb'),
+			'work/position_history' => __('Work history (with positions)', 'wdfb'),
+			'work/employer_history' => __('Work history (with dates)', 'wdfb'),
+		/* Complex fields - Misc */
+			//'devices' => __('Devices', 'wdfb'),
+		/* Compound fields */
+			'connection/books' => __('Favorite books', 'wdfb'),
+			'connection/games' => __('Favorite games', 'wdfb'),
+			'connection/movies' => __('Favorite movies', 'wdfb'),
+			'connection/music' => __('Favorite music', 'wdfb'),
+			'connection/television' => __('Favorite TV shows', 'wdfb'),
+			'connection/interests' => __('Interests', 'wdfb'),
+		));
+	}
+
 	/**
 	 * Returns all blogs on the current site.
 	 */
@@ -80,16 +126,18 @@ class Wdfb_Model {
 		$user_id = (int)$user_id;
 		if (!$field_id || !$user_id) return false;
 
-		if (is_array($data)) $data = $data['name']; // For complex FB fields that return JSON objects
+		//if (is_array($data)) $data = $data['name']; // For complex FB fields that return JSON objects
+		if (is_array($data) && isset($data['name'])) $data = $data['name'];
+		else if (is_array($data) && isset($data[0]) && isset($data[0]['name'])) $data = join(', ', array_map(create_function('$m', 'return $m["name"];'), $data));
 		$data = apply_filters('wdfb-profile_sync-bp-field_value', $data, $field_id, $user_id);
-		if (!$data) return false; // Don't waste cycles if we don't need to
 
+		if (!$data) return false; // Don't waste cycles if we don't need to
 		$tbl_pfx = function_exists('bp_core_get_table_prefix') ? bp_core_get_table_prefix() : apply_filters('bp_core_get_table_prefix', $this->db->base_prefix);
 		$sql = "SELECT id FROM {$tbl_pfx}bp_xprofile_data WHERE field_id={$field_id} AND user_id={$user_id}";
 		$id = $this->db->get_var($sql);
 
 		if ($id) {
-			$sql = "UPDATE {$tbl_pfx}bp_xprofile_data SET data='" . $data . "' WHERE id={$id}";
+			$sql = "UPDATE {$tbl_pfx}bp_xprofile_data SET value='" . $data . "' WHERE id={$id}";
 		} else {
 			$sql = "INSERT INTO {$tbl_pfx}bp_xprofile_data (field_id, user_id, value, last_updated) VALUES (" .
 				(int)$field_id . ', ' . (int)$user_id . ", '" . $data . "', '" . date('Y-m-d H:i:s') . "')";
@@ -345,14 +393,30 @@ class Wdfb_Model {
 		$this->set_fb_image_as_bp_avatar($user_id, $me);
 
 		$bp_fields = $this->get_bp_xprofile_fields();
+		$fields_map = array();
 		if (is_array($bp_fields)) foreach ($bp_fields as $bpf) {
 			$fb_value = $this->data->get_option('wdfb_connect', 'buddypress_registration_fields_' . $bpf['id']);
-			if ($fb_value && @$me[$fb_value]) $this->set_bp_xprofile_field($bpf['id'], $user_id, @$me[$fb_value]);
+			if ($fb_value) $fields_map[$bpf['id']] = $fb_value;
+		}
+
+		foreach ($fields_map as $bpfid => $field_name) {
+			$field_value = false;
+			if (false !== strstr($field_name, '/')) {
+				list($field_name, $field_processor) = explode('/', $field_name);
+				$field_value = apply_filters("wdfb-profile_sync-{$field_name}-{$field_processor}", $me[$field_name], $field_name, $this);
+			}
+			if (!$field_value && empty($me[$field_name])) continue;
+			$field_value = $field_value ? $field_value : $me[$field_name];
+			$this->set_bp_xprofile_field($bpfid, $user_id, $field_value);
 		}
 		return true;
 	}
 
 	function populate_wp_fields_from_fb ($user_id, $me=false) {
+		$wp_mappings = $this->data->get_option('wdfb_connect', 'wordpress_registration_fields');
+		if (empty($wp_mappings)) return true;
+		if (!is_array($wp_mappings)) return false;
+
 		if (!$me) {
 			try {
 				$me = $this->fb->api('/me');
@@ -361,13 +425,24 @@ class Wdfb_Model {
 			}
 			if (!$me) return false;
 		}
-		$wp_mappings = $this->data->get_option('wdfb_connect', 'wordpress_registration_fields');
 
-		if (is_array($wp_mappings)) foreach($wp_mappings as $map) {
-			if (!$map['wp'] || !$map['fb'] || !@$me[$map['fb']]) continue;
-			if (is_array(@$me[$map['fb']]) && isset($me[$map['fb']]['name'])) $data = @$me[$map['fb']]['name'];
-			else if (is_array(@$me[$map['fb']]) && isset($me[$map['fb']][0])) $data = join(', ', array_map(create_function('$m', 'return $m["name"];'), $me[$map['fb']]));
-			else $data = @$me[$map['fb']];
+		foreach($wp_mappings as $map) {
+			$field_value = false;
+			
+			if (empty($map['wp']) || empty($map['fb'])) continue;
+			$field_name = $map['fb'];
+
+			if (false !== strstr($field_name, '/')) {
+				list($field_name, $field_processor) = explode('/', $field_name);
+				$field_value = apply_filters("wdfb-profile_sync-{$field_name}-{$field_processor}", $me[$field_name], $field_name, $this);
+			}
+			if (!$field_value && empty($me[$field_name])) continue;
+			$field_value = $field_value ? $field_value : $me[$field_name];
+			
+			if (is_array($field_value) && isset($field_value['name'])) $data = $field_value['name'];
+			else if (is_array($field_value) && isset($field_value[0]) && isset($field_value[0]['name'])) $data = join(', ', array_map(create_function('$m', 'return $m["name"];'), $field_value));
+			else $data = $field_value;
+
 			$data = apply_filters('wdfb-profile_sync-wp-field_value', $data, $map['wp'], $user_id);
 			update_user_meta($user_id, $map['wp'], $data);
 		}
@@ -447,7 +522,7 @@ class Wdfb_Model {
 		$token = $this->get_user_api_token($fid);
 
 		// Events sanity check
-		if ('events' == $type && (!@$post['start_time'] || !@$post['end_time'])) return false;
+		if ('events' == $type && (empty($post['start_time']) || empty($post['end_time']))) return false;
 
 		//$post['auth_token'] = $tokens[$fid];
 		if (!$token) {
@@ -459,7 +534,6 @@ class Wdfb_Model {
 		$title = ('feed' == $type) ? @$post['message'] : '';
 		$_ap = $as_page ? 'as page' : '';
 		$this->log->notice("Posting {$title} to Facebook [{$type}] - [{$fid}] {$_ap} [{$token}].");
-
 		/*
 		if ($as_page) {
 			try {

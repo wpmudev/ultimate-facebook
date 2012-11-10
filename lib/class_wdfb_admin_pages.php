@@ -1013,7 +1013,7 @@ $token = false;
 		if ((defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) || (defined('DOING_CRON') && DOING_CRON)) {
 			add_action('save_post', array($this, 'publish_post_on_facebook'));
 		} else {
-			add_action('post_updated', array($this, 'publish_post_on_facebook'), 10, 3);
+			add_action('post_updated', array($this, 'publish_post_on_facebook'), 999, 3);
 		}
 		add_action('admin_notices', array($this, 'show_post_publish_error'));
 

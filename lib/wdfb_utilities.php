@@ -393,7 +393,25 @@ function wdfb_get_singular_description () {
  * Wrapper for URL to post ID matching.
  */
 function wdfb_url_to_postid ($url) {
-	$post_id = url_to_postid($url);
+	$post_id = false;
+	// Do our best to unwrap Jetpack shortlinks
+	if (wdfb__has_jetpack() && preg_match('/https?:' . preg_quote('//wp.me', '/') . '/i', $url)) {
+		// We may have a Jetpack-encoded link.
+		$path = trim(parse_url($url, PHP_URL_PATH), '/');
+		$type = substr($path, 0, 1);
+		$no_type = substr($path, 1);
+		if (false !== strstr($no_type, '-')) {
+			list($raw_blog_id, $raw_post_id) = explode('-', $no_type);
+			if ('s' === $type) {
+				$post_id = wdfb__post_name_to_id($raw_post_id);
+			} else {
+				$post_id = wdfb__base62_to_decimal($raw_post_id);
+			}
+		}
+	} else {
+		// We hopefully have a regular link/shortlink
+		$post_id = url_to_postid($url);
+	}
 	if (!$post_id) $post_id = apply_filters('wdfb-comments-url_to_post_id-fallback', $url);
 	return apply_filters('wdfb-comments-url_to_post_id-post_id', $post_id);
 }
@@ -455,6 +473,39 @@ class Wdfb_ErrorRegistry {
 }
 
 /**
+ * Utility to help converting the Jetpack-encoded shortlink format.
+ * Barely adapted from
+ * http://stackoverflow.com/questions/4964197/converting-a-number-base-10-to-base-62-a-za-z0-9
+ * Original code by Eineki http://stackoverflow.com/users/29125/eineki
+ * Thanks!
+ */
+function wdfb__base62_to_decimal ($num, $b=62) {
+	$base = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$limit = strlen($num);
+	$res = strpos($base, $num[0]);
+	for ($i=1; $i<$limit; $i++) {
+		$res = $b * $res + strpos($base,$num[$i]);
+	}
+	return $res;
+}
+
+/**
+ * Post name to ID helper.
+ */
+function wdfb__post_name_to_id ($post_name) {
+	global $wpdb;
+	return $wpdb->get_var($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_name=%s AND post_status='publish'", $post_name));
+}
+
+/**
+ * Jetpack recognition helper.
+ */
+function wdfb__has_jetpack () {
+	//return (bool)(class_exists('Jetpack') && function_exists('wpme_get_shortlink'));
+	return defined('JETPACK__API_BASE');
+}
+
+/**
  * Allow for default curlopt timeout define.
  */
 function wdfb_fb_core_curlopt_increase_timeout ($options) {
@@ -471,3 +522,173 @@ function wdfb_cleanup_admin_pages ($list) {
 	));
 }
 add_filter('wdfb-scripts-prevent_inclusion_ids', 'wdfb_cleanup_admin_pages');
+
+
+/**
+ * Education complex field data mapping processor - school names.
+ */
+function wdfb__education_complex_profile_field_schools ($data) {
+	if (!is_array($data) || empty($data)) return $data;
+	$ret = array();
+	foreach ($data as $sch) {
+		if (!isset($sch['school']['name'])) continue;
+		if (in_array($sch['school']['name'], $ret)) continue;
+		$ret[] = $sch['school']['name'];
+	}
+	return join(', ', $ret);
+}
+add_filter('wdfb-profile_sync-education-schools', 'wdfb__education_complex_profile_field_schools');
+
+/**
+ * Education complex field data mapping processor - graduation.
+ */
+function wdfb__education_complex_profile_field_graduation ($data) {
+	if (!is_array($data) || empty($data)) return $data;
+	$ret = array();
+	foreach ($data as $sch) {
+		if (!isset($sch['school']['name'])) continue;
+		if (!isset($sch['year']['name'])) continue;
+
+		$str = $sch['school']['name'] . ' (' . $sch['year']['name'] . ')';
+		if (in_array($str, $ret)) continue;
+
+		$ret[] = $str;
+	}
+	return join(', ', $ret);
+}
+add_filter('wdfb-profile_sync-education-graduation_dates', 'wdfb__education_complex_profile_field_graduation');
+
+/**
+ * Education complex field data mapping processor - subjects.
+ */
+function wdfb__education_complex_profile_field_subjects ($data) {
+	if (!is_array($data) || empty($data)) return $data;
+	$ret = array();
+	foreach ($data as $sch) {
+		if (empty($sch['concentration'])) continue;
+		foreach ($sch['concentration'] as $subject) {
+			if (in_array($subject['name'], $ret)) continue;
+			$ret[] = $subject['name'];
+		}
+	}
+	return join(', ', $ret);
+}
+add_filter('wdfb-profile_sync-education-subjects', 'wdfb__education_complex_profile_field_subjects');
+
+/**
+ * Work complex field data mapping processor - employers.
+ */
+function wdfb__work_complex_profile_field_employers ($data) {
+	if (!is_array($data) || empty($data)) return $data;
+	$ret = array();
+	foreach ($data as $wrk) {
+		if (empty($wrk['employer']['name'])) continue;
+		if (in_array($wrk['employer']['name'], $ret)) continue;
+		$ret[] = $wrk['employer']['name'];
+	}
+	return join(', ', $ret);
+}
+add_filter('wdfb-profile_sync-work-employers', 'wdfb__work_complex_profile_field_employers');
+
+/**
+ * Work complex field data mapping processor - position_history.
+ */
+function wdfb__work_complex_profile_field_position_history ($data) {
+	if (!is_array($data) || empty($data)) return $data;
+	$ret = array();
+	foreach ($data as $wrk) {
+		if (empty($wrk['employer']['name'])) continue;
+		$position = !empty($wrk['position']['name']) ? $wrk['position']['name'] : __('N/A', 'wdfb');
+		$str = $wrk['employer']['name'] . " ({$position})";
+		if (in_array($str, $ret)) continue;
+		$ret[] = $str;
+	}
+	return join(', ', $ret);
+}
+add_filter('wdfb-profile_sync-work-position_history', 'wdfb__work_complex_profile_field_position_history');
+
+/**
+ * Work complex field data mapping processor - employer_history.
+ */
+function wdfb__work_complex_profile_field_employer_history ($data) {
+	if (!is_array($data) || empty($data)) return $data;
+	$ret = array();
+	foreach ($data as $wrk) {
+		if (empty($wrk['employer']['name'])) continue;
+		$position = !empty($wrk['position']['name']) ? $wrk['position']['name'] : __('N/A', 'wdfb');
+		$timespan = false;
+		$start_date = !empty($wrk['start_date']) && !preg_match('/^0{4}/', $wrk['start_date']) ? $wrk['start_date'] : false;
+		if ($start_date) {
+			$end_date = !empty($wrk['end_date']) && !preg_match('/^0{4}/', $wrk['end_date']) ? $wrk['end_date'] : false;
+			$end_date = $end_date ? $end_date : __('Present', 'wdfb');
+			$timespan = ", {$start_date} - {$end_date}";
+		}
+
+		$str = $wrk['employer']['name'] . " ({$position}{$timespan})";
+		if (in_array($str, $ret)) continue;
+		$ret[] = $str;
+	}
+	return join(', ', $ret);
+}
+add_filter('wdfb-profile_sync-work-employer_history', 'wdfb__work_complex_profile_field_employer_history');
+
+/**
+ * Connection processor helper.
+ */
+function wdfb__profile_sync_connections_process_connection ($name, $model) {
+	try {
+		$data = $model->fb->api("/me/{$name}");
+	} catch (Exception $e) {
+		$data = false;
+	}
+	$data = !empty($data['data']) ? $data['data'] : array();
+	$ret = array();
+	foreach ($data as $item) {
+		if (empty($item['name'])) continue;
+		if (in_array($item['name'], $ret)) continue;
+		$ret[] = $item['name'];
+	}
+	return join(', ', $ret);
+}
+/**
+ * Books connection complex field data mapping processor.
+ */
+function wdfb__connection_complex_profile_field_books ($data, $name, $model) {
+	return wdfb__profile_sync_connections_process_connection('books', $model);
+}
+add_filter('wdfb-profile_sync-connection-books', 'wdfb__connection_complex_profile_field_books', 10, 3);
+/**
+ * Games connection complex field data mapping processor.
+ */
+function wdfb__connection_complex_profile_field_games ($data, $name, $model) {
+	return wdfb__profile_sync_connections_process_connection('games', $model);
+}
+add_filter('wdfb-profile_sync-connection-games', 'wdfb__connection_complex_profile_field_games', 10, 3);
+/**
+ * Music connection complex field data mapping processor.
+ */
+function wdfb__connection_complex_profile_field_movies ($data, $name, $model) {
+	return wdfb__profile_sync_connections_process_connection('movies', $model);
+}
+add_filter('wdfb-profile_sync-connection-movies', 'wdfb__connection_complex_profile_field_movies', 10, 3);
+/**
+ * Movies connection complex field data mapping processor.
+ */
+function wdfb__connection_complex_profile_field_music ($data, $name, $model) {
+	return wdfb__profile_sync_connections_process_connection('music', $model);
+}
+add_filter('wdfb-profile_sync-connection-music', 'wdfb__connection_complex_profile_field_music', 10, 3);
+/**
+ * Movies connection complex field data mapping processor.
+ */
+function wdfb__connection_complex_profile_field_television ($data, $name, $model) {
+	return wdfb__profile_sync_connections_process_connection('television', $model);
+}
+add_filter('wdfb-profile_sync-connection-television', 'wdfb__connection_complex_profile_field_television', 10, 3);
+/**
+ * Movies connection complex field data mapping processor.
+ */
+function wdfb__connection_complex_profile_field_interests ($data, $name, $model) {
+	return wdfb__profile_sync_connections_process_connection('interests', $model);
+}
+add_filter('wdfb-profile_sync-connection-interests', 'wdfb__connection_complex_profile_field_interests', 10, 3);

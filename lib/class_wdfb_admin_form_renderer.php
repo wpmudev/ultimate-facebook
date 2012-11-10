@@ -237,31 +237,8 @@ class Wdfb_AdminFormRenderer {
 	}
 	function create_buddypress_registration_fields_box () {
 		$opt = $this->_get_option('wdfb_connect');
-		$fb_fields = array (
-			'_nothing' => __('Nothing', 'wdfb'),
-			'name' => __('Name', 'wdfb'),
-			'first_name' => __('First name', 'wdfb'),
-			'middle_name' => __('Middle name', 'wdfb'),
-			'last_name' => __('Last name', 'wdfb'),
-			'gender' => __('Gender', 'wdfb'),
-			'bio' => __('Bio', 'wdfb'),
-			'birthday' => __('Birthday', 'wdfb'),
-			'about' => __('About', 'wdfb'),
-			'hometown' => __('Hometown', 'wdfb'),
-			'location' => __('Location', 'wdfb'),
-			'link' => __('Facebook profile', 'wdfb'),
-			'locale' => __('Locale', 'wdfb'),
-			'languages' => __('Languages', 'wdfb'),
-			'username' => __('Facebook username', 'wdfb'),
-			'email' => __('Email', 'wdfb'),
-			'relationship_status' => __('Relationship status', 'wdfb'),
-			'significant_other' => __('Significant other', 'wdfb'),
-			'political' => __('Political view', 'wdfb'),
-			'religion' => __('Religion', 'wdfb'),
-			'favorite_teams' => __('Favorite teams', 'wdfb'),
-			'quotes' => __('Favorite quotes', 'wdfb'),
-		);
 		$model = new Wdfb_Model;
+		$fb_fields = $model->get_known_fb_fields_map();
 		$bp_fields = $model->get_bp_xprofile_fields();
 		if (!is_array($bp_fields)) return '';
 
@@ -282,30 +259,8 @@ class Wdfb_AdminFormRenderer {
 	}
 	function create_wordpress_registration_fields_box () {
 		$opt = $this->_get_option('wdfb_connect');
-		$fb_fields = array (
-			'_nothing' => __('Nothing', 'wdfb'),
-			'name' => __('Name', 'wdfb'),
-			'first_name' => __('First name', 'wdfb'),
-			'middle_name' => __('Middle name', 'wdfb'),
-			'last_name' => __('Last name', 'wdfb'),
-			'gender' => __('Gender', 'wdfb'),
-			'bio' => __('Bio', 'wdfb'),
-			'birthday' => __('Birthday', 'wdfb'),
-			'about' => __('About', 'wdfb'),
-			'hometown' => __('Hometown', 'wdfb'),
-			'location' => __('Location', 'wdfb'),
-			'link' => __('Facebook profile', 'wdfb'),
-			'locale' => __('Locale', 'wdfb'),
-			'languages' => __('Languages', 'wdfb'),
-			'username' => __('Facebook username', 'wdfb'),
-			'email' => __('Email', 'wdfb'),
-			'relationship_status' => __('Relationship status', 'wdfb'),
-			'significant_other' => __('Significant other', 'wdfb'),
-			'political' => __('Political view', 'wdfb'),
-			'religion' => __('Religion', 'wdfb'),
-			'favorite_teams' => __('Favorite teams', 'wdfb'),
-			'quotes' => __('Favorite quotes', 'wdfb'),
-		);
+		$model = new Wdfb_Model;
+		$fb_fields = $model->get_known_fb_fields_map();
 
 		// Set up default mapping
 		$wp_defaults = array (
@@ -332,19 +287,6 @@ class Wdfb_AdminFormRenderer {
 		}
 		echo '</div>';
 		echo '<p><input type="button" id="wdfb_connect_add_mapping" value="' . __('Add another mapping', 'wdfb') . '" /></p>';
-
-		/*
-		global $wdfb_wp_profile_fields;
-
-		foreach ($wdfb_wp_profile_fields as $wpf_id => $wpf_label) {
-			_e(sprintf('Map %s to', $wpf_label), 'wdfb');
-			echo ' <select name="wdfb_connect[wordpress_registration_fields_' . $wpf_id . ']">';
-			foreach ($fb_fields as $fbf_key=>$fbf_label) {
-				echo '<option value="' . $fbf_key . '" ' . ((@$opt['wordpress_registration_fields_' . $wpf_id] == $fbf_key) ? 'selected="selected"' : '') . '">' . $fbf_label . '</option>';
-			}
-			echo '</select><br />';
-		}
-		*/
 	}
 
 	function create_allow_facebook_button_box () {
