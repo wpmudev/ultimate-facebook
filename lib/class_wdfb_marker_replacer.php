@@ -127,7 +127,7 @@ class Wdfb_MarkerReplacer {
 
 		$api = new Wdfb_EventsBuffer;
 		$events = $api->get_for($atts['for']);
-		if (!is_array($events)) return $content;
+		if (!is_array($events) || empty($events)) return $content;
 
 		if ($atts['order']) {
 			$events = $this->_sort_by_time($events, $atts['order']);

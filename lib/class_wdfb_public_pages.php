@@ -551,7 +551,7 @@ EOBpFormInjection;
 
 		// Connect
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
-			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
+			if (!$this->data->get_option('wdfb_connect', 'skip_fb_avatars')) add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
 
 			add_action('login_head', array($this, 'js_inject_fb_login_script'));
 			add_action('login_head', array($this, 'js_setup_ajaxurl'));
@@ -610,7 +610,7 @@ EOBpFormInjection;
 				add_action($hook, array($this, 'inject_fb_comments'));
 			}
 		}
-		add_filter('get_avatar', array($this, 'get_commenter_avatar'), 10, 3);
+		if (!$this->data->get_option('wdfb_connect', 'skip_fb_avatars')) add_filter('get_avatar', array($this, 'get_commenter_avatar'), 10, 3);
 
 		// Autopost for front pages
 		if ($this->data->get_option('wdfb_autopost', 'allow_autopost') && $this->data->get_option('wdfb_autopost', 'allow_frontend_autopost')) {

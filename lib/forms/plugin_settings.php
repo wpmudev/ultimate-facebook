@@ -166,17 +166,57 @@ $(".wdfb-next_step").live('click', function () {
 	return false;
 });
 
+/* ----- Saving section data ----- */
+
+// Section save deferred posting - requires at least jQuery 1.5
+function wdfb_send_save_request (part, data) {
+	// Wrap request in deferred, resolve once the paging completes
+	var dreq = $.Deferred(function () {
+		$.post(ajaxurl, {
+			"action": "<?php echo (
+				(defined('WP_NETWORK_ADMIN') && WP_NETWORK_ADMIN) 
+					? "wdfb_network_partial_data_save" 
+					: "wdfb_partial_data_save"
+				); ?>",
+			"part": part,
+			"data": data
+		}, function (response) {
+			if (response && response.page) { // So, we're paging, obviously
+				// Prepare data paging
+				data = data.match(/&page=\d+/) 
+					? data.replace(/&page=\d+/, '&page=' + response.page) 
+					: data + '&page=' + response.page
+				;
+				wdfb_send_save_request(part, data); // More paging to do, rebind deferred recursively
+			} else dreq.resolve(); // We're done paging, resolve the deferred
+		}, 'json');
+	});
+	
+	// Reload when we're done
+	$.when(dreq).then(function () {
+		$("#wdfb-save_settings-waiting").after(
+			"<?php echo esc_js(__('Done. Applying new settings, please hold on.', 'wdfb')); ?>"
+		).remove();
+		var loc = window.location;
+		loc.hash = '#wdfb-section_header-' + part;
+		window.location = loc; 
+		window.location.reload();
+	});
+}
+
 // Section save handler
 $(".wdfb-save_settings").click(function () {
-	var $me = $(this);
-	var section_id = $me.attr("data-wdfb_section_id");
-	var $section = $("#wdfb-section-" + section_id);
+	var $me = $(this),
+		section_id = $me.attr("data-wdfb_section_id"),
+		$section = $("#wdfb-section-" + section_id)
+	;
 	if (!$section.length) return false;
 	
 	$me.after(
 		'<img src="' + _wdfb_root_url + '/img/waiting.gif" id="wdfb-save_settings-waiting">'
 	).remove();
 	
+	/*
 	$.post(ajaxurl, {
 		"action": "<?php echo (
 			(defined('WP_NETWORK_ADMIN') && WP_NETWORK_ADMIN) 
@@ -186,14 +226,17 @@ $(".wdfb-save_settings").click(function () {
 		"part": section_id,
 		"data": $section.parents("form:first").serialize()
 	}, function () {
-		$("#wdfb-save_settings-waiting").after(
-			"<?php echo esc_js(__('Done. Applying new settings, please hold on.', 'wdfb')); ?>"
-		).remove();
 		var loc = window.location;
 		loc.hash = '#wdfb-section_header-' + section_id;
 		window.location = loc; 
 		window.location.reload();
-	})
+	});
+	*/
+
+	var data = $section.parents("form:first").serialize(),
+		request = wdfb_send_save_request(section_id, data)
+	;
+
 	return false;
 });
 

@@ -33,7 +33,7 @@ class Wdfb_EventsBuffer extends Wdfb_TransientBuffer {
 		
 		$result = $this->fetch($transient);
 		if ($result) return $result;
-		
+
 		$model = new Wdfb_Model;
 		$events = $model->get_events_for($fbid);
 		if (!$events) return false;

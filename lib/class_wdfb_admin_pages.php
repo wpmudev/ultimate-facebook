@@ -43,6 +43,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_allow_facebook_registration', __('Allow users to register with Facebook', 'wdfb'), array($form, 'create_allow_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_force_facebook_registration', __('Force users to register with Facebook', 'wdfb'), array($form, 'create_force_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_easy_facebook_registration', __('Allow single-click registration', 'wdfb'), array($form, 'create_easy_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
+		add_settings_field('wdfb_facebook_avatars', __('Do not use Facebook avatars as profile images', 'wdfb'), array($form, 'create_facebook_avatars_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_login_redirect', __('Redirect on login', 'wdfb'), array($form, 'create_login_redirect_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_captcha', __('Do not show CAPTCHA on registration pages', 'wdfb'), array($form, 'create_captcha_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_autologin', __('Auto-login after registration', 'wdfb'), array($form, 'create_autologin_box'), 'wdfb_options_page', 'wdfb_connect');
@@ -144,6 +145,7 @@ class Wdfb_AdminPages {
 			add_settings_field('wdfb_allow_facebook_registration', __('Allow users to register with Facebook', 'wdfb'), array($form, 'create_allow_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_force_facebook_registration', __('Force users to register with Facebook', 'wdfb'), array($form, 'create_force_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_easy_facebook_registration', __('Allow single-click registration', 'wdfb'), array($form, 'create_easy_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
+			add_settings_field('wdfb_facebook_avatars', __('Do not use Facebook avatars as profile images', 'wdfb'), array($form, 'create_facebook_avatars_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_login_redirect', __('Redirect on login', 'wdfb'), array($form, 'create_login_redirect_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_captcha', __('Do not show CAPTCHA on registration pages', 'wdfb'), array($form, 'create_captcha_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_autologin', __('Auto-login after registration', 'wdfb'), array($form, 'create_autologin_box'), 'wdfb_options_page', 'wdfb_connect');
@@ -879,12 +881,15 @@ $token = false;
 		update_site_option($key, $new_data);
 		
 		if ($keys && $override) {
-			$blogs = $this->model->get_blog_ids(); // Get this list only once
+			$page = !empty($data['page']) ? (int)$data['page'] : 0;
+			$blogs = $this->model->get_paged_blog_ids($page); // Get this list only once
+			if (empty($blogs)) die; // We're done with paging
 			foreach ($keys as $key) {
 				if ('api' == $key && $preserve_api) continue; // Preserve API
 				$site_opt = get_site_option("wdfb_{$key}");
 				foreach ($blogs as $blog) update_blog_option($blog['blog_id'], "wdfb_{$key}", $site_opt);
 			}
+			die(json_encode(array("page" => $page+1))); // Paged resource, respond with next page
 		}
 		
 		die;
@@ -984,7 +989,7 @@ $token = false;
 		// Connect
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
 			// Add admin gravatars support
-			add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
+			if (!$this->data->get_option('wdfb_connect', 'skip_fb_avatars')) add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
 			// ... but allow avatars selection in the admin > Settings > Discussion
 			add_filter('avatar_defaults', array($this, 'allow_default_avatars_selection'));
 			// Single-click registration enabled

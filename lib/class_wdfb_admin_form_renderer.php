@@ -206,6 +206,11 @@ class Wdfb_AdminFormRenderer {
 		echo $this->_create_checkbox('connect', 'easy_facebook_registration',  @$opt['easy_facebook_registration']);
 		echo '<div><small>' . __('If enabled, the "Login with Facebook" button will work as a single-click register button for your new users', 'wdfb') . '</small></div>';
 	}
+	function create_facebook_avatars_box () {
+		$opt = $this->_get_option('wdfb_connect');
+		echo $this->_create_checkbox('connect', 'skip_fb_avatars',  @$opt['skip_fb_avatars']);
+		echo '<div><small>' . __('By default, the plugin will use Facebook profile images instead of your users avatars wherever possible. Enable this option to prevent this behavior', 'wdfb') . '</small></div>';
+	}
 	function create_login_redirect_box () {
 		$opt = $this->_get_option('wdfb_connect');
 		$base = @$opt['login_redirect_base'] ? @$opt['login_redirect_base'] : 'site_url';

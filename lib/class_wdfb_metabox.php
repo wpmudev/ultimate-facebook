@@ -181,7 +181,7 @@ class Wdfb_Metabox_OpenGraph extends Wdfb_Metabox {
 		$help = $help ? "<small><em>{$help}</em></small>" : '';
 		$images = $this->_get_value('wdfb_og_images');
 
-		$images = $images ? $images : array('');
+		$images = $images && is_array($images) ? $images : array('');
 		$title = __('Custom OpenGraph images', 'wdfb');
 
 		foreach ($images as $idx => $image) {
@@ -200,7 +200,7 @@ class Wdfb_Metabox_OpenGraph extends Wdfb_Metabox {
 		$names = $this->_get_value('wdfb_og_custom_name');
 		$values = $this->_get_value('wdfb_og_custom_value');
 
-		$names = $names ? $names : array('');
+		$names = $names && is_array($names) ? $names : array('');
 		$title = __('Custom OpenGraph properties', 'wdfb');
 
 		foreach ($names as $idx => $name) {

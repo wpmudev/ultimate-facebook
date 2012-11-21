@@ -53,9 +53,13 @@ class Wdfb_CommentsImporter {
 		$limit = $limit ? $limit : 10;
 
 		$tokens = $this->model->data->get_option('wdfb_api', 'auth_tokens');
+		$tokens = is_array($tokens) ? $tokens : array();
+		
 		$skips = $this->model->data->get_option('wdfb_comments', 'skip_import');
-		$reverse = $this->model->data->get_option('wdfb_comments', 'reverse_skip_logic');
 		$skips = is_array($skips) ? $skips : array();
+		
+		$reverse = $this->model->data->get_option('wdfb_comments', 'reverse_skip_logic');
+
 		foreach ($tokens as $fb_uid=>$token) {
 			if (!$fb_uid) continue;
 			if ($reverse) {

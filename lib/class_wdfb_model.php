@@ -15,7 +15,7 @@ class Wdfb_Model {
 		$this->data =& Wdfb_OptionsRegistry::get_instance();
 		$this->db = $wpdb;
 
-		Facebook::$CURL_OPTS = apply_filters('wdfb-fb_core-facebook_curl_options', Facebook::$CURL_OPTS);
+		if (isset(Facebook::$CURL_OPTS)) Facebook::$CURL_OPTS = apply_filters('wdfb-fb_core-facebook_curl_options', Facebook::$CURL_OPTS);
 		$this->fb = new Facebook(array(
 			'appId' => trim($this->data->get_option('wdfb_api', 'app_key')),
 			'secret' => trim($this->data->get_option('wdfb_api', 'secret_key')),
@@ -90,6 +90,27 @@ class Wdfb_Model {
 			$site_id = $current_blog->site_id;
 		}
 		$sql = "SELECT blog_id FROM " . $this->db->blogs . " WHERE site_id={$site_id} AND public='1' AND archived= '0' AND spam='0' AND deleted='0' ORDER BY registered DESC";
+		return $this->db->get_results($sql, ARRAY_A);
+	}
+
+	/**
+	 * Returns all blogs on the current network, as paged resources.
+	 */
+	function get_paged_blog_ids ($page) {
+		global $current_blog;
+		$site_id = 0;
+		if ($current_blog) {
+			$site_id = $current_blog->site_id;
+		}
+		
+		$_limit = defined('WDFB_NETWORK_BLOGS_PAGE_SIZE') && WDFB_NETWORK_BLOGS_PAGE_SIZE
+			? WDFB_NETWORK_BLOGS_PAGE_SIZE
+			: 25
+		;
+		
+		$start = $page * $_limit;
+		$end = $start + $_limit;
+		$sql = "SELECT blog_id FROM " . $this->db->blogs . " WHERE site_id={$site_id} AND public='1' AND archived= '0' AND spam='0' AND deleted='0' ORDER BY registered DESC LIMIT {$start}, {$end}";
 		return $this->db->get_results($sql, ARRAY_A);
 	}
 
@@ -390,7 +411,7 @@ class Wdfb_Model {
 			if (!$me) return false;
 		}
 
-		$this->set_fb_image_as_bp_avatar($user_id, $me);
+		if (!$this->data->get_option('wdfb_connect', 'skip_fb_avatars')) $this->set_fb_image_as_bp_avatar($user_id, $me);
 
 		$bp_fields = $this->get_bp_xprofile_fields();
 		$fields_map = array();
@@ -562,10 +583,13 @@ class Wdfb_Model {
 		if (!$for) return false;
 
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
-		$token = $tokens[$for];
+		$token = !empty($tokens[$for]) 
+			? '?access_token=' . $tokens[$for] 
+			: '?access_token=' . $this->fb->getAppId() . '|' . $this->fb->getAppSecret()
+		;
 
 		try {
-			$res = $this->fb->api('/' . $for . '/events/?auth_token=' . $token);
+			$res = $this->fb->api("/{$for}/events/{$token}");
 		} catch (Exception $e) {
 			return false;
 		}
