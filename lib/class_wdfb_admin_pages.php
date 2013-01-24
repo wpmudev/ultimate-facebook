@@ -23,6 +23,12 @@ class Wdfb_AdminPages {
 	 */
 	function register_site_settings () {
 		$form = new Wdfb_AdminFormRenderer;
+		
+		register_setting('wdfb', 'wdfb_network');
+		add_settings_section('wdfb_network', __('Network options', 'wdfb'), create_function('', ''), 'wdfb_options_page');
+		add_settings_field('wdfb_override_all', __('Override individual blog settings', 'wdfb'), array($form, 'create_override_all_box'), 'wdfb_options_page', 'wdfb_network');
+		add_settings_field('wdfb_preserve_api', __('Preserve individual blog API settings', 'wdfb'), array($form, 'create_preserve_api_box'), 'wdfb_options_page', 'wdfb_network');
+		add_settings_field('wdfb_prevent_blog_settings', __('Do not allow per-blog settings', 'wdfb'), array($form, 'create_prevent_blog_settings_box'), 'wdfb_options_page', 'wdfb_network');
 
 		register_setting('wdfb', 'wdfb_api');
 		add_settings_section('wdfb_api', __('Facebook API', 'wdfb'), create_function('', ''), 'wdfb_options_page');
@@ -34,7 +40,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_allow_propagation', __('Allow sub-sites to use these credentials', 'wdfb'), array($form, 'create_allow_propagation_box'), 'wdfb_options_page', 'wdfb_api');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_api');
 
-		add_settings_section('wdfb_grant', __('Grant extended permissions', 'wdfb'), create_function('', ''), 'wdfb_options_page');
+		add_settings_section('wdfb_grant', __('Permissions &amp; Tokens', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_api_permissions', __('Allowing permissions', 'wdfb'), array($form, 'api_permissions'), 'wdfb_options_page', 'wdfb_grant');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_grant');
 
@@ -74,6 +80,12 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_og_extras', __('Additional OpenGraph headers', 'wdfb'), array($form, 'create_og_extras_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_opengraph');
 
+		if (defined('BP_VERSION')) {
+			register_setting('wdfb', 'wdfb_groups');
+			add_settings_section('wdfb_groups', __('Facebook Groups', 'wdfb'), create_function('', ''), 'wdfb_options_page');
+			add_settings_field('wdfb_allow_bp_groups_sync', __('BuddyPress groups info sync', 'wdfb'), array($form, 'create_allow_bp_groups_sync_box'), 'wdfb_options_page', 'wdfb_groups');
+		}
+
 		register_setting('wdfb', 'wdfb_comments');
 		add_settings_section('wdfb_comments', __('Facebook Comments', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_import_fb_comments', __('Import Facebook comments', 'wdfb'), array($form, 'create_import_fb_comments_box'), 'wdfb_options_page', 'wdfb_comments');
@@ -98,12 +110,6 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_allow_post_metabox', __('Do not allow individual posts to Facebook', 'wdfb'), array($form, 'create_allow_post_metabox_box'), 'wdfb_options_page', 'wdfb_autopost');
 		if (defined('BP_VERSION')) add_settings_field('wdfb_allow_bp_activity_switch', __('Do not allow individual Activity updates to Facebook', 'wdfb'), array($form, 'create_allow_bp_activity_switch_box'), 'wdfb_options_page', 'wdfb_autopost');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_autopost');
-
-		register_setting('wdfb', 'wdfb_network');
-		add_settings_section('wdfb_network', __('Network options', 'wdfb'), create_function('', ''), 'wdfb_options_page');
-		add_settings_field('wdfb_override_all', __('Override individual blog settings', 'wdfb'), array($form, 'create_override_all_box'), 'wdfb_options_page', 'wdfb_network');
-		add_settings_field('wdfb_preserve_api', __('Preserve individual blog API settings', 'wdfb'), array($form, 'create_preserve_api_box'), 'wdfb_options_page', 'wdfb_network');
-		add_settings_field('wdfb_prevent_blog_settings', __('Do not allow per-blog settings', 'wdfb'), array($form, 'create_prevent_blog_settings_box'), 'wdfb_options_page', 'wdfb_network');
 
 		register_setting('wdfb', 'wdfb_widget_pack');
 		add_settings_section('wdfb_widget_pack', __('Widget pack', 'wdfb'), create_function('', ''), 'wdfb_widget_options_page');
@@ -135,7 +141,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_prevent_access', __('Prevent access to my linked accounts', 'wdfb'), array($form, 'create_prevent_access_box'), 'wdfb_options_page', 'wdfb_api');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_api');
 
-		add_settings_section('wdfb_grant', __('Grant extended permissions', 'wdfb'), create_function('', ''), 'wdfb_options_page');
+		add_settings_section('wdfb_grant', __('Permissions &amp; Tokens', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_api_permissions', __('Allowing permissions', 'wdfb'), array($form, 'api_permissions'), 'wdfb_options_page', 'wdfb_grant');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_grant');
 
@@ -176,6 +182,12 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_og_type', __('OpenGraph type', 'wdfb'), array($form, 'create_og_type_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('wdfb_og_extras', __('Additional OpenGraph headers', 'wdfb'), array($form, 'create_og_extras_box'), 'wdfb_options_page', 'wdfb_opengraph');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_opengraph');
+
+		if (defined('BP_VERSION')) {
+			register_setting('wdfb', 'wdfb_groups');
+			add_settings_section('wdfb_groups', __('Facebook Groups', 'wdfb'), create_function('', ''), 'wdfb_options_page');
+			add_settings_field('wdfb_allow_bp_groups_sync', __('BuddyPress groups info sync', 'wdfb'), array($form, 'create_allow_bp_groups_sync_box'), 'wdfb_options_page', 'wdfb_groups');
+		}
 
 		register_setting('wdfb', 'wdfb_comments');
 		add_settings_section('wdfb_comments', __('Facebook Comments', 'wdfb'), create_function('', ''), 'wdfb_options_page');
@@ -339,8 +351,10 @@ class Wdfb_AdminPages {
 	 * API setup notice
 	 */
 	function notice_api_setup () {
+		if (!current_user_can('manage_options')) return false; // This guy can't help us. Moving on.
 		if ($this->data->get_option('wdfb_api', 'app_key')) return false; // We're set up. Moving on.
 		if (isset($_GET['page']) && 'wdfb' == $_GET['page']) return false; // We're doing this. Stop nagging.
+		if (defined('WDFB_DO_NOT_SHOW_CONFIGURATION_NAG') && WDFB_DO_NOT_SHOW_CONFIGURATION_NAG) return false;
 
 		$opt = get_site_option('wdfb_network', array());
 		if (@$opt['prevent_blog_settings']) return false; // Can't really do this, no point in whining.		
@@ -512,7 +526,7 @@ $token = false;
 			));
 			if(is_wp_error($page)) return false; // Request fail
 			if ((int)$page['response']['code'] != 200) return false; // Request fail
-
+			
 			parse_str($page['body'], $response);
 			$token = isset($response['access_token']) ? $response['access_token'] : false;
 			if (!$token) return false;
@@ -829,13 +843,27 @@ $token = false;
 		$fb_user = $this->model->fb->getUser();
 		if ($fb_user) {
 			$user_id = $this->model->get_wp_user_from_fb();
+			if ($user_id) do_action('wdfb-login-facebook_login', $user_id, $fb_user);
+
 			if (!$user_id) $user_id = $this->model->map_fb_to_current_wp_user();
+			if ($user_id) do_action('wdfb-login-facebook_mapping', $user_id, $fb_user);
+
 			if (!$user_id && $this->data->get_option('wdfb_connect', 'easy_facebook_registration')) {
 				$user_id = $this->model->register_fb_user();
 			}
 			$this->handle_fb_session_state();
 		}
 		exit();
+	}
+
+	function json_refresh_access_token () {
+		$this->handle_fb_auth_tokens();
+		die;
+	}
+	
+	function json_remap_user () {
+		$this->model->map_fb_to_current_wp_user();
+		die;
 	}
 	
 	function json_check_api_status () {
@@ -846,6 +874,34 @@ $token = false;
 		if(is_wp_error($resp)) die(json_encode(array("status" => 0))); // Request fail
 		if ((int)$resp['response']['code'] != 200) die(json_encode(array("status" => 0))); // Request fail
 		die($resp['body']);
+	}
+
+	function json_get_facebook_groups_map () {
+		$groups = $this->model->get_current_user_groups();
+		if (!$groups) die;
+
+		$str = '<select id="wdfb-fb_groups_selection-selection">';
+		foreach ($groups as $group) {
+			$str .= '<option value="' . esc_attr($group['id']) . '">' . $group['name'] . '</option>';
+		}
+		$str .= '</select>';
+
+		$str .= '&nbsp;<input type="button" id="wdfb-fb_groups_selection-map" value="' . esc_attr(__('Sync', 'wdfb')) . '" />';
+		$str .= '&nbsp;<input type="button" id="wdfb-fb_groups_selection-map_cancel" value="' . esc_attr(__('Cancel', 'wdfb')) . '" />';
+		$str .= '&nbsp;';
+		die('<div id="wdfb-fb_groups_selection">' . $str . '</div>');
+	}
+
+	function json_map_facebook_group () {
+		$bp_group = !empty($_POST['bp_group']) ? $_POST['bp_group'] : false;
+		$fb_group = !empty($_POST['fb_group']) ? $_POST['fb_group'] : false;
+		$token = !empty($_POST['token']) ? $_POST['token'] : false;
+		if (!$bp_group || !$fb_group || !$token) die;
+
+		$result = $this->model->map_bp_group_info($bp_group, $fb_group, $token);
+		die(json_encode(array(
+			"status" => $result,
+		)));
 	}
 	
 	function json_partial_data_save () {
@@ -917,6 +973,12 @@ $token = false;
 		}
 	}
 
+	function inject_profile_update_link () {
+		$profile = apply_filters('wdfb-profile_name', '<em>' . get_bloginfo('name') . '</em>');//defined('BP_VERSION') ? "BuddyPress" : "WordPress";
+		echo '<p><a href="#" class="wdfb_fill_profile">' . sprintf(__('Fill my %s profile with Facebook data', 'wdfb'), $profile) . '</a></p>';
+		echo '<script type="text/javascript">(function ($) { $(function () { $(".wdfb_fill_profile").click(function () { var $me = $(this); var oldHtml = $me.html(); try {var url = _wdfb_ajaxurl;} catch (e) { var url = ajaxurl; } $me.html("Please, wait... <img src=\"' . WDFB_PLUGIN_URL . '/img/waiting.gif\">"); $.post(url, {"action": "wdfb_populate_profile"}, function (data) { window.location.reload(); }); return false; }); }); })(jQuery);</script>';
+	}
+
 	function inject_settings_link ($links) {
 		$settings = '<a href="' .
 			(is_network_admin() ? network_admin_url('admin.php?page=wdfb') : admin_url('admin.php?page=wdfb')) .
@@ -978,8 +1040,13 @@ $token = false;
 		add_action('wp_ajax_wdfb_list_fb_album_photos', array($this, 'json_list_fb_album_photos'));
 		add_action('wp_ajax_wdfb_import_comments', array($this, 'json_import_comments'));
 		add_action('wp_ajax_wdfb_populate_profile', array($this, 'json_populate_profile'));
+		
+		add_action('wp_ajax_wdfb_get_facebook_groups_map', array($this, 'json_get_facebook_groups_map'));
+		add_action('wp_ajax_wdfb_map_facebook_group', array($this, 'json_map_facebook_group'));
 
 		add_action('wp_ajax_wdfb_check_api_status', array($this, 'json_check_api_status'));
+		add_action('wp_ajax_wdfb_refresh_access_token', array($this, 'json_refresh_access_token'));
+		add_action('wp_ajax_wdfb_remap_user', array($this, 'json_remap_user'));
 
 		add_action('wp_ajax_wdfb_partial_data_save', array($this, 'json_partial_data_save'));
 		add_action('wp_ajax_wdfb_network_partial_data_save', array($this, 'json_network_partial_data_save'));
@@ -994,6 +1061,9 @@ $token = false;
 			add_filter('avatar_defaults', array($this, 'allow_default_avatars_selection'));
 			// Single-click registration enabled
 			add_action('wp_ajax_nopriv_wdfb_perhaps_create_wp_user', array($this, 'json_perhaps_create_wp_user'));
+
+			// Allow users to map their user profile fields from profile page
+			if (!defined('BP_VERSION')) add_action('profile_personal_options', array($this, 'inject_profile_update_link'));
 		}
 		// Identity renewal
 		if ($this->data->get_option('wdfb_connect', 'allow_identity_renewal')) {
@@ -1024,6 +1094,9 @@ $token = false;
 
 		// Events shortcode
 		add_action('wp_insert_post_data', array($this, 'insert_events_into_post_meta'));
+
+		// Internal actions definitions
+		add_action('wdfb-api-handle_fb_auth_tokens', array($this, 'handle_fb_auth_tokens'));
 
 		// Register the shortcodes, so Membership picks them up
 		$rpl = new Wdfb_MarkerReplacer; $rpl->register();

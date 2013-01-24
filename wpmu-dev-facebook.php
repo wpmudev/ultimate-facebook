@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall and notes, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.5.4
+Version: 2.6
 Text Domain: wdfb
 Author: Ve Bailovity (Incsub)
 Author URI: http://premium.wpmudev.org
@@ -92,7 +92,7 @@ function wdfb_add_dashboard_permissions_widget () {
  */
 function wdfb_dashboard_profile_widget () {
 	$profile = apply_filters('wdfb-profile_name', '<em>' . get_bloginfo('name') . '</em>');//defined('BP_VERSION') ? "BuddyPress" : "WordPress";
-	echo '<a href="#" class="wdfb_fill_profile">Fill my ' . $profile . ' profile with Facebook data</a>';
+	echo '<a href="#" class="wdfb_fill_profile">' . sprintf(__('Fill my %s profile with Facebook data', 'wdfb'), $profile) . '</a>';
 	echo '<script type="text/javascript">(function ($) { $(function () { $(".wdfb_fill_profile").click(function () { var $me = $(this); var oldHtml = $me.html(); try {var url = _wdfb_ajaxurl;} catch (e) { var url = ajaxurl; } $me.html("Please, wait... <img src=\"' . WDFB_PLUGIN_URL . '/img/waiting.gif\">"); $.post(url, {"action": "wdfb_populate_profile"}, function (data) { $me.html(oldHtml); }); return false; }); }); })(jQuery);</script>';
 }
 function wdfb_add_dashboard_profile_widget () {

@@ -15,7 +15,13 @@ class Wdfb_Model {
 		$this->data =& Wdfb_OptionsRegistry::get_instance();
 		$this->db = $wpdb;
 
-		if (isset(Facebook::$CURL_OPTS)) Facebook::$CURL_OPTS = apply_filters('wdfb-fb_core-facebook_curl_options', Facebook::$CURL_OPTS);
+		if (isset(Facebook::$CURL_OPTS)) {
+			Facebook::$CURL_OPTS = apply_filters('wdfb-fb_core-facebook_curl_options', Facebook::$CURL_OPTS);
+			if (!(defined('WDFB_FACEBOOK_SSL_CERTIFICATE') && WDFB_FACEBOOK_SSL_CERTIFICATE)) {
+				Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYHOST] = 0;
+				Facebook::$CURL_OPTS[CURLOPT_SSL_VERIFYPEER] = 0;
+			}
+		}
 		$this->fb = new Facebook(array(
 			'appId' => trim($this->data->get_option('wdfb_api', 'app_key')),
 			'secret' => trim($this->data->get_option('wdfb_api', 'secret_key')),
@@ -286,6 +292,12 @@ class Wdfb_Model {
 	function get_all_user_tokens () {
 		$sql = "SELECT * FROM " . $this->db->base_prefix . "usermeta WHERE meta_key='wdfb_api_accounts'";
 		return $this->db->get_results($sql, ARRAY_A);
+	}
+
+	function get_api_accounts ($user_id) {
+		$fb_accounts = get_user_meta($user_id, 'wdfb_api_accounts', true);
+		$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
+		return apply_filters('wdfb-api-connected_accounts', $fb_accounts, $user_id);
 	}
 	
 	/**
@@ -670,16 +682,23 @@ class Wdfb_Model {
 		$limit = $limit ? '?limit=' . $limit : '';
 
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
-		$token = $tokens[$uid];
+		$token = !empty($tokens[$uid])
+			? $tokens[$uid]
+			: reset($tokens) // Use any token, if there's no token we need
+		;
 
-		$req = $limit ? $limit . '&auth_token=' . $token : '?auth_token=' . $token;
+		$old_token = $this->fb->getAccessToken();
+		$this->fb->setAccessToken($token);
 
 		try {
-			$res = $this->fb->api('/' . $uid . '/feed/' . $req);
+			$res = $this->fb->api("/{$uid}/feed/{$limit}");
 		} catch (Exception $e) {
 			$this->log->error(__FUNCTION__, $e);
 			return false;
 		}
+
+		$this->fb->setAccessToken($old_token);
+
 		return $res;
 	}
 
@@ -728,6 +747,56 @@ class Wdfb_Model {
 		}
 	}
 
+	function get_current_user_groups () {
+		$groups = array();
+		try {
+			$groups = $this->fb->api('/me/groups');
+		} catch (Exception $e) {
+			$groups = array();
+		}
+		return !empty($groups['data']) 
+			? $groups['data'] 
+			: array()
+		;
+	}
+
+	function map_bp_group_info ($bp_group, $fb_group, $token=false) {
+		if (!function_exists('groups_edit_base_group_details')) return false;
+		$data = false;
+		//$access_token = $token ? "?access_token={$token}" : "";
+		if ($token) {
+			$old_token = $this->fb->getAccessToken();
+			$this->fb->setAccessToken($token);
+		}
+		try {
+			$data = $this->fb->api("/{$fb_group}/");
+		} catch (Exception $e) {}
+		if ($token) {
+			$this->fb->setAccessToken($old_token);
+		}
+
+		if (!$data) return false;
+		$group = groups_get_group(array('group_id' => $bp_group));
+		if (!$group) return false;
+
+		// Privacy settings
+		if ($this->data->get_option('wdfb_groups', 'allow_group_privacy_sync')) {
+			$status = !empty($data['privacy']) ? $data['privacy'] : $group->status;
+			if ('OPEN' == $status) $status = 'public';
+			if ('CLOSED' == $status) $status = 'private';
+			if ('SECRET' == $status) $status = 'hidden';
+			$group->status = $status;
+		}
+
+		$group->name = !empty($data['name']) ? $data['name'] : $group->name;
+		$group->description = !empty($data['description']) ? $data['description'] : $group->description;
+		$group->save();
+
+		if ($this->data->get_option('wdfb_groups', 'notify_members')) {
+			groups_notification_group_updated($group->id);
+		}
+	}
+
 	function _create_username_from_fb_response ($me) {
 		if (@$me['first_name'] && @$me['last_name']) {
 			$name = preg_replace('/[^a-zA-Z0-9_]+/', '', ucfirst($me['first_name']) . '_' . ucfirst($me['last_name']));
@@ -742,4 +811,5 @@ class Wdfb_Model {
 		}
 		return apply_filters('wdfb-registration-username', $username, $me);
 	}
+
 }

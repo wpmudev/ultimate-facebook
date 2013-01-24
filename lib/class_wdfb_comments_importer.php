@@ -10,6 +10,9 @@ class Wdfb_CommentsImporter {
 	function Wdfb_CommentsImporter () { $this->__construct(); }
 
 	function process_comments ($post_id, $item_id) {
+		if (empty($post_id)) return;
+		if (!is_numeric($post_id)) return;
+
 		$comments = $this->model->get_item_comments($item_id);
 		if (!$comments || !isset($comments['data'])) return;
 		$comments = $comments['data'];
@@ -20,7 +23,7 @@ class Wdfb_CommentsImporter {
 			if ($this->model->comment_already_imported($comment['id'])) continue; // We already have this comment, continue.
 			$data = array (
 				'comment_post_ID' => $post_id,
-				'comment_date' => date('Y-m-d H:i:s', strtotime($comment['created_time'])),
+				'comment_date_gmt' => date('Y-m-d H:i:s', strtotime($comment['created_time'])),
 				'comment_author' => $comment['from']['name'],
 				'comment_author_url' => 'http://www.facebook.com/profile.php?id=' . $comment['from']['id'],
 				'comment_content' => $comment['message'],
@@ -43,7 +46,7 @@ class Wdfb_CommentsImporter {
 		if (!count($posts)) return false;
 		foreach ($posts as $post) {
 			$post_id = wdfb_url_to_postid($post['link']);
-			if (!$post_id) continue; // Not a post on this blog. Continue.
+			if (empty($post_id)) continue; // Not a post on this blog. Continue.
 			$this->process_comments($post_id, $post['id']);
 		}
 	}

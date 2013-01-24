@@ -38,6 +38,10 @@ class Wdfb_AdminHelp {
 				'<li><a href="http://premium.wpmudev.org/project/ultimate-facebook/installation/" target="_blank">' . __('Installation and instructions page', 'wdfb') . '</a></li>' .
 				'<li><a href="http://premium.wpmudev.org/forums/tags/ultimate-facebook" target="_blank">' . __('Support forum', 'wdfb') . '</a></li>' .
 			'</ul>' . 
+			'<h4>' . __('Useful links', 'wdfb') . '</h4>' .
+			'<ul>' .
+				'<li><a href="http://premium.wpmudev.org/forums/topic/how-to-make-a-facebook-app" target="_blank">' . __('How to make a Facebook App', 'wdfb') . '</a></li>' .
+			'</ul>' . 
 		'';
 	}
 	
@@ -47,7 +51,7 @@ class Wdfb_AdminHelp {
 			'title' => __('Facebook API', 'wdfb'),
 			'content' => '' . 
 				'<p>' . 
-					__('This is the most important step in plugin configuration. Please, follow the instructions to create a Facebook App and connect your site with it.', 'wdfb') . 
+					__('This is the most important step in plugin configuration. Please, follow the instructions to create a Facebook App and connect your site with it. If you need more help, <a href="http://premium.wpmudev.org/forums/topic/how-to-make-a-facebook-app" target="_blank">there is a detailed tutorial explaining you how to do so</a>.', 'wdfb') . 
 				'</p>' .
 				'<p>' . 
 					__('Once you are done, save your settings and check for the green checkmark, followed by a message with your app name. This is a sign everything went fine.', 'wdfb') . 
@@ -58,10 +62,13 @@ class Wdfb_AdminHelp {
 	private function _get_perms_help () {
 		return array(
 			'id' => 'wdfb_perms',
-			'title' => __('Grant extended permissions', 'wdfb'),
+			'title' => __('Permissions &amp; Tokens', 'wdfb'),
 			'content' => '' . 
 				'<p>' . 
 					__('Some parts of the plugin require extended permissions to work. You can use a link in this section to grant them anytime.', 'wdfb') . 
+				'</p>' .
+				'<p>' . 
+					__('This is also the place where you can recofigure the plugin using a different Facebook indentity, or refresh your access token manually.', 'wdfb') . 
 				'</p>'
 		);
 	}
@@ -87,6 +94,9 @@ class Wdfb_AdminHelp {
 					'content' => '' .
 						'<p>' . 
 							__('This is where you configure your plugin.', 'wdfb') . 
+						'</p>' .
+						'<p>' .
+							__('First thing first, the most important section for setup is the Facebook API settings. You will need to <a href="http://premium.wpmudev.org/forums/topic/how-to-make-a-facebook-app" target="_blank">create a Facebook app</a> in order to continue and set up your plugin properly.', 'wdfb') . 
 						'</p>',
 				),
 				$this->_get_api_help(),

@@ -50,7 +50,7 @@ class Wdfb_Permissions {
 				break;
 			}
 		}
-		return $import ? 
+		$perms = $import ? 
 			rtrim(join(',', array(
 				self::EXTRAS,
 				self::NEW_USER,
@@ -58,20 +58,23 @@ class Wdfb_Permissions {
 			: 
 			rtrim(self::NEW_USER, ',');
 		;
+		return apply_filters('wdfb-permissions-new_user', $perms);
 	}
 
 	public static function get_non_publisher_permissions () {
-		return rtrim(join(',', array(
+		$perms = rtrim(join(',', array(
 			self::get_new_user_permissions(),
 			self::NON_PUBLISHER,
 		)), ',');
+		return  apply_filters('wdfb-permissions-non_publisher', $perms);
 	}
 
 	public static function get_publisher_permissions () {
-		return rtrim(join(',', array(
+		$perms = rtrim(join(',', array(
 			self::get_new_user_permissions(),
 			self::get_non_publisher_permissions(),
 			self::PUBLISHER,
 		)), ',');
+		return  apply_filters('wdfb-permissions-publisher', $perms);
 	}
 }

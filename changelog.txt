@@ -5,6 +5,17 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.6 - 2013-01-24
+----------------------------------------------------------------------
+- Added option for BuddyPress groups info sync, minus avatar.
+- Added more hooks.
+- Added custom post type support for comments import.
+- Fix for comments import issues.
+- Fix for filter nesting check.
+- Allowing admin nag skips with a define.
+- Account limiting via define flag.
+- Trumping WordPress discussion settings by default.
+
 2.5.4 - 2012-11-21
 ----------------------------------------------------------------------
 - Added the Facebook avatars override option.

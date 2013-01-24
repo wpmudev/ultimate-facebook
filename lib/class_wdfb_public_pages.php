@@ -349,15 +349,21 @@ EOBpFormInjection;
 					remove_filter('wpmu_validate_blog_signup', 'signup_nonce_check');
 
 					// Set up proper blog name
-					$blog_domain = preg_replace('/[^a-z0-9]/', '', strtolower($data['registration']['blog_domain']));
+					$blog_domain = apply_filters('wdfb-registration-blog_domain-sanitize_domain', 
+						preg_replace('/[^a-z0-9]/', '', strtolower($data['registration']['blog_domain'])),
+						$data['registration']['blog_domain']
+					);
 					// All numbers? Fix that
 					if (preg_match('/^[0-9]$/', $blog_domain)) {
 						$letters = shuffle(range('a', 'z'));
 						$blog_domain .= $letters[0];
 					}
+					$blog_domain = apply_filters('wdfb-registration-blog_domain', $blog_domain, $data['registration']['blog_domain']);
+
 					// Set up proper title
 					$blog_title = $data['registration']['blog_title'];
-					$blog_title = $blog_title ? $blog_title : __("My new blog", 'wdfb');
+					$blog_title = $blog_title ? $blog_title : apply_filters('wdfb-registration-default_blog_title', __("My new blog", 'wdfb'));
+					$blog_title = apply_filters('wdfb-registration-blog_title', $blog_title, $data['registration']['blog_title']);
 
 					$result = wpmu_validate_blog_signup($blog_domain, $blog_title);
 					$iteration = 0;
@@ -520,6 +526,14 @@ EOBpFormInjection;
 		do_action('wdfb-autopost-posting_complete', $res);
 	}
 
+	function inject_bp_groups_sync () {
+		if (!function_exists('bp_get_group_id')) return false;
+		echo '<p><a href="#bp-fb-group_sync" id="wdfb_sync_group" data-wdfb-bp_group_id="' . bp_get_group_id() . '">' .
+			__('Sync this group info with a Facebook group', 'wdfb') .
+		'</a></p>';
+		wp_enqueue_script('wdfb_groups_sync', WDFB_PLUGIN_URL . '/js/wdfb_groups_sync.js', array('jquery'));
+	}
+
 	/**
 	 * Hooks to appropriate places and adds stuff as needed.
 	 *
@@ -621,6 +635,11 @@ EOBpFormInjection;
 					add_filter('bp_activity_post_form_options', array($this, 'bp_inject_form_checkbox'));
 				}
 			}
+		}
+
+		// Groups
+		if ($this->data->get_option('wdfb_groups', 'allow_bp_groups_sync')) {
+			if (defined('BP_VERSION')) add_action('bp_before_group_admin_content', array($this, 'inject_bp_groups_sync'));
 		}
 
 		$rpl = $this->replacer->register();

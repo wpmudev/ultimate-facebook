@@ -37,16 +37,18 @@ class Wdfb_AdminFormRenderer {
 	function api_info () {
 		printf(__(
 			'<p><b>This step must be completed before using the plugin. You must make a Facebook Application to continue.</b></p>' .
-			'<p>Before we begin, you need to <a target="_blank" href="http://www.facebook.com/developers/createapp.php">create a Facebook Application</a>.</p>' .
-			'<p>To do so, follow these steps:</p>' .
+			'<p>Before we begin, you need to <a target="_blank" href="https://developers.facebook.com/apps">create a Facebook Application</a>.</p>' .
+			'<p>To do so, follow these steps (We also have a <a target="_blank" href="%1$s">Guide here</a>):</p>' .
 			'<ol>' .
-				'<li><a target="_blank" href="http://www.facebook.com/developers/createapp.php">Create your application</a></li>' .
-				'<li>Look for <strong>Site URL</strong> field in the <em>Web Site</em> tab and enter your site URL in this field: <code>%s</code></li>' .
-				'<li>After this, go to the <a target="_blank" href="http://www.facebook.com/developers/apps.php">Facebook Application List page</a> and select your newly created application</li>' .
+				'<li><a target="_blank" href="https://developers.facebook.com/apps">Create your application</a></li>' .
+				'<li>Please, make sure you properly configured <strong>App Domains</strong> for your App (see our <a target="_blank" href="%1$s">guide</a> for more info)</li>' .
+				'<li>Look for <strong>Site URL</strong> field in the <em>Web Site</em> tab and enter your site URL in this field: <code>%2$s</code></li>' .
+				'<li>After this, go to the <a target="_blank" href="https://developers.facebook.com/apps">Facebook Application List page</a> and select your newly created application</li>' .
 				'<li>Copy the values from these fields: <strong>App ID</strong>/<strong>API key</strong>, and <strong>Application Secret</strong>, and enter them here:</li>' .
 			'</ol>' .
 			'<p>Once you\'re done with that, please click the "Save changes" button below before proceeding onto other steps.<p>',
 		'wdfb'),
+			'http://premium.wpmudev.org/forums/topic/how-to-make-a-facebook-app',
 			get_bloginfo('url')
 		);
 		echo '<div class="wdfb-api_connect-result">' . 
@@ -60,12 +62,19 @@ class Wdfb_AdminFormRenderer {
 		printf(__(
 			'<p>Some parts of the plugin will require you to grant them extended permissions on Facebook. If you haven\'t done so already, it is highly recommended you do so now:</p>',
 		'wdfb'));
+		$model = new Wdfb_Model;
+		$remap_string = __('Use a new Facebook user for setup', 'wdfb'); 
 		echo '<div class="wdfb_perms_root" style="display:none">' .
 			'<p class="wdfb_perms_granted">' .
 				'<span class="wdfb_message">' . __('You already granted extended permissions', 'wdfb') . '</span> ' .
 			'</p>' .
 			'<p class="wdfb_perms_not_granted">' .
-				'<a href="#" class="wdfb_grant_perms" data-wdfb_locale="' . wdfb_get_locale() . '" data-wdfb_perms="' . Wdfb_Permissions::get_permissions() . '">' . __('Grant extended permissions', 'wdfb') . '</a>' .
+				'<a href="#" class="wdfb_grant_perms" data-wdfb_locale="' . wdfb_get_locale() . '" data-wdfb_perms="' . esc_attr(Wdfb_Permissions::get_permissions()) . '">' . __('Grant extended permissions', 'wdfb') . '</a>' .
+			'</p>' .
+			'<p>' .
+				'<input type="button" class="button" id="wdfb-refresh_access_token" data-wdfb_perms="' . esc_attr(Wdfb_Permissions::get_permissions()) . '" value="' . esc_attr(__('Refresh user access token', 'wdfb')) . '" />' .
+				'&nbsp;' .
+				'<input type="button" class="button" id="wdfb-remap_user" data-wdfb_perms="' . esc_attr(Wdfb_Permissions::get_permissions()) . '" value="' . esc_attr($remap_string) . '" />' .
 			'</p>' .
 		'</div>';
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
@@ -429,6 +438,29 @@ class Wdfb_AdminFormRenderer {
 		echo '<input type="button" class="wdfb-save_settings" data-wdfb_section_id="wdfb_opengraph" value="' . esc_attr(__('Add header', 'wdfb')) . '" />';
 	}
 
+	function create_allow_bp_groups_sync_box () {
+		$opt = $this->_get_option('wdfb_groups');
+		$opt = $opt ? $opt : array();
+		echo '' .
+			$this->_create_checkbox('groups', 'allow_bp_groups_sync',  @$opt['allow_bp_groups_sync']) .
+			'&nbsp;<label for="allow_bp_groups_sync">' . __('Allow BuddyPress groups info syncing with Facebook group profile info', 'wdfb') . '</label>' .
+		'<br />';
+		/*
+		echo '' .
+			$this->_create_checkbox('groups', 'allow_group_avatar_sync',  @$opt['allow_group_avatar_sync']) .
+			'&nbsp;<label for="allow_group_avatar_sync">' . __('Also sync group avatar', 'wdfb') . '</label>' .
+		'<br />';
+		*/
+		echo '' .
+			$this->_create_checkbox('groups', 'allow_group_privacy_sync',  @$opt['allow_group_privacy_sync']) .
+			'&nbsp;<label for="allow_group_privacy_sync">' . __('Also sync group privacy settings', 'wdfb') . '</label>' .
+		'<br />';
+		echo '' .
+			$this->_create_checkbox('groups', 'notify_members',  @$opt['notify_members']) .
+			'&nbsp;<label for="notify_members">' . __('Notify group members on successful data sync', 'wdfb') . '</label>' .
+		'<br />';
+	}
+
 	function create_import_fb_comments_box () {
 		$opt = $this->_get_option('wdfb_comments');
 		echo $this->_create_checkbox('comments', 'import_fb_comments',  @$opt['import_fb_comments']);
@@ -572,8 +604,11 @@ class Wdfb_AdminFormRenderer {
 		$opts = $this->_get_option('wdfb_autopost');
 
 		$user = wp_get_current_user();
+		$fb_accounts = $this->_get_api_accounts($user->ID);
+		/*
 		$fb_accounts = get_user_meta($user->ID, 'wdfb_api_accounts', true);
 		$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
+		*/
 
 		echo '<div id="wdfb-autopost_map_message"></div>';
 		echo "<ul>";
@@ -747,23 +782,33 @@ class Wdfb_AdminFormRenderer {
 			'</div>';
 
 			$user = wp_get_current_user();
+			$fb_accounts = $this->_get_api_accounts($user->ID);
+			/*
 			$fb_accounts = get_user_meta($user->ID, 'wdfb_api_accounts', true);
 			$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
+			*/
 
-			echo '<div>';
-			echo '	<label for="wdfb_metabox_publishing_account">' . __('Publish to wall of this Facebook account:', 'wdfb') . '</label>';
-			echo '	<select name="wdfb_metabox_publishing_account" id="wdfb_metabox_publishing_account">';
-			foreach ($fb_accounts as $aid=>$aval) {
-				echo "<option value='{$aid}'>{$aval}</option>";
+			if ($fb_accounts) {
+				echo '<div>';
+				echo '	<label for="wdfb_metabox_publishing_account">' . __('Publish to wall of this Facebook account:', 'wdfb') . '</label>';
+				echo '	<select name="wdfb_metabox_publishing_account" id="wdfb_metabox_publishing_account">';
+				foreach ($fb_accounts as $aid=>$aval) {
+					echo "<option value='{$aid}'>{$aval}</option>";
+				}
+				echo '	</select>';
+				echo '<br />';
+				echo '<label for="post_as_page">' . __("If posting to a page, post <b>AS</b> page", "wdfb") . '</label> ' .
+					'<input type="checkbox" name="wdfb_post_as_page" id="post_as_page" value="1" />'
+				;
+				echo '</div>';
+				echo '<p class="wdfb_perms_not_granted"><small>' . __('Please make sure that you granted extended permissions to your Facebook App', 'wdfb') . '</small></p>';
 			}
-			echo '	</select>';
-			echo '<br />';
-			echo '<label for="post_as_page">' . __("If posting to a page, post <b>AS</b> page", "wdfb") . '</label> ' .
-				'<input type="checkbox" name="wdfb_post_as_page" id="post_as_page" value="1" />'
-			;
-			echo '</div>';
-			echo '<p class="wdfb_perms_not_granted"><small>' . __('Please make sure that you granted extended permissions to your Facebook App', 'wdfb') . '</small></p>';
 		}
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
+	}
+
+	function _get_api_accounts ($user_id) {
+		$model = new Wdfb_Model;
+		return $model->get_api_accounts($user_id);
 	}
 }

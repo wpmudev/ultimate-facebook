@@ -6,12 +6,24 @@ class Wdfb_OptionsRegistry {
 
 	var $_store = array();
 
+	/*
 	function get_instance () {
 		static $instance;
 		if (! isset($instance)) {
 			$instance = array(new Wdfb_OptionsRegistry);
 		}
 		return $instance[0];
+	}
+	*/
+
+	private static $_instance;
+
+	private function __construct () {}
+
+	public function get_instance () {
+		if (self::$_instance) return self::$_instance;
+		self::$_instance = new Wdfb_OptionsRegistry;
+		return self::$_instance;
 	}
 
 	function get_key ($key, $default=false) {

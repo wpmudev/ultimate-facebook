@@ -366,6 +366,28 @@ $(".wdfb-restart_tutorial").click(function () {
 	return false;
 });
 
+$("#wdfb-refresh_access_token").on("click", function () {
+	var perms = $(this).attr("data-wdfb_perms");
+	FB.login(function (response) {
+		if (response.authResponse) $.post(ajaxurl, {"action": "wdfb_refresh_access_token"}, window.location.reload);
+	}, {"scope": perms});
+	return false;
+});
+$("#wdfb-remap_user").on("click", function () {
+	var perms = $(this).attr("data-wdfb_perms"),
+		wdfb_remap_login = function () {
+			FB.login(function (response) {
+				if (response.authResponse) $.post(ajaxurl, {"action": "wdfb_remap_user"}, window.location.reload);
+			}, {"scope": perms});
+		}
+	;
+	FB.getLoginStatus(function (status) {
+		if (status.authResponse) FB.logout(wdfb_remap_login);
+		else wdfb_remap_login();
+	});
+	return false;
+});
+
 });
 })(jQuery);
 </script>

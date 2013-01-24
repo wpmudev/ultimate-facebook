@@ -40,6 +40,7 @@ class Wdfb_Installer {
 			'fallback_image' => '',
 	*/
 		),
+		'groups' => array (),
 		'comments' => array (
 	/*
 			'import_fb_comments' => 0,

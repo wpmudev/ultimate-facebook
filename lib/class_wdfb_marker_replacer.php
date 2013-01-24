@@ -10,7 +10,8 @@ class Wdfb_MarkerReplacer {
 		'like_button' => 'wdfb_like_button',
 		'events' => 'wdfb_events',
 		'album' => 'wdfb_album',
-		'connect' => 'wdfb_connect'
+		'connect' => 'wdfb_connect',
+		'recent_comments' => 'wdfb_recent_comments',
 	);
 
 	function __construct () {
@@ -31,8 +32,23 @@ class Wdfb_MarkerReplacer {
 		if (!$this->data->get_option('wdfb_connect', 'allow_facebook_registration')) return $content;
 		$atts = shortcode_atts(array(
 			'avatar_size' => 32,
+			'redirect_to' => false,
 		), $atts);
 		$content = $content ? $content : __('Log in with Facebook', 'wdfb');
+		$redirect_to = false;
+		if ($atts['redirect_to']) {
+			$redirection_keywords = array(
+				'current',
+				'home',
+			);
+			// Proper link recognition
+			if (!in_array($atts['redirect_to'], $redirection_keywords)) $redirect_to = esc_url($atts['redirect_to']);
+			if (!$redirect_to && 'home' == $atts['redirect_to']) $redirect_to = home_url();
+			if (!$redirect_to && 'current' == $atts['redirect_to']) {
+				global $wp;
+				$redirect_to = site_url($wp->request);
+			}
+		}
 		if (!class_exists('Wdfb_WidgetConnect')) {
 			echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
 		}
@@ -42,16 +58,65 @@ class Wdfb_MarkerReplacer {
 			$html = '<p class="wdfb_login_button">' . 
 				wdfb_get_fb_plugin_markup('login-button', array(
 					'scope' => Wdfb_Permissions::get_permissions(),
-					'redirect-url' => wdfb_get_login_redirect(),
+					'redirect-url' => ($redirect_to 
+						? apply_filters('wdfb-login-redirect_url', $redirect_to) 
+						: wdfb_get_login_redirect()
+					),
 					'content' => $content,
 				)) .
 			'</p>';
 		} else {
-			$logout = wp_logout_url(home_url()); // Props jmoore2026
+			$redirect_to = $redirect_to ? apply_filters('wdfb-login-redirect_url', $redirect_to) : home_url();
+			$logout = wp_logout_url($redirect_to); // Props jmoore2026
 			$html .= get_avatar($user->ID, $atts['avatar_size']);
 			$html .= "<br /><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a>";
 		}
 		return $html;
+	}
+
+	function process_recent_comments_code ($atts=array(), $content='') {
+		$atts = shortcode_atts(array(
+			'limit' => 5,
+			'avatar_size' => false,
+			'hide_text' => false,
+		), $atts);
+		$limit = (int)$atts['limit'];
+		$size = (int)$atts['avatar_size'];
+		$hide_text = in_array($atts['hide_text'], array("true", "yes", "on", "1"));
+		$out = '';
+
+		global $wpdb;
+		$comments = $wpdb->get_results("SELECT * FROM {$wpdb->comments} AS c, {$wpdb->commentmeta} AS mc WHERE mc.meta_key='wdfb_comment' AND c.comment_ID=mc.comment_id ORDER BY c.comment_date LIMIT {$limit}");
+		if (!$comments) return $out;
+
+		$out .= '<ul class="wdfb-recent_facebook_comments">';
+		foreach ($comments as $comment) {
+			$meta = unserialize($comment->meta_value);
+			$out .= '<li>';
+			
+			$out .= '<div class="wdfb-comment_author vcard">';
+			if ($size) {
+				$out .= '<img src="' . WDFB_PROTOCOL . 'graph.facebook.com/' . esc_attr($meta['fb_author_id']) . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
+			}
+			$out .= '<cite class="fn"><a href="' . WDFB_PROTOCOL . 'www.facebook.com/profile.php?id=' . esc_attr($meta['fb_author_id']) . '">' . esc_html($comment->comment_author) . '</a></cite>';
+			$out .= '</div>';
+			
+			if (!$hide_text) {
+				$out .= '<div class="wdfb-comment_body">';
+				$out .= esc_html($comment->comment_content);
+				$out .= '</div>';
+			}
+			
+			$out .= '<div class="wdfb-comment_meta">';
+			$out .= mysql2date(get_option('date_format') . ' ' . get_option('time_format'), $comment->comment_date);
+			$out .= __('&nbsp;on&nbsp;', 'wdfb');
+			$out .= '<a href="' . get_permalink($comment->comment_post_ID) . '">' . get_the_title($comment->comment_post_ID) . '</a>';
+			$out .= '</div>';
+			
+			$out .= '</li>';
+		}
+		$out .= '</ul>';
+		return $out;
 	}
 
 	function process_like_button_code ($atts, $content='') {
@@ -63,7 +128,7 @@ class Wdfb_MarkerReplacer {
 
 		// Check nesting (i.e. posts within post, reformatted with apply_filters)
 		$filters = array_count_values($wp_current_filter);
-		if ($filters['the_content'] > 1) return '';
+		if (isset($filters['the_content']) && $filters['the_content'] > 1) return '';
 
 		$atts = shortcode_atts(array(
 			'forced' => false,

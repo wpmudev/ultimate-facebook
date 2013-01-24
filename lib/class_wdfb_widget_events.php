@@ -172,6 +172,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 */
 		$api = new Wdfb_EventsBuffer;
 		$events = $api->get_for($for);
+		$events = is_array($events) ? $events : array();
 		usort($events, array($this, 'sort_events_by_start_time'));
 		if ($reverse_order) $events = array_reverse($events);
 
@@ -180,7 +181,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		if (is_array($events)) {
+		if (is_array($events) && !empty($events)) {
 			echo '<ul class="wdfb_widget_events">';
 			foreach ($events as $event) {
 				if ($date_threshold > strtotime($event['start_time'])) continue;

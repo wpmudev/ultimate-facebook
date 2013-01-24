@@ -412,7 +412,7 @@ function wdfb_url_to_postid ($url) {
 		// We hopefully have a regular link/shortlink
 		$post_id = url_to_postid($url);
 	}
-	if (!$post_id) $post_id = apply_filters('wdfb-comments-url_to_post_id-fallback', $url);
+	if (!$post_id) $post_id = apply_filters('wdfb-comments-url_to_post_id-fallback', $post_id, $url);
 	return apply_filters('wdfb-comments-url_to_post_id-post_id', $post_id);
 }
 
@@ -437,6 +437,25 @@ function wdfb_add_email_message ($msg) {
 		) .
 		$msg
 	;
+}
+
+// Default blog domain sanitization
+if (!(defined('WDFB_SKIP_DEFAULT_BLOG_DOMAIN_SANITIZATION') && WDFB_SKIP_DEFAULT_BLOG_DOMAIN_SANITIZATION)) {
+
+	/**
+	 * Cleanup and sanitize possible full url entries into clean subdomain value.
+	 * @param string $domain Sanitized domain
+	 * @param string $original Original domain
+	 * @return string Sanitized subdomain
+	 */
+	function wdfb__extract_subdomain_name ($domain, $original) {
+		if (false === strpos($original, '.')) return $domain;
+		$host = parse_url(esc_url($original), PHP_URL_HOST);
+		$parts = explode('.', $host);
+		$subdomain = $parts[0];
+		return preg_replace('/[^a-z0-9]/', '', strtolower($subdomain));
+	}
+	if (function_exists('is_subdomain_install') && is_subdomain_install()) add_filter('wdfb-registration-blog_domain-sanitize_domain', 'wdfb__extract_subdomain_name', 10, 2);
 }
 
 /**
@@ -506,6 +525,127 @@ function wdfb__has_jetpack () {
 }
 
 /**
+ * Custom post types URL remapping filter.
+ * Code by BetterWP.net
+ * taken almost verbatim from http://betterwp.net/wordpress-tips/url_to_postid-for-custom-post-types/
+ */
+function wdfb__cpt_url_to_post_id ($post_id, $url) {
+	if ($post_id) return $post_id;
+
+	global $wp_rewrite, $wp;
+
+	// Check to see if we are using rewrite rules
+	$rewrite = $wp_rewrite->wp_rewrite_rules();
+
+	// Not using rewrite rules, and 'p=N' and 'page_id=N' methods failed, so we're out of options
+	if ( empty($rewrite) )
+		return 0;
+
+	// Get rid of the #anchor
+	$url_split = explode('#', $url);
+	$url = $url_split[0];
+
+	// Get rid of URL ?query=string
+	$url_split = explode('?', $url);
+	$url = $url_split[0];
+
+	// Add 'www.' if it is absent and should be there
+	if ( false !== strpos(home_url(), '://www.') && false === strpos($url, '://www.') )
+		$url = str_replace('://', '://www.', $url);
+
+	// Strip 'www.' if it is present and shouldn't be
+	if ( false === strpos(home_url(), '://www.') )
+		$url = str_replace('://www.', '://', $url);
+
+	// Strip 'index.php/' if we're not using path info permalinks
+	if ( !$wp_rewrite->using_index_permalinks() )
+		$url = str_replace('index.php/', '', $url);
+
+	if ( false !== strpos($url, home_url()) ) {
+		// Chop off http://domain.com
+		$url = str_replace(home_url(), '', $url);
+	} else {
+		// Chop off /path/to/blog
+		$home_path = parse_url(home_url());
+		$home_path = isset( $home_path['path'] ) ? $home_path['path'] : '' ;
+		$url = str_replace($home_path, '', $url);
+	}
+
+	$url = trim($url, '/');
+	$request = $url;
+	// Look for matches.
+	$request_match = $request;
+	foreach ( (array)$rewrite as $match => $query) {
+		// If the requesting file is the anchor of the match, prepend it
+		// to the path info.
+		if ( !empty($url) && ($url != $request) && (strpos($match, $url) === 0) )
+			$request_match = $url . '/' . $request;
+
+		if (!preg_match("!^$match!", $request_match, $matches)) continue;
+
+		// Got a match.
+		// Trim the query of everything up to the '?'.
+		$query = preg_replace("!^.+\?!", '', $query);
+
+		// Substitute the substring matches into the query.
+		$query = addslashes(WP_MatchesMapRegex::apply($query, $matches));
+
+		// Filter out non-public query vars
+		parse_str($query, $query_vars);
+		$query = array();
+		foreach ( (array) $query_vars as $key => $value ) {
+			if ( in_array($key, $wp->public_query_vars) )
+				$query[$key] = $value;
+		}
+
+		// Taken from class-wp.php
+		foreach ( $GLOBALS['wp_post_types'] as $post_type => $t ) {
+			if ( $t->query_var )
+				$post_type_query_vars[$t->query_var] = $post_type;
+		}
+
+		foreach ( $wp->public_query_vars as $wpvar ) {
+			if ( isset( $wp->extra_query_vars[$wpvar] ) )
+				$query[$wpvar] = $wp->extra_query_vars[$wpvar];
+			elseif ( isset( $_POST[$wpvar] ) )
+				$query[$wpvar] = $_POST[$wpvar];
+			elseif ( isset( $_GET[$wpvar] ) )
+				$query[$wpvar] = $_GET[$wpvar];
+			elseif ( isset( $query_vars[$wpvar] ) )
+				$query[$wpvar] = $query_vars[$wpvar];
+
+			if ( !empty( $query[$wpvar] ) ) {
+				if ( ! is_array( $query[$wpvar] ) ) {
+					$query[$wpvar] = (string) $query[$wpvar];
+				} else {
+					foreach ( $query[$wpvar] as $vkey => $v ) {
+						if ( !is_object( $v ) ) {
+							$query[$wpvar][$vkey] = (string) $v;
+						}
+					}
+				}
+
+				if ( isset($post_type_query_vars[$wpvar] ) ) {
+					$query['post_type'] = $post_type_query_vars[$wpvar];
+					$query['name'] = $query[$wpvar];
+				}
+			}
+		}
+
+		// Do the query
+		$query = new WP_Query($query);
+		return !empty($query->posts) && $query->is_singular 
+			? $query->post->ID
+			: 0
+		;
+	}
+
+
+	return $post_id;
+}
+add_filter('wdfb-comments-url_to_post_id-fallback', 'wdfb__cpt_url_to_post_id', 10, 2);
+
+/**
  * Allow for default curlopt timeout define.
  */
 function wdfb_fb_core_curlopt_increase_timeout ($options) {
@@ -522,6 +662,48 @@ function wdfb_cleanup_admin_pages ($list) {
 	));
 }
 add_filter('wdfb-scripts-prevent_inclusion_ids', 'wdfb_cleanup_admin_pages');
+
+
+if (!(defined('WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS') && WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS)) {
+	function wdfb_wp_core__trump_discussion_settings () {
+		$data = Wdfb_OptionsRegistry::get_instance();
+		if ($data->get_option('wdfb_comments', 'override_wp_comments_settings')) {
+			add_filter('comments_open', '__return_false');
+		}
+	}
+	add_action('init', 'wdfb_wp_core__trump_discussion_settings');
+}
+
+
+// ----- API filters -----
+
+/**
+ * Repopulate user account with connected API settings, if needed.
+ */
+function wdfb__check_connected_api_accounts ($accounts, $user_id) {
+	if (!empty($accounts)) return $accounts;
+	do_action('wdfb-api-handle_fb_auth_tokens');
+	remove_filter('wdfb-api-connected_accounts', 'wdfb__check_connected_api_accounts', 0, 2);
+	$model = new Wdfb_Model;
+	return $model->get_api_accounts($user_id);
+}
+add_filter('wdfb-api-connected_accounts', 'wdfb__check_connected_api_accounts', 0, 2);
+
+// Account access limiting
+if (defined('WDFB_LIMIT_ACCOUNTS_ACCESS_TO') && WDFB_LIMIT_ACCOUNTS_ACCESS_TO) {
+	function wdfb__limit_accounts_access_to ($accounts) {
+		$allowed = array_map('trim', explode(',', WDFB_LIMIT_ACCOUNTS_ACCESS_TO));
+		$processed = array();
+		foreach ($accounts as $account => $info) {
+			if (in_array($account, $allowed)) $processed[$account] = $info;
+		}
+		return $processed;
+	}
+	add_filter('wdfb-api-connected_accounts', 'wdfb__limit_accounts_access_to', 10);
+}
+
+
+// ----- Profile sync filters -----
 
 
 /**
