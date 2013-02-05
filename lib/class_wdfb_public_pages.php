@@ -28,7 +28,11 @@ class Wdfb_PublicPages {
 	function js_load_scripts () {
 		wp_enqueue_script('jquery');
 		$locale = wdfb_get_locale();
-		wp_enqueue_script('facebook-all',  WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js');
+		if (defined('WDFB_LEGACY_SCRIPT_PLACEMENT') && WDFB_LEGACY_SCRIPT_PLACEMENT) {
+			wp_enqueue_script('facebook-all',  WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js');
+		} else if (!(defined('WDFB_FB_ASYNC_INIT') && WDFB_FB_ASYNC_INIT)) {
+			wp_enqueue_script('facebook-all',  WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js', array('jquery'), null, true);
+		}
 	}
 
 	function js_inject_fb_login_script () {
@@ -164,15 +168,37 @@ class Wdfb_PublicPages {
 	}
 
 	function inject_fb_init_js () {
-		echo "<script type='text/javascript'>
-         FB.init({
-            appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "',
-            status: true,
-            cookie: true,
-            xfbml: true,
-            oauth: true
-         });
-      </script>";
+		if (defined('WDFB_FB_ASYNC_INIT') && WDFB_FB_ASYNC_INIT) {
+			$locale = wdfb_get_locale();
+			echo '<script>
+				window.fbAsyncInit = function() {
+					FB.init({
+						appId: "' . trim($this->data->get_option('wdfb_api', 'app_key')) . '", 
+						status: true,
+						cookie: true,
+						xfbml: true,
+						oauth: true
+					});
+				};
+				(function(d, debug){
+					var js, id = "facebook-jssdk", ref = d.getElementsByTagName("script")[0];
+					if (d.getElementById(id)) {return;}
+					js = d.createElement("script"); js.id = id; js.async = true;
+					js.src = "//connect.facebook.net/' . $locale . '/all" + (debug ? "/debug" : "") + ".js";
+					ref.parentNode.insertBefore(js, ref);
+				}(document, /*debug*/ false));
+			</script>';
+		} else {
+			echo "<script type='text/javascript'>
+	         FB.init({
+	            appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "',
+	            status: true,
+	            cookie: true,
+	            xfbml: true,
+	            oauth: true
+	         });
+	      </script>";
+  		}
 	}
 
 	/**
@@ -396,15 +422,30 @@ EOBpFormInjection;
 				}
 			}
 		}
+		
+		// Successful registration stuff
+		if ($registration_success) {
+			
+			// Trigger actions
+			if ($user_id) {
+				do_action('wdfb-registration-facebook_registration', $user_id);
+				do_action('wdfb-registration-facebook_regular_registration', $user_id);
+			}
 
-		// Attempt to auto-login the user
-		if ($this->data->get_option('wdfb_connect', 'autologin_after_registration') && isset($_GET['fb_register']) && $registration_success) {
-			$fb_user = $this->model->fb->getUser();
-			if ($fb_user && $user_id) { // Don't try too hard
-				$user = get_userdata($user_id);
-				wp_set_current_user($user->ID, $user->user_login);
-				wp_set_auth_cookie($user->ID); // Logged in with Facebook, yay
-				do_action('wp_login', $user->user_login);
+			// Record activities, if told so		
+			if ($user_id && defined('BP_VERSION') && $this->data->get_option('wdfb_connect', 'update_feed_on_registration')) {
+				if (function_exists('bp_core_new_user_activity')) bp_core_new_user_activity($user_id);
+			}
+
+			// Attempt to auto-login the user
+			if ($this->data->get_option('wdfb_connect', 'autologin_after_registration') && isset($_GET['fb_register'])) {
+				$fb_user = $this->model->fb->getUser();
+				if ($fb_user && $user_id) { // Don't try too hard
+					$user = get_userdata($user_id);
+					wp_set_current_user($user->ID, $user->user_login);
+					wp_set_auth_cookie($user->ID); // Logged in with Facebook, yay
+					do_action('wp_login', $user->user_login);
+				}
 			}
 		}
 
@@ -545,10 +586,7 @@ EOBpFormInjection;
 		add_action('wp_print_styles', array($this, 'css_load_styles'));
 		add_action('wp_head', array($this, 'js_setup_ajaxurl'));
 
-		$footer_hook = 'get_footer';
-		if (defined('WDFB_FOOTER_HOOK')) {
-			$footer_hook = is_string(WDFB_FOOTER_HOOK) ? WDFB_FOOTER_HOOK : 'wp_footer';
-		}
+		$footer_hook = wdfb_get_footer_hook();
 		add_action($footer_hook, array($this, 'inject_fb_root_div'));
 		add_action($footer_hook, array($this, 'inject_fb_init_js'));
 
@@ -571,7 +609,7 @@ EOBpFormInjection;
 			add_action('login_head', array($this, 'js_setup_ajaxurl'));
 			add_action('login_form', array($this, 'inject_fb_login'));
 			add_action('login_footer', array($this, 'inject_fb_root_div'));
-			add_action('login_footer', array($this, 'inject_fb_init_js'));
+			add_action('login_footer', array($this, 'inject_fb_init_js'), 999); // Bind very late, so footer script can execute.
 
 			// BuddyPress
 			if (defined('BP_VERSION')) {

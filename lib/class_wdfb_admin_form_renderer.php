@@ -215,6 +215,15 @@ class Wdfb_AdminFormRenderer {
 		echo $this->_create_checkbox('connect', 'easy_facebook_registration',  @$opt['easy_facebook_registration']);
 		echo '<div><small>' . __('If enabled, the "Login with Facebook" button will work as a single-click register button for your new users', 'wdfb') . '</small></div>';
 	}
+	function create_update_bp_activity_box () {
+		$opt = $this->_get_option('wdfb_connect');
+		echo $this->_create_checkbox('connect', 'update_feed_on_registration',  @$opt['update_feed_on_registration']);
+		echo '&nbsp;<label for="update_feed_on_registration">' . __('New users registration will update your site Activity feed', 'wdfb') . '</label>';
+		echo '<br />';
+		echo $this->_create_checkbox('connect', 'update_feed_on_easy_registration',  @$opt['update_feed_on_easy_registration']);
+		echo '&nbsp;<label for="update_feed_on_easy_registration">' . __('Single-click registration will update your site Activity feed', 'wdfb') . '</label>';
+
+	}
 	function create_facebook_avatars_box () {
 		$opt = $this->_get_option('wdfb_connect');
 		echo $this->_create_checkbox('connect', 'skip_fb_avatars',  @$opt['skip_fb_avatars']);
@@ -747,17 +756,20 @@ class Wdfb_AdminFormRenderer {
 
 		$opt = $this->_get_option('wdfb_autopost');
 
-		$meta = get_post_meta($post->ID, 'wdfb_published_on_fb', true);
-		if ($meta) {
+		$is_published = get_post_meta($post->ID, 'wdfb_published_on_fb', true);
+		if ($is_published) {
 			echo '<div style="margin: 5px 0 15px; background-color: #FFFFE0; border-color: #E6DB55; border-radius: 3px 3px 3px 3px; border-style: solid; border-width: 1px; padding: 0 0.6em;">' .
 				'<p>' . __("This post has already been published on Facebook", 'wdfb') . '</p>' .
 			'</div>';
 		}
 
+		$stored = get_post_meta($post->ID, 'wdfb_scheduled_publish', true);
+		$stored = is_array($stored) ? $stored : array();
+		$title = !empty($stored['wdfb_metabox_publishing_title']) ? $stored['wdfb_metabox_publishing_title'] : '';
 
 		echo '<div>';
 		echo '<label for="">' . __('Publish on Facebook with different title:', 'wdfb') . '</label>';
-		echo '<input type="text" class="widefat" name="wdfb_metabox_publishing_title" id="wdfb_metabox_publishing_title" />';
+		echo '<input type="text" class="widefat" name="wdfb_metabox_publishing_title" id="wdfb_metabox_publishing_title" value="' . esc_attr($title) . '" />';
 		echo __('<p><small>Leave this value blank to use the post title.</small></p>', 'wdfb');
 		echo '</div>';
 

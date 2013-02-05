@@ -5,6 +5,14 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.6.1 - 2013-02-05
+----------------------------------------------------------------------
+- Network settings fix.
+- Async loading and new script placement options.
+- Allowing responsive FB comments hack.
+- Showing stored post title for scheduled posts.
+- Adding optional activity feed update on registration.
+
 2.6 - 2013-01-24
 ----------------------------------------------------------------------
 - Added option for BuddyPress groups info sync, minus avatar.

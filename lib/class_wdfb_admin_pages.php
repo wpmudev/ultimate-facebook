@@ -49,6 +49,9 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_allow_facebook_registration', __('Allow users to register with Facebook', 'wdfb'), array($form, 'create_allow_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_force_facebook_registration', __('Force users to register with Facebook', 'wdfb'), array($form, 'create_force_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_easy_facebook_registration', __('Allow single-click registration', 'wdfb'), array($form, 'create_easy_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
+		if (defined('BP_VERSION')) {
+			add_settings_field('wdfb_update_bp_activity', __('Update Activity feed', 'wdfb'), array($form, 'create_update_bp_activity_box'), 'wdfb_options_page', 'wdfb_connect');
+		}
 		add_settings_field('wdfb_facebook_avatars', __('Do not use Facebook avatars as profile images', 'wdfb'), array($form, 'create_facebook_avatars_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_login_redirect', __('Redirect on login', 'wdfb'), array($form, 'create_login_redirect_box'), 'wdfb_options_page', 'wdfb_connect');
 		add_settings_field('wdfb_captcha', __('Do not show CAPTCHA on registration pages', 'wdfb'), array($form, 'create_captcha_box'), 'wdfb_options_page', 'wdfb_connect');
@@ -151,6 +154,9 @@ class Wdfb_AdminPages {
 			add_settings_field('wdfb_allow_facebook_registration', __('Allow users to register with Facebook', 'wdfb'), array($form, 'create_allow_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_force_facebook_registration', __('Force users to register with Facebook', 'wdfb'), array($form, 'create_force_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_easy_facebook_registration', __('Allow single-click registration', 'wdfb'), array($form, 'create_easy_facebook_registration_box'), 'wdfb_options_page', 'wdfb_connect');
+			if (defined('BP_VERSION')) {
+				add_settings_field('wdfb_update_bp_activity', __('Update Activity feed', 'wdfb'), array($form, 'create_update_bp_activity_box'), 'wdfb_options_page', 'wdfb_connect');
+			}
 			add_settings_field('wdfb_facebook_avatars', __('Do not use Facebook avatars as profile images', 'wdfb'), array($form, 'create_facebook_avatars_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_login_redirect', __('Redirect on login', 'wdfb'), array($form, 'create_login_redirect_box'), 'wdfb_options_page', 'wdfb_connect');
 			add_settings_field('wdfb_captcha', __('Do not show CAPTCHA on registration pages', 'wdfb'), array($form, 'create_captcha_box'), 'wdfb_options_page', 'wdfb_connect');
@@ -600,6 +606,52 @@ $token = false;
 	}
 
 	/**
+	 * Events publishing gets postponed, so all the metas are tucked in and ready.
+	 */
+	function publish_event_on_facebook ($post_id, $post) {
+		$post_type = $post->post_type;
+		$post_as = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_type");
+		$post_to = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_user");
+		if (!$post_to) return false; // Don't know where to post, bail
+
+		$as_page = false;
+		if ($post_to != $this->model->get_current_user_fb_id()) {
+			$as_page = $this->data->get_option('wdfb_autopost', 'post_as_page');
+		}
+
+		if (!$post_as) return true; // Skip this type
+		$post_content = strip_shortcodes($post->post_content);
+		$post_title = @$_POST['wdfb_metabox_publishing_title'] ? stripslashes($_POST['wdfb_metabox_publishing_title']) : $post->post_title;
+
+		$time = time();
+		$start_timestamp = apply_filters('wdfb-autopost-events-start_time', $time, $post);
+		$end_timestamp = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
+		$location = apply_filters('wdfb-autopost-events-location', false, $post);
+		$start_time = date('Y-m-d\TH:i:sO', $start_timestamp);
+		$end_time = date('Y-m-d\TH:i:sO', $end_timestamp);
+		
+		$send = array(
+			'name' => $post_title,
+			'description' => $post_content,
+			'start_time' => $start_time,
+			'end_time' => $end_time,
+		);
+		if ($location) {
+			$send['location'] = $location;
+		}
+
+		$send = apply_filters('wdfb-autopost-post_update', $send, $post_id);
+		$send = apply_filters('wdfb-autopost-send', $send, $post_as, $post_to);
+		$res = $this->model->post_on_facebook($post_as, $post_to, $send, $as_page);
+		if ($res) {
+			update_post_meta($post_id, 'wdfb_published_on_fb', 1);
+			do_action('wdfb-autopost-posting_successful', $post_id);
+		}
+		add_filter('redirect_post_location', create_function('$loc', 'return add_query_arg("wdfb_published", ' . (int)$res . ', $loc);'));
+		do_action('wdfb-autopost-posting_complete', $res);
+	}
+
+	/**
 	 * Default catch-all publishing procedure.
 	 */
 	function publish_post_on_facebook ($id, $new=false, $old=false) {
@@ -617,7 +669,10 @@ $token = false;
 
 		$post = get_post($post_id);
 		if ('publish' != $post->post_status) {
-			if ('future' == $post->post_status) update_post_meta($post_id, 'wdfb_scheduled_publish', array(
+			if (
+				'future' == $post->post_status && 
+				(!empty($_POST['wdfb_metabox_publishing_publish']) || !empty($_POST['wdfb_metabox_publishing_title']) || !empty($_POST['wdfb_metabox_publishing_account']))
+			) update_post_meta($post_id, 'wdfb_scheduled_publish', array(
 				'wdfb_metabox_publishing_publish' => $_POST['wdfb_metabox_publishing_publish'],
 				'wdfb_metabox_publishing_title' => $_POST['wdfb_metabox_publishing_title'],
 				'wdfb_metabox_publishing_account' => $_POST['wdfb_metabox_publishing_account'],
@@ -658,23 +713,8 @@ $token = false;
 				);
 				break;
 			case "events":
-				$time = time();
-				$start_timestamp = apply_filters('wdfb-autopost-events-start_time', $time, $post);
-				$end_timestamp = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
-				$location = apply_filters('wdfb-autopost-events-location', false, $post);
-				
-				$start_time = date('Y-m-d\TH:i:s', $start_timestamp);
-				$end_time = date('Y-m-d\TH:i:s', $end_timestamp);
-				$send = array(
-					'name' => $post_title,
-					'description' => $post_content,
-					'start_time' => $start_time,
-					'end_time' => $end_time,
-				);
-				if ($location) {
-					$send['location'] = $location;
-				}
-				break;
+				add_action('wp_insert_post', array($this, 'publish_event_on_facebook'), 999, 2); // Delay long enough for Events+ to kick in
+				return false;
 			case "feed":
 			default:
 				$use_shortlink = $this->data->get_option('wdfb_autopost', "type_{$post_type}_use_shortlink");
@@ -850,6 +890,14 @@ $token = false;
 
 			if (!$user_id && $this->data->get_option('wdfb_connect', 'easy_facebook_registration')) {
 				$user_id = $this->model->register_fb_user();
+				// Record activities, if told so
+				if ($user_id && defined('BP_VERSION') && $this->data->get_option('wdfb_connect', 'update_feed_on_easy_registration')) {
+					if (function_exists('bp_core_new_user_activity')) bp_core_new_user_activity($user_id);
+				}
+				if ($user_id) {
+					do_action('wdfb-registration-facebook_registration', $user_id);
+					do_action('wdfb-registration-facebook_easy_registration', $user_id);
+				}
 			}
 			$this->handle_fb_session_state();
 		}

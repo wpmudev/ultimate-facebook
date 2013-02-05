@@ -132,6 +132,7 @@ if (!check_hash()) {
 	$(".wdfb-settings_section:first h3").click();
 }
 
+<?php if (!is_network_admin()) { ?>
 // Disable all other steps if we don't have enough credentials
 if (!$('#app_key').val() || !$('#secret_key').val()) {
 	invalid_api_settings();
@@ -157,6 +158,14 @@ if (!$('#app_key').val() || !$('#secret_key').val()) {
 		invalid_api_settings();
 	});
 }
+<?php } else { ?>
+// We're in network admin, just make a note.
+if (!$('#app_key').val() || !$('#secret_key').val()) {
+	$("#wdfb-section-wdfb_api .wdfb-api_connect-result").html(
+		"<b class='wdfb-api_connect-failure'><?php echo esc_js(__('No API info - some settings will be unavailable.', 'wdfb')); ?></b>"
+	);
+}
+<?php } ?>
 
 // Next step switching
 $(".wdfb-next_step").live('click', function () {

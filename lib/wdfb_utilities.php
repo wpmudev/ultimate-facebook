@@ -77,6 +77,18 @@ function wdfb_get_locale () {
 }
 
 /**
+ * Determine front-end footer hook.
+ * @return string Actual footer hook to use.
+ */
+function wdfb_get_footer_hook () {
+	$footer_hook = 'get_footer';
+	if (defined('WDFB_FOOTER_HOOK')) {
+		$footer_hook = is_string(WDFB_FOOTER_HOOK) ? WDFB_FOOTER_HOOK : 'wp_footer';
+	}
+	return $footer_hook;
+}
+
+/**
  * Helper function for getting the login redirect URL.
  */
 function wdfb_get_login_redirect ($force_admin_redirect=false) {
@@ -237,13 +249,16 @@ function wdfb_get_fb_plugin_markup_xfbml ($type, $args) {
 			break;
 
 		case "comments":
-			$markup = '<fb:comments href="' . $args['link'] . '" '.
+			$responsive = defined('WDFB_USE_RESPONSIVE_FB_COMMENTS_HACK') && WDFB_USE_RESPONSIVE_FB_COMMENTS_HACK;
+			$markup = '<div class="wdfb-fb_comments"><fb:comments href="' . $args['link'] . '" '.
 				'xid="' . $args['xid'] . '"  ' .
 				'num_posts="' . $args['num_posts'] . '"  ' .
 				'width="' . $args['width'] . 'px"  ' .
 				'reverse="' . $args['reverse'] . '"  ' .
 				'colorscheme="' . $args['scheme'] . '"  ' .
-			'publish_feed="true"></fb:comments>';
+				($responsive ? 'mobile="false" ' : '') .
+			'publish_feed="true"></fb:comments></div>';
+			if ($responsive) add_action(wdfb_get_footer_hook(), 'wdfb__responsive_fb_comments_hack_style');
 			break;
 
 		case "activity":
@@ -287,13 +302,16 @@ function wdfb_get_fb_plugin_markup_html5 ($type, $args) {
 			break;
 
 		case "comments":
-			$markup = '<div class="fb-comments" data-href="' . $args['link'] . '" '.
+			$responsive = defined('WDFB_USE_RESPONSIVE_FB_COMMENTS_HACK') && WDFB_USE_RESPONSIVE_FB_COMMENTS_HACK;
+			$markup = '<div class="wdfb-fb_comments"><div class="fb-comments" data-href="' . $args['link'] . '" '.
 				'data-xid="' . $args['xid'] . '"  ' .
 				'data-num-posts="' . $args['num_posts'] . '"  ' .
 				'data-width="' . $args['width'] . '"  ' .
 				'data-reverse="' . $args['reverse'] . '"  ' .
 				'data-colorscheme="' . $args['scheme'] . '"  ' .
-			'data-publish-feed="true"></div>';
+				($responsive ? 'data-mobile="false" ' : '') .
+			'data-publish-feed="true"></div></div>';
+			if ($responsive) add_action(wdfb_get_footer_hook(), 'wdfb__responsive_fb_comments_hack_style');
 			break;
 
 		case "activity":
@@ -357,6 +375,17 @@ function wdfb_get_fb_comments () {
 	$scheme = $scheme ? $scheme : 'light';
 
 	return wdfb_get_fb_plugin_markup('comments', compact(array('link', 'xid', 'num_posts', 'width', 'reverse', 'scheme')));
+}
+
+function wdfb__responsive_fb_comments_hack_style () {
+	echo <<<EoResponsiveFbCommentsHack
+<style type="text/css">
+.wdfb-fb_comments {
+	width: 100%;
+}
+#fbcomments, .wdfb-fb_comments span[style], .fb_iframe_widget, .fb_iframe_widget[style], .fb_iframe_widget iframe[style], #fbcomments iframe[style] {width: 100% !important;}
+</style>
+EoResponsiveFbCommentsHack;
 }
 
 
