@@ -28,11 +28,16 @@ class Wdfb_PublicPages {
 	function js_load_scripts () {
 		wp_enqueue_script('jquery');
 		$locale = wdfb_get_locale();
+		/*
 		if (defined('WDFB_LEGACY_SCRIPT_PLACEMENT') && WDFB_LEGACY_SCRIPT_PLACEMENT) {
 			wp_enqueue_script('facebook-all',  WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js');
 		} else if (!(defined('WDFB_FB_ASYNC_INIT') && WDFB_FB_ASYNC_INIT)) {
 			wp_enqueue_script('facebook-all',  WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js', array('jquery'), null, true);
 		}
+		*/
+		if (defined('WDFB_INTERNAL_FLAG_FB_SCRIPT_INCLUDED')) return false;
+		echo '<script type="text/javascript" src="' . WDFB_PROTOCOL  . 'connect.facebook.net/' . $locale . '/all.js"></script>';
+		define('WDFB_INTERNAL_FLAG_FB_SCRIPT_INCLUDED', true);
 	}
 
 	function js_inject_fb_login_script () {
@@ -189,6 +194,7 @@ class Wdfb_PublicPages {
 				}(document, /*debug*/ false));
 			</script>';
 		} else {
+			if (!defined('WDFB_INTERNAL_FLAG_FB_SCRIPT_INCLUDED')) $this->js_load_scripts();
 			echo "<script type='text/javascript'>
 	         FB.init({
 	            appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "',
@@ -499,7 +505,7 @@ EOBpFormInjection;
 
 		$post_type = $post->post_type;
 		$post_title = $post->post_title;
-		$post_content = strip_shortcodes($post->post_content);
+		$post_content = wp_strip_all_tags(strip_shortcodes($post->post_content));
 
 		$post_as = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_type");
 		$post_to = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_user");
@@ -582,13 +588,20 @@ EOBpFormInjection;
 	 */
 	function add_hooks () {
 		// Step1a: Add script and style dependencies
-		add_action('wp_print_scripts', array($this, 'js_load_scripts'));
+		//add_action('wp_print_scripts', array($this, 'js_load_scripts'));
+		$footer_hook = wdfb_get_footer_hook();
+		if (!(defined('WDFB_FB_ASYNC_INIT') && WDFB_FB_ASYNC_INIT)) {
+			$hook = defined('WDFB_LEGACY_SCRIPT_PLACEMENT') && WDFB_LEGACY_SCRIPT_PLACEMENT
+				? 'wp_head'
+				: $footer_hook
+			;
+			add_action($hook, array($this, 'js_load_scripts'));
+		}
 		add_action('wp_print_styles', array($this, 'css_load_styles'));
 		add_action('wp_head', array($this, 'js_setup_ajaxurl'));
 
-		$footer_hook = wdfb_get_footer_hook();
-		add_action($footer_hook, array($this, 'inject_fb_root_div'));
-		add_action($footer_hook, array($this, 'inject_fb_init_js'));
+		add_action($footer_hook, array($this, 'inject_fb_root_div'), 99);
+		add_action($footer_hook, array($this, 'inject_fb_init_js'), 99);
 
 		// Automatic Facebook button
 		if ('manual' != $this->data->get_option('wdfb_button', 'button_position')) {

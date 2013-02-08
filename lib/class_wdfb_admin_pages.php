@@ -620,7 +620,7 @@ $token = false;
 		}
 
 		if (!$post_as) return true; // Skip this type
-		$post_content = strip_shortcodes($post->post_content);
+		$post_content = wp_strip_all_tags(strip_shortcodes($post->post_content));
 		$post_title = @$_POST['wdfb_metabox_publishing_title'] ? stripslashes($_POST['wdfb_metabox_publishing_title']) : $post->post_title;
 
 		$time = time();
@@ -703,7 +703,7 @@ $token = false;
 		}
 
 		if (!$post_as) return true; // Skip this type
-		$post_content = strip_shortcodes($post->post_content);
+		$post_content = wp_strip_all_tags(strip_shortcodes($post->post_content));
 
 		switch ($post_as) {
 			case "notes":

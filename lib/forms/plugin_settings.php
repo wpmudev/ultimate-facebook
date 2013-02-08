@@ -164,6 +164,28 @@ if (!$('#app_key').val() || !$('#secret_key').val()) {
 	$("#wdfb-section-wdfb_api .wdfb-api_connect-result").html(
 		"<b class='wdfb-api_connect-failure'><?php echo esc_js(__('No API info - some settings will be unavailable.', 'wdfb')); ?></b>"
 	);
+} else {
+	$.post(ajaxurl, {
+		"action": "wdfb_check_api_status"
+	}, function (data) {
+		var name = false;
+		try { name = data.name; } catch (e) { name = false; }
+		if (!name) {
+			$(".wdfb-api_connect-success").remove();
+			$("#wdfb-section-wdfb_api .wdfb-api_connect-result").html(
+				"<b class='wdfb-api_connect-failure'><?php echo esc_js(__('Please, enter correct Facebook API settings', 'wdfb')); ?></b>"
+			);
+			return false;
+		}
+		$("#wdfb-section-wdfb_api .wdfb-api_connect-result").html(
+			"<b class='wdfb-api_connect-success'><?php echo esc_js(__('Successfully connected to ', 'wdfb')); ?>" + name + "</b>"
+		);
+	}, 'json').error(function () {
+		$(".wdfb-api_connect-success").remove();
+		$("#wdfb-section-wdfb_api .wdfb-api_connect-result").html(
+			"<b class='wdfb-api_connect-failure'><?php echo esc_js(__('Please, enter correct Facebook API settings', 'wdfb')); ?></b>"
+		);
+	});
 }
 <?php } ?>
 
