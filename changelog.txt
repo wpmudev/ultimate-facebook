@@ -5,6 +5,14 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.6.3 - 2013-03-31
+----------------------------------------------------------------------
+- Added per-blog cache operations area.
+- Added color scheme settings box.
+- Wrapping the base Facebook exception class.
+- Ensuring brief logger messages.
+- Added optional XFBML option for BuddyPress activities button.
+
 2.6.2 - 2013-02-08
 ----------------------------------------------------------------------
 - Network connection data loading.
