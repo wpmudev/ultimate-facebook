@@ -72,6 +72,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_not_in_post_types', __('Do <strong>NOT</strong> show button in these types', 'wdfb'), array($form, 'create_do_not_show_button_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_position', __('Button position', 'wdfb'), array($form, 'create_button_position_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_appearance', __('Button appearance', 'wdfb'), array($form, 'create_button_appearance_box'), 'wdfb_options_page', 'wdfb_button');
+		add_settings_field('wdfb_button_color_scheme', __('Color scheme', 'wdfb'), array($form, 'create_button_color_scheme_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_button');
 
 		register_setting('wdfb', 'wdfb_opengraph');
@@ -146,6 +147,7 @@ class Wdfb_AdminPages {
 
 		add_settings_section('wdfb_grant', __('Permissions &amp; Tokens', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_api_permissions', __('Allowing permissions', 'wdfb'), array($form, 'api_permissions'), 'wdfb_options_page', 'wdfb_grant');
+		add_settings_field('wdfb_api_cache', __('Cache', 'wdfb'), array($form, 'cache_operations'), 'wdfb_options_page', 'wdfb_grant');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_grant');
 
 		if (!is_multisite() || current_user_can('manage_network_options')) {
@@ -178,6 +180,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_not_in_post_types', __('Do <strong>NOT</strong> show button in these types', 'wdfb'), array($form, 'create_do_not_show_button_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_position', __('Button position', 'wdfb'), array($form, 'create_button_position_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_appearance', __('Button appearance', 'wdfb'), array($form, 'create_button_appearance_box'), 'wdfb_options_page', 'wdfb_button');
+		add_settings_field('wdfb_button_color_scheme', __('Color scheme', 'wdfb'), array($form, 'create_button_color_scheme_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_button');
 
 		register_setting('wdfb', 'wdfb_opengraph');
@@ -665,7 +668,10 @@ $token = false;
 			!$this->data->get_option('wdfb_autopost', 'allow_autopost')
 			&&
 			!@$_POST['wdfb_metabox_publishing_publish']
-		) return false;
+		) {
+			$stored_publish_test = get_post_meta($post_id, 'wdfb_scheduled_publish', true); // Allow scheduled semi-auto publishing
+			if (empty($stored_publish_test['wdfb_metabox_publishing_publish'])) return false; // Okay, so this has a stored value
+		}
 
 		$post = get_post($post_id);
 		if ('publish' != $post->post_status) {
@@ -742,6 +748,7 @@ $token = false;
 		$res = $this->model->post_on_facebook($post_as, $post_to, $send, $as_page);
 		if ($res) {
 			update_post_meta($post_id, 'wdfb_published_on_fb', 1);
+			update_post_meta($post_id, 'wdfb_scheduled_publish', array());
 			do_action('wdfb-autopost-posting_successful', $post_id);
 		}
 		add_filter('redirect_post_location', create_function('$loc', 'return add_query_arg("wdfb_published", ' . (int)$res . ', $loc);'));
@@ -951,6 +958,17 @@ $token = false;
 			"status" => $result,
 		)));
 	}
+
+	function json_cache_purge () {
+		$purge = !empty($_POST['purge']) ? trim(strtolower($_POST['purge'])) : false;
+		if (!$purge) die;
+		if (!in_array($purge, array('events', 'album_photos'))) die;
+
+		global $wpdb;
+		$sql = "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient%wdfb%{$purge}%'";
+		$wpdb->query($sql);
+		die;
+	}
 	
 	function json_partial_data_save () {
 		$key = @$_POST['part'];
@@ -1095,6 +1113,7 @@ $token = false;
 		add_action('wp_ajax_wdfb_check_api_status', array($this, 'json_check_api_status'));
 		add_action('wp_ajax_wdfb_refresh_access_token', array($this, 'json_refresh_access_token'));
 		add_action('wp_ajax_wdfb_remap_user', array($this, 'json_remap_user'));
+		add_action('wp_ajax_wdfb_cache_purge', array($this, 'json_cache_purge'));
 
 		add_action('wp_ajax_wdfb_partial_data_save', array($this, 'json_partial_data_save'));
 		add_action('wp_ajax_wdfb_network_partial_data_save', array($this, 'json_network_partial_data_save'));

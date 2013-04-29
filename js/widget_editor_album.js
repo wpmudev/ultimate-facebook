@@ -87,16 +87,16 @@ function openWidgetEditor () {
 function init_ui () {
 	// Create the needed editor container HTML
 	$('body').append('<div id="wdfb_album_root_container" style="display:none"><div id="wdfb_album_container"></div></div>');
-	
+
 	// --- Bind events ---
-	
-	$('a.wdfb_widget_open_editor').live('click', function () {
+
+	$(document).on('click', ".wdfb_grant_events_perms", function () {
 		$parent = $(this).parents('.wdfb_album_widget_select_album');
 		openWidgetEditor();
 		return false;
 	});
-	
-	$('a.wdfb_insert_album').live('click', function () {
+
+	$(document).on('click', 'a.wdfb_insert_album', function () {
 		insertAlbum($(this));
 	});
 }
@@ -119,11 +119,11 @@ function init () {
 			init_ui();
 		} else {
 			$('.wdfb_album_widget_select_album').html(
-				'<div class="error below-h2">' + l10nWdfbEditor.insuficient_perms + '<br />' + 
+				'<div class="error below-h2">' + l10nWdfbEditor.insuficient_perms + '<br />' +
 					'<a class="wdfb_grant_albums_perms" href="#" >' + l10nWdfbEditor.grant_perms + '</a>' +
 				'</div>'
 			);
-			$(".wdfb_grant_albums_perms").live("click", function () { 
+			$(document).on("click", ".wdfb_grant_albums_perms", function () {
 				var $me = $(this);
 				var locale = $me.attr("data-wdfb_locale");
 				/*
@@ -139,15 +139,15 @@ function init () {
 					window.location.reload(true);
 				}, {
 					"scope": 'user_photos'
-				}); 
-				return false; 
-			}); 
+				});
+				return false;
+			});
 		}
 	});
 }
 FB.getLoginStatus(function (resp) {
 	init();
-})
-	
+});
+
 });
 })(jQuery);

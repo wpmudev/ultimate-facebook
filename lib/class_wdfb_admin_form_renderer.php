@@ -80,6 +80,14 @@ class Wdfb_AdminFormRenderer {
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
 	}
 
+	function cache_operations () {
+		echo '<p>' .
+			'<input type="button" class="button wdfb-cache_purge" data-wdfb_purge="events" value="' . esc_attr(__('Purge Events cache', 'wdfb')) . '" />' .
+			'&nbsp;' .
+			'<input type="button" class="button wdfb-cache_purge" data-wdfb_purge="album_photos" value="' . esc_attr(__('Purge Albums cache', 'wdfb')) . '" />' .
+		'</p>';
+	}
+
 	function create_api_key_box () {
 		$opt = $this->_get_option('wdfb_api');
 		echo $this->_create_text_box('api', 'api_key', @$opt['api_key']);
@@ -337,6 +345,8 @@ class Wdfb_AdminFormRenderer {
 			echo '<label for="not_in_post_types-_buddypress_activity">' . __('Allow &quot;Like&quot; button for BuddyPress Activities', 'wdfb') . '</label>: ';
 			echo $this->_create_subcheckbox('button', 'not_in_post_types',  '_buddypress_activity', @in_array('_buddypress_activity', $opt['not_in_post_types']));
 			echo '</div>';
+			echo '<label for="bp_activity_xfbml">' . __('Use XFBML button for BuddyPress Activities', 'wdfb') . '</label>: ';
+			echo $this->_create_checkbox('button', 'bp_activity_xfbml', @$opt['bp_activity_xfbml']);
 		}
 		echo '</div>';
 	}
@@ -372,6 +382,19 @@ class Wdfb_AdminFormRenderer {
 		echo '</tr>';
 
 		echo "</table>";
+	}
+
+	function create_button_color_scheme_box () {
+		$opt = $this->_get_option('wdfb_button');
+		$_schemes = array(
+			'light' => __('Light', 'wdfb'),
+			'dark' => __('Dark', 'wdfb'),
+		);
+		echo "<select name='wdfb_button[color_scheme]'>";
+		foreach ($_schemes as $idx => $lbl) {
+			echo "<option value='{$idx}' " . (($idx == @$opt['color_scheme']) ? 'selected="selected"' : '') . ">{$lbl}</option>";
+		}
+		echo "</select>";
 	}
 
 	function create_use_opengraph_box () {
@@ -766,6 +789,8 @@ class Wdfb_AdminFormRenderer {
 		$stored = get_post_meta($post->ID, 'wdfb_scheduled_publish', true);
 		$stored = is_array($stored) ? $stored : array();
 		$title = !empty($stored['wdfb_metabox_publishing_title']) ? $stored['wdfb_metabox_publishing_title'] : '';
+		$stored_publish = !empty($stored['wdfb_metabox_publishing_publish']);
+		$stored_publishing_user = !empty($stored['wdfb_metabox_publishing_account']) ? $stored['wdfb_metabox_publishing_account'] : '';
 
 		echo '<div>';
 		echo '<label for="">' . __('Publish on Facebook with different title:', 'wdfb') . '</label>';
@@ -775,7 +800,7 @@ class Wdfb_AdminFormRenderer {
 
 		if (!@$opt['allow_autopost']) {
 			echo '<div>';
-			echo '	<input type="checkbox" name="wdfb_metabox_publishing_publish" id="wdfb_metabox_publishing_publish" value="1" />';
+			echo '	<input type="checkbox" name="wdfb_metabox_publishing_publish" id="wdfb_metabox_publishing_publish" value="1" ' . checked($stored_publish, true, false) . ' />';
 			echo '	<label for="wdfb_metabox_publishing_publish">' . __('I want to publish this post to Facebook', 'wdfb') . '</label>';
 			echo __('<p><small>If checked, the post will be unconditionally published on Facebook</small></p>', 'wdfb');
 			echo '</div>';
@@ -805,7 +830,8 @@ class Wdfb_AdminFormRenderer {
 				echo '	<label for="wdfb_metabox_publishing_account">' . __('Publish to wall of this Facebook account:', 'wdfb') . '</label>';
 				echo '	<select name="wdfb_metabox_publishing_account" id="wdfb_metabox_publishing_account">';
 				foreach ($fb_accounts as $aid=>$aval) {
-					echo "<option value='{$aid}'>{$aval}</option>";
+					$selected = selected($stored_publishing_user, $aid, false);
+					echo "<option value='{$aid}' {$selected}>{$aval}</option>";
 				}
 				echo '	</select>';
 				echo '<br />';

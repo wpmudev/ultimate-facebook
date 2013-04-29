@@ -54,11 +54,7 @@ class Wdfb_PublicPages {
 		wp_enqueue_style('wdfb_style', WDFB_PLUGIN_URL . '/css/wdfb.css');
 	}
 
-	/**
-	 * Inject Facebook button into post content.
-	 * This is triggered only for automatic injection.
-	 * Adds shortcode in proper place, and lets replacer do its job later on.
-	 */
+/*
 	function inject_facebook_button ($body) {
 		if (
 			(is_home() && !$this->data->get_option('wdfb_button', 'show_on_front_page'))
@@ -75,11 +71,6 @@ class Wdfb_PublicPages {
 		}
 		return $body;
 	}
-
-	/**
-	 * Activities don't use the_content filter, and doesn't understand shortcodes.
-	 * Make sure we're ready.
-	 */
 	function inject_facebook_button_bp ($body) {
 		if (false) return $body;
 		// Disregard position
@@ -87,6 +78,7 @@ class Wdfb_PublicPages {
 		$body .= " " . do_shortcode($this->replacer->get_button_tag('like_button'));
 		return $body;
 	}
+*/
 
 	/**
 	 * Inject OpenGraph info in the HEAD
@@ -603,11 +595,13 @@ EOBpFormInjection;
 		add_action($footer_hook, array($this, 'inject_fb_root_div'), 99);
 		add_action($footer_hook, array($this, 'inject_fb_init_js'), 99);
 
+/*
 		// Automatic Facebook button
 		if ('manual' != $this->data->get_option('wdfb_button', 'button_position')) {
 			add_filter('the_content', array($this, 'inject_facebook_button'), 10);
 			if (defined('BP_VERSION')) add_filter('bp_get_activity_content_body', array($this, 'inject_facebook_button_bp'));
 		}
+*/
 
 		// OpenGraph
 		if ($this->data->get_option('wdfb_opengraph', 'use_opengraph')) {
@@ -618,6 +612,7 @@ EOBpFormInjection;
 		if ($this->data->get_option('wdfb_connect', 'allow_facebook_registration')) {
 			if (!$this->data->get_option('wdfb_connect', 'skip_fb_avatars')) add_filter('get_avatar', array($this, 'get_fb_avatar'), 10, 3);
 
+			add_action('login_enqueue_scripts', create_function('', 'wp_enqueue_script("jquery");'));
 			add_action('login_head', array($this, 'js_inject_fb_login_script'));
 			add_action('login_head', array($this, 'js_setup_ajaxurl'));
 			add_action('login_form', array($this, 'inject_fb_login'));

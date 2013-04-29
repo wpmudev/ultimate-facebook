@@ -136,7 +136,9 @@ class Wdfb_MarkerReplacer {
 		$forced = ($atts['forced'] && 'no' != $atts['forced']) ? true : false;
 
 		$in_types = $this->data->get_option('wdfb_button', 'not_in_post_types');
-		if (@in_array(get_post_type(), $in_types) && !$forced) return '';
+		$in_types = is_array($in_types) ? $in_types : array();
+		$post_type = get_post_type();
+		if (($post_type && in_array(get_post_type(), $in_types)) && !$forced) return '';
 
 		$is_activity = defined('BP_VERSION') && isset($filters['bp_get_activity_content_body']);
 		if ($is_activity && !@in_array('_buddypress_activity', $in_types)) return ''; // Reverse logic for BuddyPress Activity check.
@@ -148,7 +150,10 @@ class Wdfb_MarkerReplacer {
 		$width = ("standard" == $layout) ? 300 : (
 			("button_count" == $layout) ? 150 : 60
 		); 
-		$width = apply_filters('wdfb-like_button-width', $width); 
+		$width = apply_filters('wdfb-like_button-width', $width);
+
+		$scheme = $this->data->get_option('wdfb_button', 'color_scheme');
+		$scheme = $scheme ? $scheme : 'light';
 		
 		if (
 			(is_home() && $this->data->get_option('wdfb_button', 'show_on_front_page'))
@@ -156,19 +161,23 @@ class Wdfb_MarkerReplacer {
 			(defined('BP_VERSION') && $is_activity && !wdfb_is_single_bp_activity())
 		) {
 			$tmp_url = $is_activity && function_exists('bp_activity_get_permalink') ? bp_activity_get_permalink(bp_get_activity_id()) : get_permalink();
-			$url = $tmp_url ? $tmp_url : $url;
-			$url = rawurlencode($url);
-			
+			$href = $tmp_url ? $tmp_url : $url;
+			$url = rawurlencode($href);
+			$locale = wdfb_get_locale();
+
 			$height = ("box_count" == $layout) ? 60 : 25;
 			$height = apply_filters('wdfb-like_button-height', $height); 
 			
-			return "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height={$height}&amp;width={$width}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>";
+			return defined('BP_VERSION') && $is_activity && !wdfb_is_single_bp_activity() && $this->data->get_option('wdfb_button', 'bp_activity_xfbml')	
+				? '<div class="wdfb_like_button">' . wdfb_get_fb_plugin_markup('like', compact(array('href', 'send', 'layout', 'width', 'scheme'))) . '</div>'
+				: "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme={$scheme}&amp;font&amp;height={$height}&amp;width={$width}&amp;locale={$locale}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>"
+			;
 		}
 
 		$href = WDFB_PROTOCOL  . $url;
 		return '<div class="wdfb_like_button">' .
 			wdfb_get_fb_plugin_markup('like', compact(array(
-				'href', 'send', 'layout', 'width'
+				'href', 'send', 'layout', 'width', 'scheme'
 			))) .
 		'</div>';
 	}
@@ -254,7 +263,7 @@ class Wdfb_MarkerReplacer {
 			? (($img_w >= 180) ? 0 : 1)
 			: (($img_w >= 75) ? 2 : 3)
 		;
-		
+
 		$columns = (int)$atts['columns'];
 		$current = 1;
 		foreach ($photos as $photo) {
@@ -264,8 +273,9 @@ class Wdfb_MarkerReplacer {
 				? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id']
 				: $photo['images'][0]['source']
 			;
+			$name = !empty($photo['name']) ? 'title="' . esc_attr($photo['name']) . '"' : '';
 			$ret .= '<a href="' . $url . 
-				'" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' >' .
+				'" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' ' . $name . '>' .
 					'<img src="' . $photo['images'][$photo_idx]['source'] . '" ' .
 						($img_w ? "width='{$img_w}'" : '') .
 						($img_h && !$atts['crop'] ? "height='{$img_h}'" : '') .

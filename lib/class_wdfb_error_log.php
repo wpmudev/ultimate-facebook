@@ -22,12 +22,16 @@ class Wdfb_ErrorLog {
 
 	function error ($function, $exception) {
 		Wdfb_ErrorRegistry::store($exception);
+		$info = is_object($exception) && method_exists($exception, 'getMessage')
+			? $exception->getMessage()
+			: $exception
+		;
 		$this->_update_error_queue(array(
 			'date' => time(),
 			'area' => $function,
 			'user_id' => get_current_user_id(),
 			'type' => 'exception',
-			'info' => $exception
+			'info' => $info
 		));
 	}
 

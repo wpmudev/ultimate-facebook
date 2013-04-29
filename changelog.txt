@@ -5,6 +5,13 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.6.4 - 2013-04-29
+----------------------------------------------------------------------
+- Fix for scheduled semi-auto publishing.
+- Fix for localized IFRAME buttons.
+- Fix for buttons with more activities.
+- Added photo title support in album shortcode.
+
 2.6.3 - 2013-03-31
 ----------------------------------------------------------------------
 - Added per-blog cache operations area.

@@ -235,7 +235,8 @@ function wdfb_get_fb_plugin_markup_xfbml ($type, $args) {
 				$args['href'] . '" send="' . 
 				($args['send'] ? 'true' : 'false') . '" layout="' . 
 				$args['layout'] . '" width="' . 
-				$args['width'] . 
+				$args['width'] . '" colorscheme="' .
+				(!empty($args['scheme']) ? $args['scheme'] : 'light') .
 			'" show_faces="true" font=""></fb:like>';
 			break;
 
@@ -288,7 +289,8 @@ function wdfb_get_fb_plugin_markup_html5 ($type, $args) {
 				$args['href'] . '" data-send="' . 
 				($args['send'] ? 'true' : 'false') . '" data-layout="' . 
 				$args['layout'] . '" data-width="' . 
-				$args['width'] . 
+				$args['width'] . '" data-scheme="' .
+				(!empty($args['scheme']) ? $args['scheme'] : 'light') .
 			'" data-show-faces="true"></div>';
 			break;
 

@@ -10,6 +10,13 @@ class Wdfb_Model {
 
 	private $_batch_page_size;
 
+	function __sleep () {
+		unset($this->db);
+		unset($this->log);
+		unset($this->data);
+		unset($this->log);
+	}
+
 	function __construct () {
 		global $wpdb;
 		$this->data =& Wdfb_OptionsRegistry::get_instance();

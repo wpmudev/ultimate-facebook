@@ -138,39 +138,39 @@ function insertAtCursor(fld, text) {
 }
 
 function init_ui () {
-	
+
 	// Find Media Buttons strip and add the new one
 	var mbuttons_container = $('#media-buttons').length ? /*3.2*/ $('#media-buttons') : /*3.3*/ $("#wp-content-media-buttons");
 	if (!mbuttons_container.length) return;
-	
-	mbuttons_container.append('' + 
+
+	mbuttons_container.append('' +
 			'<a onclick="return wdfbOpenAlbumEditor();" title="' + l10nWdfbEditor.add_fb_photo + '" class="thickbox" id="add_fb_photo" href="#TB_inline?width=640&height=594&inlineId=wdfb_album_root_container">' +
 			'<img onclick="return false;" alt="' + l10nWdfbEditor.add_fb_photo + '" src="' + _wdfb_root_url + '/img/fb_photo.png">' +
 			'</a>'
 	);
-	
+
 	// Create the needed editor container HTML
 	$('body').append('<div id="wdfb_album_root_container" style="display:none"><div id="wdfb_album_container"></div></div>');
-	
+
 	// --- Bind events ---
-	
+
 	$(document).bind('wdfb_album_editor_open', function () {
 		loadAlbums();
 	});
-	
-	$('a.wdfb_show_album_photos').live('click', function () {
+
+	$(document).on('click', 'a.wdfb_show_album_photos', function () {
 		loadAlbumPhotos($(this));
 	});
-	$('a.wdfb_insert_album').live('click', function () {
+	$(document).on('click', 'a.wdfb_insert_album', function () {
 		insertAlbum($(this));
 	});
-	$('#wdfb_back_to_albums').live('click', function () {
+	$(document).on('click', '#wdfb_back_to_albums', function () {
 		loadAlbums();
 	});
-	$('#wdfb_insert_album_photo_items').live('click', function () {
+	$(document).on('click', '#wdfb_insert_album_photo_items', function () {
 		insertAlbumPhotos();
 	});
-	
+
 }
 
 function init () {

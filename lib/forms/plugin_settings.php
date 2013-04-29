@@ -190,7 +190,7 @@ if (!$('#app_key').val() || !$('#secret_key').val()) {
 <?php } ?>
 
 // Next step switching
-$(".wdfb-next_step").live('click', function () {
+$(document).on('click', ".wdfb-next_step", function () {
 	var $parent = $(this).parents(".wdfb-settings_section");
 	var $next = $parent.next(".wdfb-settings_section").find("h3.hndle");
 	if ($next.length) $next.click();
@@ -416,6 +416,15 @@ $("#wdfb-remap_user").on("click", function () {
 		if (status.authResponse) FB.logout(wdfb_remap_login);
 		else wdfb_remap_login();
 	});
+	return false;
+});
+
+$(".wdfb-cache_purge").on("click", function () {
+	var $me = $(this),
+		purge = $me.attr("data-wdfb_purge")
+	;
+	if (!purge) return false;
+	$.post(ajaxurl, {"action": "wdfb_cache_purge", "purge": purge}, window.location.reload);
 	return false;
 });
 

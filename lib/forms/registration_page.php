@@ -13,7 +13,7 @@ $force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $o
 ;
 ?>
 
-	<h2>Register with Facebook</h2>
+	<h2><?php _e('Register with Facebook', 'wdfb'); ?></h2>
 
 <?php foreach ($errors as $error) { ?>
 	<?php $error = is_array($error) ? array_reduce($error, create_function('$val,$el', 'return "$val <br />$el";')) : $error; ?>

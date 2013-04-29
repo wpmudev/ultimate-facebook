@@ -2,7 +2,7 @@
 $(function () {
 
 function init_ui () {
-	$(".wdfb_date_threshold").live('focus', function () {
+	$(document).on('focus', ".wdfb_date_threshold", function () {
 		$(this).datepicker({
 			dateFormat: 'yy-mm-dd'
 		});
@@ -27,11 +27,11 @@ function init () {
 			init_ui();
 		} else {
 			$('.wdfb_widget_events_home').html(
-				'<div class="error below-h2">' + l10nWdfbEventsEditor.insuficient_perms + '<br />' + 
+				'<div class="error below-h2">' + l10nWdfbEventsEditor.insuficient_perms + '<br />' +
 					'<a class="wdfb_grant_events_perms" href="#" >' + l10nWdfbEventsEditor.grant_perms + '</a>' +
 				'</div>'
 			);
-			$(".wdfb_grant_events_perms").live("click", function () { 
+			$(document).on("click", ".wdfb_grant_events_perms", function () {
 				var $me = $(this);
 				var locale = $me.attr("data-wdfb_locale");
 				FB.login(function () {
@@ -47,9 +47,9 @@ function init () {
 				}, function () {
 					window.location.reload(true);
 				});
-				*/ 
-				return false; 
-			}); 
+				*/
+				return false;
+			});
 		}
 	});
 }
