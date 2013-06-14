@@ -35,6 +35,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 	function form($instance) {
 		$title = esc_attr($instance['title']);
 		$for = esc_attr($instance['for']);
+		$limit = esc_attr($instance['limit']);
 		$show_image = esc_attr($instance['show_image']);
 		$show_location = esc_attr($instance['show_location']);
 		$show_start_date = esc_attr($instance['show_start_date']);
@@ -69,6 +70,16 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$html .= '<label for="' . $this->get_field_id('for') . '">' . __('Show events for:', 'wdfb') . '</label>';
 		$html .= '<input type="text" name="' . $this->get_field_name('for') . '" id="' . $this->get_field_id('for') . '" value="' . $for . '"/>';
 		$html .= '<div>Leave this box empty to display your own events.</div>';
+		$html .= '</p>';
+
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('limit') . '">' . __('Limit:', 'wdfb') . '</label>';
+		$html .= ' <select name="' . $this->get_field_name('limit') . '" id="' . $this->get_field_id('limit') . '">';
+		foreach (range(5,50,5) as $i) {
+			$selected = selected($i, $limit, true);
+			$html .= "<option value='{$i}' {$selected}>{$i}</option>";
+		}
+		$html .= '</select>';
 		$html .= '</p>';
 
 		$html .= '<p>';
@@ -117,6 +128,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		$instance['title'] = strip_tags($new_instance['title']);
 		$for = strip_tags($new_instance['for']);
 		$instance['for'] = $for ? $for : $this->model->fb->getUser();
+		$instance['limit'] = (int)$new_instance['limit'];
 		$instance['show_image'] = strip_tags($new_instance['show_image']);
 		$instance['show_location'] = strip_tags($new_instance['show_location']);
 		$instance['show_start_date'] = strip_tags($new_instance['show_start_date']);
@@ -134,6 +146,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		extract($args);
 		$title = apply_filters('widget_title', $instance['title']);
 		$for = $instance['for'];
+		$limit = (int)$instance['limit'];
 		$show_image = (int)$instance['show_image'];
 		$show_location = (int)$instance['show_location'];
 		$show_start_date = (int)$instance['show_start_date'];
@@ -147,31 +160,9 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		if ($only_future) {
 			$date_threshold = ($date_threshold && $date_threshold > $now) ? $date_threshold : $now;
 		}
-/*
-		if (
-			!@$instance['_last_checked_on'] 
-			|| 
-			(WDFB_TRANSIENT_TIMEOUT + (int)@$instance['_last_checked_on']) < $now
-		) {
-			$events = $this->model->get_events_for($for);
-			if (!empty($events['data'])) {
-				// We have a valid FB connection.
-				// Use that to refresh data:
-				// Update the instance with fresh events
-				$all_instances = $this->get_settings();
-				$all_instances[$this->number]['events'] = $events;
-				$all_instances[$this->number]['_last_checked_on'] = $now;
-				$this->save_settings($all_instances);
-			} else {
-				$events = $instance['events'];
-			}
-		} else {
-			$events = $instance['events'];
-		}
-		$events = $events['data'];
-*/
+
 		$api = new Wdfb_EventsBuffer;
-		$events = $api->get_for($for);
+		$events = $api->get_for($for, $limit);
 		$events = is_array($events) ? $events : array();
 		usort($events, array($this, 'sort_events_by_start_time'));
 		if ($reverse_order) $events = array_reverse($events);
@@ -183,8 +174,9 @@ class Wdfb_WidgetEvents extends WP_Widget {
 
 		if (is_array($events) && !empty($events)) {
 			echo '<ul class="wdfb_widget_events">';
-			foreach ($events as $event) {
+			foreach ($events as $idx => $event) {
 				if ($date_threshold > strtotime($event['start_time'])) continue;
+				if ($idx >= $limit) break;
 				include (WDFB_PLUGIN_BASE_DIR . '/lib/forms/event_item.php');
 			}
 			echo '</ul>';

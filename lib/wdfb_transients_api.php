@@ -35,7 +35,7 @@ class Wdfb_EventsBuffer extends Wdfb_TransientBuffer {
 		if ($result) return $result;
 
 		$model = new Wdfb_Model;
-		$events = $model->get_events_for($fbid);
+		$events = $model->get_events_for($fbid, $limit);
 		if (!$events) return false;
 		
 		$this->store($transient, $events['data']);

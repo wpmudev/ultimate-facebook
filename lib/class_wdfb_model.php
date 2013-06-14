@@ -598,21 +598,52 @@ class Wdfb_Model {
 		return $ret;
 	}
 
-	function get_events_for ($for) {
+	function get_events_for ($for, $limit=false, $offset=false) {
 		if (!$for) return false;
+
+		$page_size = 5;
+		$max_limit = apply_filters('wdfb-albums-max_photos_limit', 
+			(defined('WDFB_EVENTS_MAX_EVENT_LIMIT') && WDFB_EVENTS_MAX_EVENT_LIMIT ? WDFB_EVENTS_MAX_EVENT_LIMIT : 200)
+		);
 
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
 		$token = !empty($tokens[$for]) 
-			? '?access_token=' . $tokens[$for] 
-			: '?access_token=' . $this->fb->getAppId() . '|' . $this->fb->getAppSecret()
+			? $tokens[$for] 
+			: $this->fb->getAppId() . '|' . $this->fb->getAppSecret()
 		;
 
-		try {
-			$res = $this->fb->api("/{$for}/events/{$token}");
-		} catch (Exception $e) {
-			return false;
+		if ($limit && $limit > $page_size) {
+			$limit = $limit > $max_limit ? $max_limit : $limit;
+			$batch = array();
+			for ($i=0; $i<$limit; $i+=$page_size) {
+				$batch[] = json_encode(array(
+					'method' => 'GET',
+					'relative_url' => "/{$for}/events/?limit={$page_size}&offset={$i}&fields=id,name,description,start_time,end_time,location,venue,picture,ticket_uri,owner,privacy"
+				));
+			}
+			try {
+				$res = $this->fb->api('/', 'POST', array('batch' => '[' . implode(',',$batch) . ']', 'access_token' => $token));
+			} catch (Exception $e) {
+				$this->log->error(__FUNCTION__, $e);
+				return false;
+			}
+			$return = array();
+			foreach ($res as $key => $data) {
+				if (!$data || !isset($data['body'])) continue;
+				$data = json_decode($data['body'],true);
+				$return = array_merge($return, $data['data']);
+			}
+			return array('data' => $return);
+		} else {
+			try {
+				//$res = $this->fb->api("/{$for}/events/?access_token={$token}");
+				$res = $this->fb->api("/{$for}/events/", 'GET', array('access_token' => $token));
+			} catch (Exception $e) {
+				return false;
+			}
+			return $res;
 		}
-		return $res;
+		return false;
 	}
 
 	function get_albums_for ($for) {

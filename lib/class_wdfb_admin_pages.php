@@ -68,7 +68,7 @@ class Wdfb_AdminPages {
 		add_settings_section('wdfb_button', __('Facebook Like/Send Button', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_show_button', __('Allow Facebook Like Button', 'wdfb'), array($form, 'create_allow_facebook_button_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_show_send_position', __('Show "Send" button too', 'wdfb'), array($form, 'create_show_send_button_box'), 'wdfb_options_page', 'wdfb_button');
-		add_settings_field('wdfb_show_front_page', __('Show on Front page posts', 'wdfb'), array($form, 'create_show_on_front_page_box'), 'wdfb_options_page', 'wdfb_button');
+		add_settings_field('wdfb_show_front_page', __('Show on', 'wdfb'), array($form, 'create_show_on_front_page_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_not_in_post_types', __('Do <strong>NOT</strong> show button in these types', 'wdfb'), array($form, 'create_do_not_show_button_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_position', __('Button position', 'wdfb'), array($form, 'create_button_position_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_appearance', __('Button appearance', 'wdfb'), array($form, 'create_button_appearance_box'), 'wdfb_options_page', 'wdfb_button');
@@ -176,7 +176,7 @@ class Wdfb_AdminPages {
 		add_settings_section('wdfb_button', __('Facebook Like/Send Button', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_show_button', __('Allow Facebook Like Button', 'wdfb'), array($form, 'create_allow_facebook_button_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_show_send_position', __('Show "Send" button too', 'wdfb'), array($form, 'create_show_send_button_box'), 'wdfb_options_page', 'wdfb_button');
-		add_settings_field('wdfb_show_front_page', __('Show on Front page posts', 'wdfb'), array($form, 'create_show_on_front_page_box'), 'wdfb_options_page', 'wdfb_button');
+		add_settings_field('wdfb_show_front_page', __('Show on', 'wdfb'), array($form, 'create_show_on_front_page_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_not_in_post_types', __('Do <strong>NOT</strong> show button in these types', 'wdfb'), array($form, 'create_do_not_show_button_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_position', __('Button position', 'wdfb'), array($form, 'create_button_position_box'), 'wdfb_options_page', 'wdfb_button');
 		add_settings_field('wdfb_button_appearance', __('Button appearance', 'wdfb'), array($form, 'create_button_appearance_box'), 'wdfb_options_page', 'wdfb_button');

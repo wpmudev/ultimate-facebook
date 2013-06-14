@@ -12,6 +12,7 @@ class Wdfb_MarkerReplacer {
 		'album' => 'wdfb_album',
 		'connect' => 'wdfb_connect',
 		'recent_comments' => 'wdfb_recent_comments',
+		'register_button' => 'wdfb_register_button',
 	);
 
 	function __construct () {
@@ -26,6 +27,22 @@ class Wdfb_MarkerReplacer {
 	function get_button_tag ($b) {
 		if (!isset($this->buttons[$b])) return '';
 		return '[' . $this->buttons[$b] . ']';
+	}
+
+	function process_register_button_code ($atts, $content='') {
+		if (is_user_logged_in()) return '';
+		if (!$this->data->get_option('wdfb_connect', 'allow_facebook_registration')) return '';
+
+		$content = !empty($content) ? $content : __('Register with Facebook', 'wdfb');
+
+		$base_url = defined('BP_VERSION')
+			? bp_get_signup_page()
+			: apply_filters('wdfb-registration-registration_page', site_url('/wp-signup.php', 'login'))
+		;
+		$url = add_query_arg(array(
+			'fb_registration_page' => 1
+		), $base_url);
+		return '<p><a class="wdfb_register_button" href="' . $url . '"><span>' . $content . '</span></a></p>';
 	}
 
 	function process_connect_code ($atts, $content='') {
@@ -158,17 +175,30 @@ class Wdfb_MarkerReplacer {
 		if (
 			(is_home() && $this->data->get_option('wdfb_button', 'show_on_front_page'))
 			||
+			(is_archive() && $this->data->get_option('wdfb_button', 'show_on_archive_page'))
+			||
 			(defined('BP_VERSION') && $is_activity && !wdfb_is_single_bp_activity())
 		) {
-			$tmp_url = $is_activity && function_exists('bp_activity_get_permalink') ? bp_activity_get_permalink(bp_get_activity_id()) : get_permalink();
-			$href = $tmp_url ? $tmp_url : $url;
+			$tmp_url = $is_activity && function_exists('bp_activity_get_permalink') ? bp_activity_get_permalink(bp_get_activity_id()) : (in_the_loop() ? get_permalink() : false);
+			$href = $tmp_url ? $tmp_url : WDFB_PROTOCOL . $url;
 			$url = rawurlencode($href);
 			$locale = wdfb_get_locale();
 
 			$height = ("box_count" == $layout) ? 60 : 25;
-			$height = apply_filters('wdfb-like_button-height', $height); 
+			$height = apply_filters('wdfb-like_button-height', $height);
+
+			$use_xfbml = false;
+			if (
+				(defined('BP_VERSION') && $is_activity && !wdfb_is_single_bp_activity() && $this->data->get_option('wdfb_button', 'bp_activity_xfbml')) 
+				||
+				(is_home() && $this->data->get_option('wdfb_button', 'show_on_front_page') && $this->data->get_option('wdfb_button', 'shared_pages_use_xfbml')) 
+				||
+				(is_archive() && $this->data->get_option('wdfb_button', 'show_on_archive_page') && $this->data->get_option('wdfb_button', 'shared_pages_use_xfbml')) 
+			) {
+				$use_xfbml = true;
+			}
 			
-			return defined('BP_VERSION') && $is_activity && !wdfb_is_single_bp_activity() && $this->data->get_option('wdfb_button', 'bp_activity_xfbml')	
+			return $use_xfbml
 				? '<div class="wdfb_like_button">' . wdfb_get_fb_plugin_markup('like', compact(array('href', 'send', 'layout', 'width', 'scheme'))) . '</div>'
 				: "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme={$scheme}&amp;font&amp;height={$height}&amp;width={$width}&amp;locale={$locale}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>"
 			;

@@ -71,11 +71,13 @@ class Wdfb_CommentsImporter {
 				if (in_array($fb_uid, $skips)) continue;				
 			}
 			$feed = $this->model->get_feed_for($fb_uid, $limit);
-			if (!isset($feed['data'])) return false; // Nothing to import
+			//if (!isset($feed['data'])) return false; // Nothing to import
+			if (!isset($feed['data'])) continue; // Nothing to import
 
 			$commented_posts = array();
 			foreach ($feed['data'] as $post) {
-				if (!isset($post['comments']) || !@$post['comments']['count']) continue; // Skip uncommented posts
+				//if (!isset($post['comments']) || !@$post['comments']['count']) continue; // Skip uncommented posts
+				if (empty($post['comments']) || empty($post['comments']['data'])) continue; // Skip uncommented posts
 				$commented_posts[] = $post;
 			}
 			$this->process_commented_posts($commented_posts);

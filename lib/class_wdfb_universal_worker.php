@@ -23,6 +23,21 @@ class Wdfb_UniversalWorker {
 			add_filter('the_content', array($this, 'inject_facebook_button'), 10);
 			if (defined('BP_VERSION')) add_filter('bp_get_activity_content_body', array($this, 'inject_facebook_button_bp'));
 		}
+		if ($this->_data->get_option('wdfb_connect', 'login_redirect_url')) {
+			add_action('init', array($this, 'post_login_url_expansion'));
+		}
+	}
+
+	/**
+	 * Expand user macros after the user has been logged in
+	 * and returns from Facebook.
+	 */
+	function post_login_url_expansion () {
+		if (empty($_GET['wdfb_expand'])) return false;
+		if (preg_match('/\b(USER_ID|USER_LOGIN)\b/', $_SERVER['REQUEST_URI'])) {
+			wp_safe_redirect(wdfb_get_login_redirect());
+			die;
+		}
 	}
 
 	/**
@@ -31,11 +46,13 @@ class Wdfb_UniversalWorker {
 	 * Adds shortcode in proper place, and lets replacer do its job later on.
 	 */
 	function inject_facebook_button ($body) {
-		if (
-			(is_home() && !$this->_data->get_option('wdfb_button', 'show_on_front_page'))
-			||
-			(!is_home() && !is_singular())
-		) return $body;
+		if (!is_singular()) {
+			if (
+				!(is_home() && $this->_data->get_option('wdfb_button', 'show_on_front_page'))
+				&&
+				!(is_archive() && $this->_data->get_option('wdfb_button', 'show_on_archive_page'))
+			) return $body;
+		}
 
 		$position = $this->_data->get_option('wdfb_button', 'button_position');
 		if ('top' == $position || 'both' == $position) {

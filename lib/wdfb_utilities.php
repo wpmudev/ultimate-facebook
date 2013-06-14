@@ -131,8 +131,10 @@ function wdfb_get_login_redirect ($force_admin_redirect=false) {
  */
 function wdfb_expand_user_macros ($str) {
 	$user = wp_get_current_user();
-	$str = preg_replace('/\bUSER_ID\b/', $user->ID, $str);
-	$str = preg_replace('/\bUSER_LOGIN\b/', $user->user_login, $str);
+	if ($user && !empty($user->ID)) {
+		$str = preg_replace('/\bUSER_ID\b/', $user->ID, $str);
+		$str = preg_replace('/\bUSER_LOGIN\b/', $user->user_login, $str);
+	} else $str = add_query_arg(array('wdfb_expand' => 'true'), $str);
 	return $str;
 }
 add_filter('wdfb-login-redirect_url', 'wdfb_expand_user_macros', 1);

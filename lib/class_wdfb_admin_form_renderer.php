@@ -330,7 +330,15 @@ class Wdfb_AdminFormRenderer {
 	}
 	function create_show_on_front_page_box () {
 		$opt = $this->_get_option('wdfb_button');
-		echo $this->_create_checkbox('button', 'show_on_front_page',  @$opt['show_on_front_page']);
+		echo $this->_create_checkbox('button', 'show_on_front_page',  @$opt['show_on_front_page']) .
+			'<label for="show_on_front_page">' . __('Front page', 'wdfb') . '</label>' .
+		'<br />';
+		echo $this->_create_checkbox('button', 'show_on_archive_page',  @$opt['show_on_archive_page']) .
+			'<label for="show_on_archive_page">' . __('Archives page', 'wdfb') . '</label>' .
+		'<br />';
+		echo '<label for="shared_pages_use_xfbml">' . __('Use XFBML button on shared pages:', 'wdfb') . '</label>&nbsp;' .
+			$this->_create_checkbox('button', 'shared_pages_use_xfbml', @$opt['shared_pages_use_xfbml']) .
+		'<br />';
 	}
 	function create_do_not_show_button_box () {
 		$opt = $this->_get_option('wdfb_button'); // 'not_in_post_types'
