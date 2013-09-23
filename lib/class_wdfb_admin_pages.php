@@ -9,9 +9,9 @@ class Wdfb_AdminPages {
 	 *
 	 * @static
 	 */
-	function serve () {
+	public static function serve () {
 		$me = new Wdfb_AdminPages;
-		$me->data =& Wdfb_OptionsRegistry::get_instance();
+		$me->data = Wdfb_OptionsRegistry::get_instance();
 		$me->model = new Wdfb_Model;
 		$me->add_hooks();
 	}
@@ -242,7 +242,7 @@ class Wdfb_AdminPages {
 	 * @access private
 	 */
 	function create_blog_admin_menu_entry () {
-		if (@$_POST && isset($_POST['option_page'])) {
+		if (current_user_can('manage_options') && !empty($_POST) && isset($_POST['option_page'])) {
 			if ('wdfb' == @$_POST['option_page']) {
 				$keys = Wdfb_Installer::get_keys();
 				unset($keys['widget_pack']);
@@ -276,7 +276,7 @@ class Wdfb_AdminPages {
 	 * @access private
 	 */
 	function create_site_admin_menu_entry () {
-		if (@$_POST && isset($_POST['option_page'])) {
+		if (current_user_can('manage_network_options') && !empty($_POST) && isset($_POST['option_page'])) {
 			$override = false;
 			if ('wdfb' == @$_POST['option_page']) {
 				$keys = Wdfb_Installer::get_keys();
@@ -709,7 +709,7 @@ $token = false;
 		}
 
 		if (!$post_as) return true; // Skip this type
-		$post_content = wp_strip_all_tags(strip_shortcodes($post->post_content));
+		$post_content = wdfb_get_excerpt($post);
 
 		switch ($post_as) {
 			case "notes":
@@ -971,6 +971,7 @@ $token = false;
 	}
 	
 	function json_partial_data_save () {
+		if (!current_user_can('manage_options')) die;
 		$key = @$_POST['part'];
 		$old_data = get_option($key, false);
 		$old_data = is_array($old_data) ? $old_data : array();
@@ -985,6 +986,7 @@ $token = false;
 	}
 
 	function json_network_partial_data_save () {
+		if (!current_user_can('manage_network_options')) die;
 		$key = @$_POST['part'];
 		$old_data = get_site_option($key, false);
 		$old_data = is_array($old_data) ? $old_data : array();

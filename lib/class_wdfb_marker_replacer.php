@@ -17,7 +17,7 @@ class Wdfb_MarkerReplacer {
 
 	function __construct () {
 		$this->model = new Wdfb_Model;
-		$this->data =& Wdfb_OptionsRegistry::get_instance();
+		$this->data = Wdfb_OptionsRegistry::get_instance();
 	}
 
 	function Wdfb_MarkerReplacer () {
@@ -164,9 +164,12 @@ class Wdfb_MarkerReplacer {
 		$layout = $this->data->get_option('wdfb_button', 'button_appearance');
 		$url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
+/*
 		$width = ("standard" == $layout) ? 300 : (
 			("button_count" == $layout) ? 150 : 60
 		); 
+*/
+		$width = 450;
 		$width = apply_filters('wdfb-like_button-width', $width);
 
 		$scheme = $this->data->get_option('wdfb_button', 'color_scheme');
@@ -180,8 +183,7 @@ class Wdfb_MarkerReplacer {
 			(defined('BP_VERSION') && $is_activity && !wdfb_is_single_bp_activity())
 		) {
 			$tmp_url = $is_activity && function_exists('bp_activity_get_permalink') ? bp_activity_get_permalink(bp_get_activity_id()) : (in_the_loop() ? get_permalink() : false);
-			$href = $tmp_url ? $tmp_url : WDFB_PROTOCOL . $url;
-			$url = rawurlencode($href);
+			$href = !empty($tmp_url) ? $tmp_url : $url;
 			$locale = wdfb_get_locale();
 
 			$height = ("box_count" == $layout) ? 60 : 25;
@@ -198,13 +200,14 @@ class Wdfb_MarkerReplacer {
 				$use_xfbml = true;
 			}
 			
+			$href = apply_filters('wdfb-like_button-href_attribute', WDFB_PROTOCOL  . preg_replace('/^https?:\/\//', '', $href));
 			return $use_xfbml
 				? '<div class="wdfb_like_button">' . wdfb_get_fb_plugin_markup('like', compact(array('href', 'send', 'layout', 'width', 'scheme'))) . '</div>'
-				: "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href={$url}&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme={$scheme}&amp;font&amp;height={$height}&amp;width={$width}&amp;locale={$locale}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>"
+				: "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href=" . rawurlencode($href) . "&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme={$scheme}&amp;font&amp;height={$height}&amp;width={$width}&amp;locale={$locale}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>"
 			;
 		}
 
-		$href = WDFB_PROTOCOL  . $url;
+		$href = apply_filters('wdfb-like_button-href_attribute', WDFB_PROTOCOL  . preg_replace('/^https?:\/\//', '', $url));
 		return '<div class="wdfb_like_button">' .
 			wdfb_get_fb_plugin_markup('like', compact(array(
 				'href', 'send', 'layout', 'width', 'scheme'
@@ -249,8 +252,17 @@ class Wdfb_MarkerReplacer {
 			$date_threshold = ($date_threshold && $date_threshold > $now) ? $date_threshold : $now;
 		}
 
+		$current_tz = function_exists('date_default_timezone_get') ? @date_default_timezone_get() : 'UTC';
 		ob_start();
 		foreach ($events as $event) {
+			if (function_exists('date_default_timezone_set') && !empty($event['timezone'])) {
+				$start_time = strtotime($event['start_time']);
+				$end_time = strtotime($event['end_time']);
+				date_default_timezone_set($event['timezone']);
+				$event['start_time'] = date('Y-m-d H:i:s', $start_time);
+				$event['end_time'] = date('Y-m-d H:i:s', $end_time);
+				date_default_timezone_set($current_tz);
+			}
 			if ($date_threshold > strtotime($event['start_time'])) continue;
 			include (WDFB_PLUGIN_BASE_DIR . '/lib/forms/event_item.php');
 		}

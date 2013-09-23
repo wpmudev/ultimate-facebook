@@ -19,7 +19,7 @@ class Wdfb_Model {
 
 	function __construct () {
 		global $wpdb;
-		$this->data =& Wdfb_OptionsRegistry::get_instance();
+		$this->data = Wdfb_OptionsRegistry::get_instance();
 		$this->db = $wpdb;
 
 		if (isset(Facebook::$CURL_OPTS)) {
@@ -558,6 +558,8 @@ class Wdfb_Model {
 	function post_on_facebook ($type, $fid, $post, $as_page=false) {
 		$type = $type ? $type : 'feed';
 		
+		if (empty($post)) return false;
+
 		$fid = $fid ? $fid : $this->get_current_user_fb_id();
 		$token = $this->get_user_api_token($fid);
 

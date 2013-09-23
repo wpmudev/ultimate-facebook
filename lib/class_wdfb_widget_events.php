@@ -173,8 +173,17 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		if ($title) echo $before_title . $title . $after_title;
 
 		if (is_array($events) && !empty($events)) {
+			$current_tz = function_exists('date_default_timezone_get') ? @date_default_timezone_get() : 'UTC';
 			echo '<ul class="wdfb_widget_events">';
 			foreach ($events as $idx => $event) {
+				if (function_exists('date_default_timezone_set') && !empty($event['timezone'])) {
+					$start_time = strtotime($event['start_time']);
+					$end_time = strtotime($event['end_time']);
+					date_default_timezone_set($event['timezone']);
+					$event['start_time'] = date('Y-m-d H:i:s', $start_time);
+					$event['end_time'] = date('Y-m-d H:i:s', $end_time);
+					date_default_timezone_set($current_tz);
+				}
 				if ($date_threshold > strtotime($event['start_time'])) continue;
 				if ($idx >= $limit) break;
 				include (WDFB_PLUGIN_BASE_DIR . '/lib/forms/event_item.php');

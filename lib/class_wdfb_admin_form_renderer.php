@@ -466,7 +466,7 @@ class Wdfb_AdminFormRenderer {
 			echo "<a href='' class='wdfb_og_remove_extra'>" . __('Remove', 'wdfb') . '</a>';
 			echo "</div>";
 		}
-		$last = count($extras) + 1;
+		$last = max(count($extras), $idx) + 1;
 		echo '<div class="wdfb_og_extra_mapping">';
 			echo "<label for='og_extra_name'>" . __('OpenGraph name:', 'wdfb') . '</label> ' .
 				"<input id='og_extra_name' size='24' name='wdfb_opengraph[og_extra_headers][{$last}][name]' value='' />" .

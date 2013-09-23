@@ -7,7 +7,7 @@ class Wdfb_UniversalWorker {
 	private $_replacer;
 
 	private function __construct () {
-		$this->_data =& Wdfb_OptionsRegistry::get_instance();
+		$this->_data = Wdfb_OptionsRegistry::get_instance();
 		$this->_model = new Wdfb_Model;
 		$this->_replacer = new Wdfb_MarkerReplacer;
 	}

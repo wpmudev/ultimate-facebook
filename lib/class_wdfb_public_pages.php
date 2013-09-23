@@ -6,7 +6,7 @@ class Wdfb_PublicPages {
 	var $fb;
 
 	function __construct () {
-		$this->data =& Wdfb_OptionsRegistry::get_instance();
+		$this->data = Wdfb_OptionsRegistry::get_instance();
 		$this->model = new Wdfb_Model;
 		$this->replacer = new Wdfb_MarkerReplacer;
 	}
@@ -20,7 +20,7 @@ class Wdfb_PublicPages {
 	 *
 	 * @static
 	 */
-	function serve () {
+	public static function serve () {
 		$me = new Wdfb_PublicPages;
 		$me->add_hooks();
 	}

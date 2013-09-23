@@ -67,14 +67,14 @@ class Wdfb_Installer {
 	);
 
 	function __construct() {
-		$this->data =& Wdfb_OptionsRegistry::get_instance();
+		$this->data = Wdfb_OptionsRegistry::get_instance();
 	}
 
 	function Wdfb_Installer () {
 		$this->__construct();
 	}
 
-	function check () {
+	public static function check () {
 		$me = new Wdfb_Installer;
 		$me->install();
 	}

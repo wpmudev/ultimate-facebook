@@ -22,7 +22,7 @@ $force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $o
 
 <div style="margin-top:2em">
 
-<iframe src="http://www.facebook.com/plugins/registration.php?<?php
+<iframe src="<?php echo (is_ssl() ? 'http:' : 'https:'); ?>//www.facebook.com/plugins/registration.php?<?php
 		echo $force;
 	?>client_id=<?php
 		echo $this->data->get_option('wdfb_api', 'app_key');

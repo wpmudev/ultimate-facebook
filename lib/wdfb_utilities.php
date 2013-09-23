@@ -154,6 +154,22 @@ function wdfb_expand_buddypress_macros ($str) {
 add_filter('wdfb-login-redirect_url', 'wdfb_expand_buddypress_macros', 1);
 
 
+/**
+ * Creates post excerpt.
+ */
+function wdfb_get_excerpt ($post) {
+	if (!is_object($post) || (empty($post->post_excerpt) && empty($post->post_content))) return $post;
+	$content = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
+
+	if (preg_match('/(<!--more(.*?)?-->)/', $content, $matches)) {
+		$tmp = explode($matches[0], $content, 2);
+		$content = $tmp[0];
+	}
+
+	return wp_strip_all_tags(strip_shortcodes($content));
+}
+
+
 
 /**
  * Helper function for fetching the image for OpenGraph info.
@@ -186,7 +202,7 @@ function wdfb_get_og_image ($id=false) {
 	if ($id) {
 		$post = get_post($id);
 		$html = $post->post_content;
-		if (!function_exists('load_membership_plugins') && !defined('GRUNION_PLUGIN_DIR')) $html = apply_filters('the_content', $html);
+		if (!function_exists('load_membership_plugins') && !defined('GRUNION_PLUGIN_DIR') && !(defined('WDFB_OG_IMAGE_SKIP_CONTENT_FILTER') && WDFB_OG_IMAGE_SKIP_CONTENT_FILTER)) $html = apply_filters('the_content', $html);
 	} else if (is_home() && $data->get_option('wdfb_opengraph', 'fallback_image')) {
 		return apply_filters(
 			'wdfb-opengraph-image',
@@ -403,6 +419,21 @@ function wdfb_is_single_bp_activity () {
 	if (!function_exists('bp_is_activity_component') || !bp_is_activity_component()) return false;
 	if (!bp_current_action() || !is_numeric(bp_current_action())) return false;
 	return true;
+}
+
+/**
+ * Actual BuddyPress activity permalink.
+ * Returns the actual permalink for activity updates, not the 302 redirect.
+ */
+function wdfb_bp_activity_get_permalink ($activity_id) {
+	if (defined('WDFB_BP_PERMALINK_SHORT_OUT') && WDFB_BP_PERMALINK_SHORT_OUT) return bp_activity_get_permalink($activity_id);
+	$activity = new BP_Activity_Activity($activity_id);
+	if (!is_object($activity) || empty($activity->type) || empty($activity->primary_link) || empty($activity->id)) return bp_activity_get_permalink($activity_id, $activity);
+	if (!in_array($activity->type, array(
+		'activity_comment',
+		'activity_update'
+	))) return bp_activity_get_permalink($activity_id, $activity);
+	return trailingslashit(preg_replace('/^https?:\/\//', '', $activity->primary_link)) . $activity->id;
 }
 
 /**
@@ -705,6 +736,13 @@ if (!(defined('WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS') && WDFB_COMMENTS_R
 		}
 	}
 	add_action('init', 'wdfb_wp_core__trump_discussion_settings');
+}
+
+if (!(defined('WDFB_SKIP_AUTOBLOG_LOOP_PREVENTION') && WDFB_SKIP_AUTOBLOG_LOOP_PREVENTION)) {
+	function wdfb__stop_abfb_loop () {
+	    add_filter('wdfb-autopost-post_update', '__return_false');
+	}
+	add_action('autoblog_pre_process_feeds', 'wdfb__stop_abfb_loop');
 }
 
 

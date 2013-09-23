@@ -150,7 +150,7 @@ class Wdfb_Metabox_OpenGraph extends Wdfb_Metabox {
 		$values = $this->_has_field_value('custom_value', array());
 
 		if (!$names || !$values) return false;
-		foreach ($names as $idx => $name) {
+		if (is_array($names)) foreach ($names as $idx => $name) {
 			echo wdfb_get_opengraph_property(
 				apply_filters('wdfb-opengraph-extra_headers-name', $name), 
 				apply_filters('wdfb-opengraph-extra_headers-value', @$values[$idx], $name),

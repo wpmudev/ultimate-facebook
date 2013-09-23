@@ -20,7 +20,7 @@ class Wdfb_OptionsRegistry {
 
 	private function __construct () {}
 
-	public function get_instance () {
+	public static function get_instance () {
 		if (self::$_instance) return self::$_instance;
 		self::$_instance = new Wdfb_OptionsRegistry;
 		return self::$_instance;
