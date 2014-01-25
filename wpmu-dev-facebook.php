@@ -5,12 +5,12 @@ Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall and notes, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
 Version: 2.6.6
 Text Domain: wdfb
-Author: Ve Bailovity (Incsub)
+Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
 WDP ID: 228
 
 Copyright 2009-2011 Incsub (http://incsub.com)
-
+Author - Ve Bailovity (Incsub)
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
 the Free Software Foundation.
