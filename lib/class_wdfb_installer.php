@@ -8,62 +8,16 @@ class Wdfb_Installer {
 	var $data;
 
 	var $_defaults = array (
-		'api' => array (
-	// Commented out, because this will probably won't be overriden in user settings.
-	/*
-			'api_key' => '',
-			'app_key' => '',
-			'secret_key' => '',
-			'auth_tokens' => '', // Array
-			'auth_accounts' => '', // Array
-	*/
-		),
-		'connect' => array (
-	/*
-			'allow_facebook_registration' => 0,
-			'force_facebook_registration' => 0,
-	*/
-		),
-		'button' => array (
-	/*
-			'allow_facebook_button' => 0,
-			'button_position' => 'top',
-			'show_send_button' => 0,
-			'button_appearance' => 'standard',
-			'not_in_post_types' => array(),
-	*/
-		),
-		'opengraph' => array (
-	/*
-			'use_opengraph' => 0,
-			'always_use_image' => '',
-			'fallback_image' => '',
-	*/
-		),
+		'api' => array (),
+		'grant' => array (),
+		'connect' => array (),
+		'button' => array (),
+		'opengraph' => array (),
 		'groups' => array (),
-		'comments' => array (
-	/*
-			'import_fb_comments' => 0,
-			'comment_limit' => 0,
-			'notify_authors' => 0,
-	*/
-		),
-		'autopost' => array (
-	/*
-			'allow_autopost' => 0,
-	*/
-		),
+		'comments' => array (),
+		'autopost' => array (),
 		'network' => array (),
-		'widget_pack' => array (
-	/*
-			'albums_allowed' => 0,
-			'events_allowed' => 0,
-			'facepile_allowed' => 0,
-			'likebox_allowed' => 0,
-			'recommendations_allowed' => 0,
-			'dashboard_permissions_allowed' => 0,
-	*/
-		),
+		'widget_pack' => array (),
 	);
 
 	function __construct() {

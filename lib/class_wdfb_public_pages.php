@@ -54,32 +54,6 @@ class Wdfb_PublicPages {
 		wp_enqueue_style('wdfb_style', WDFB_PLUGIN_URL . '/css/wdfb.css');
 	}
 
-/*
-	function inject_facebook_button ($body) {
-		if (
-			(is_home() && !$this->data->get_option('wdfb_button', 'show_on_front_page'))
-			||
-			(!is_home() && !is_singular())
-		) return $body;
-
-		$position = $this->data->get_option('wdfb_button', 'button_position');
-		if ('top' == $position || 'both' == $position) {
-			$body = $this->replacer->get_button_tag('like_button') . " " . $body;
-		}
-		if ('bottom' == $position || 'both' == $position) {
-			$body .= " " . $this->replacer->get_button_tag('like_button');
-		}
-		return $body;
-	}
-	function inject_facebook_button_bp ($body) {
-		if (false) return $body;
-		// Disregard position
-		// ...
-		$body .= " " . do_shortcode($this->replacer->get_button_tag('like_button'));
-		return $body;
-	}
-*/
-
 	/**
 	 * Inject OpenGraph info in the HEAD
 	 */
@@ -252,6 +226,29 @@ class Wdfb_PublicPages {
 		$scheme = $scheme ? $scheme : 'light';
 
 		echo wdfb_get_fb_plugin_markup('comments', compact(array('link', 'xid', 'num_posts', 'width', 'reverse', 'scheme')));
+
+$post_id = get_the_ID();
+if ($this->data->get_option('wdfb_comments', 'fbc_notify_authors') && !empty($post_id)) {
+	$hash = esc_js(wp_hash($link));
+	echo <<<EOCOMJS
+<script>
+(function ($) {
+$(window).load(function () {
+	if (typeof FB != 'object') return false;
+	FB.Event.subscribe('comment.create', function (c) {
+		if (!c.commentID) return false;
+		$.post(_wdfb_ajaxurl, {
+			action: 'wdfb_notify_author',
+			post_id: {$post_id},
+			hash: '{$hash}',
+			cid: c.commentID
+		});
+	});
+});
+})(jQuery);
+</script>
+EOCOMJS;
+}
 		return $defaults;
 	}
 
@@ -512,12 +509,14 @@ EOBpFormInjection;
 
 		switch ($post_as) {
 			case "notes":
+				if (!$this->data->get_option('wdfb_grant', 'allow_fb_notes_access')) return false;
 				$send = array (
 					'subject' => $post_title,
 					'message' => $post_content,
 				);
 				break;
 			case "events":
+				if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return false;
 				$time = time();
 				$start_timestamp = apply_filters('wdfb-autopost-events-start_time', $time, $post);
 				$end_timestamp = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);

@@ -11,6 +11,7 @@
 </p>
 <p><strong>Note:</strong> you have to <a href="?page=wdfb">allow</a> usage of <em>Facebook "Like/Send" button</em> for this shortcode to have any effect. If you dislike the default button placement options, you can set the placement to "Manual" and use this shortcode in your posts to insert the button wherever you wish.</p>
 
+<?php if ($this->data->get_option('wdfb_grant', 'allow_fb_events_access')) { ?>
 <h3>Events shortcode</h3>
 <p><em>Tag:</em> <code>[wdfb_events]</code></p>
 <p>
@@ -36,6 +37,7 @@
 		<li><code>[wdfb_events for="100002370116390" only_future="true"]</code> - will create a list of upcoming Facebook events for this Facebook user, no past events will be shown.</li>
 	</ul>
 </p>
+<?php } ?>
 
 <h3>Connect shortcode</h3>
 <p><em>Tag:</em> <code>[wdfb_connect]</code></p>
@@ -56,6 +58,7 @@
 </p>
 <p><strong>Note:</strong> you have to <a href="?page=wdfb">allow</a> registering with Facebook in your plugin settings (under &quot;Facebook Connect&quot;) for this shortcode to work.</p>
 
+<?php if ($this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) { ?>
 <h3>Album shortcode</h3>
 <p><em>Tag:</em> <code>[wdfb_album]</code></p>
 <p>
@@ -79,5 +82,6 @@
 		<li><code>[wdfb_album id="379473193359" photo_class="thickbox" columns="5" photo_height="50" crop="true"]</code> - same as above, but image height will be cropped to better fit the row height.</li>
 	</ul>
 </p>
+<?php } ?>
 
 </div>

@@ -115,8 +115,6 @@ $(function () {
 $(".wdfb-settings_section:gt(0):not(:last) .wdfb-save_settings").after(
 	' <a class="button wdfb-next_step" href="#"><?php echo esc_js('... or move on to next step', 'wdfb');?></a>'
 );
-// Kill save settings in Grant permissions section
-$("#wdfb-section-wdfb_grant .wdfb-save_settings").remove();
 
 // Initialize quasi-accordion and setup behaviors
 $(".wdfb-settings_section .inside").hide();

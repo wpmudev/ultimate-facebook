@@ -13,7 +13,7 @@ class Wdfb_CommentsImporter {
 		if (empty($post_id)) return;
 		if (!is_numeric($post_id)) return;
 
-		$comments = $this->model->get_item_comments($item_id);
+		$comments = $this->model->get_item_comments($item_id); // 
 		if (!$comments || !isset($comments['data'])) return;
 		$comments = $comments['data'];
 
@@ -37,7 +37,7 @@ class Wdfb_CommentsImporter {
 			add_comment_meta($comment_id, 'wdfb_comment', $meta) ;
 
 			if ($this->model->data->get_option('wdfb_comments', 'notify_authors')) {
-				wp_notify_postauthor($comment_id, 'comment');
+				wp_notify_postauthor($comment_id);
 			}
 		}
 	}
@@ -76,7 +76,6 @@ class Wdfb_CommentsImporter {
 
 			$commented_posts = array();
 			foreach ($feed['data'] as $post) {
-				//if (!isset($post['comments']) || !@$post['comments']['count']) continue; // Skip uncommented posts
 				if (empty($post['comments']) || empty($post['comments']['data'])) continue; // Skip uncommented posts
 				$commented_posts[] = $post;
 			}

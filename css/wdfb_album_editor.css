@@ -1,5 +1,3 @@
-@CHARSET "UTF-8";
-
 #wdfb_album_container ul.wdfb_albums li {
 	margin-bottom: 2em;
 }
@@ -16,4 +14,8 @@
 #wdfb_album_container ul.wdfb_album_photos li img {
 	width: 90px;
 	margin: 0 auto;
+}
+
+#adminmenu .toplevel_page_wdfb .wp-menu-image img {
+	opacity: 1;
 }

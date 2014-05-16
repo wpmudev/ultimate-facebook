@@ -26,6 +26,17 @@ class Wdfb_UniversalWorker {
 		if ($this->_data->get_option('wdfb_connect', 'login_redirect_url')) {
 			add_action('init', array($this, 'post_login_url_expansion'));
 		}
+		if ($this->_data->get_option('wdfb_grant', 'use_minimal_permissions')) {
+			add_action('init', array($this, 'setup_minimal_permission_set'));
+		}
+	}
+
+	/**
+	 * Set up the required permission set to a minimum,
+	 * unless otherwise already set up
+	 */
+	function setup_minimal_permission_set () {
+		if (!defined('WDFB_CORE_MINIMAL_PERMISSIONS_SET')) define('WDFB_CORE_MINIMAL_PERMISSIONS_SET', true, true);
 	}
 
 	/**

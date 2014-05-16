@@ -5,6 +5,12 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.7 - 2014-05-16
+----------------------------------------------------------------------
+- Added author notification for Facebook comments.
+- Added new options for permissions selection.
+- Improved permissions selection.
+
 2.6.6 - 2013-09-23
 ----------------------------------------------------------------------
 - Fix for mixed content issue on registration page.

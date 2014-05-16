@@ -42,6 +42,7 @@ class Wdfb_AdminPages {
 
 		add_settings_section('wdfb_grant', __('Permissions &amp; Tokens', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_api_permissions', __('Allowing permissions', 'wdfb'), array($form, 'api_permissions'), 'wdfb_options_page', 'wdfb_grant');
+		add_settings_field('wdfb_api_cache', __('Extra permissions', 'wdfb'), array($form, 'extra_permissions'), 'wdfb_options_page', 'wdfb_grant');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_grant');
 
 		register_setting('wdfb', 'wdfb_connect');
@@ -102,6 +103,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_fb_comments_reverse', __('Show Facebook Comments in reverse order?', 'wdfb'), array($form, 'create_fb_comments_reverse_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_number', __('Show this many Facebook Comments', 'wdfb'), array($form, 'create_fb_comments_number_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_color_scheme', __('Color scheme', 'wdfb'), array($form, 'create_fb_comments_color_scheme_box'), 'wdfb_options_page', 'wdfb_comments');
+		add_settings_field('wdfb_fb_color_scheme', __('Notify post authors', 'wdfb'), array($form, 'create_fbc_notify_authors_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_custom_hook', __('Use a custom hook <small>(advanced)</small>', 'wdfb'), array($form, 'create_fb_comments_custom_hook_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_comments');
 
@@ -148,6 +150,7 @@ class Wdfb_AdminPages {
 		add_settings_section('wdfb_grant', __('Permissions &amp; Tokens', 'wdfb'), create_function('', ''), 'wdfb_options_page');
 		add_settings_field('wdfb_api_permissions', __('Allowing permissions', 'wdfb'), array($form, 'api_permissions'), 'wdfb_options_page', 'wdfb_grant');
 		add_settings_field('wdfb_api_cache', __('Cache', 'wdfb'), array($form, 'cache_operations'), 'wdfb_options_page', 'wdfb_grant');
+		add_settings_field('wdfb_api_cache', __('Extra permissions', 'wdfb'), array($form, 'extra_permissions'), 'wdfb_options_page', 'wdfb_grant');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_grant');
 
 		if (!is_multisite() || current_user_can('manage_network_options')) {
@@ -211,6 +214,7 @@ class Wdfb_AdminPages {
 		add_settings_field('wdfb_fb_comments_reverse', __('Show Facebook Comments in reverse order?', 'wdfb'), array($form, 'create_fb_comments_reverse_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_number', __('Show this many Facebook Comments', 'wdfb'), array($form, 'create_fb_comments_number_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_color_scheme', __('Color scheme', 'wdfb'), array($form, 'create_fb_comments_color_scheme_box'), 'wdfb_options_page', 'wdfb_comments');
+		add_settings_field('wdfb_fb_color_scheme', __('Notify post authors', 'wdfb'), array($form, 'create_fbc_notify_authors_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('wdfb_fb_comments_custom_hook', __('Use a custom hook <small>(advanced)</small>', 'wdfb'), array($form, 'create_fb_comments_custom_hook_box'), 'wdfb_options_page', 'wdfb_comments');
 		add_settings_field('', '', array($form, 'next_step'), 'wdfb_options_page', 'wdfb_comments');
 
@@ -422,6 +426,9 @@ class Wdfb_AdminPages {
 	
 	function js_editors () {
 		wp_enqueue_script('thickbox');
+		
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return false;
+
 		wp_enqueue_script('wdfb_editor_album', WDFB_PLUGIN_URL . '/js/editor_album.js');
 		wp_localize_script('wdfb_editor_album', 'l10nWdfbEditor', array(
 			'add_fb_photo' => __('Add FB Photo', 'wdfb'),
@@ -435,6 +442,7 @@ class Wdfb_AdminPages {
 	}
 	
 	function css_load_styles () {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return false;
 		wp_enqueue_style('wdfb_album_editor', WDFB_PLUGIN_URL . '/css/wdfb_album_editor.css');
 	}
 	
@@ -449,7 +457,7 @@ class Wdfb_AdminPages {
 	}
 
 	function inject_fb_init_js () {
-		if (!(defined('WDFB_ROOT_SCRIPT_ADDED')) && WDFB_ROOT_SCRIPT_ADDED) return false; // No point it doing this
+		if (!(defined('WDFB_ROOT_SCRIPT_ADDED') && WDFB_ROOT_SCRIPT_ADDED)) return false; // No point it doing this unless we're set up
 		echo "<script type='text/javascript'>
          FB.init({
             appId: '" . trim($this->data->get_option('wdfb_api', 'app_key')) . "', cookie:true,
@@ -612,6 +620,8 @@ $token = false;
 	 * Events publishing gets postponed, so all the metas are tucked in and ready.
 	 */
 	function publish_event_on_facebook ($post_id, $post) {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return false;
+
 		$post_type = $post->post_type;
 		$post_as = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_type");
 		$post_to = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_user");
@@ -713,6 +723,7 @@ $token = false;
 
 		switch ($post_as) {
 			case "notes":
+				if (!$this->data->get_option('wdfb_grant', 'allow_fb_notes_access')) return false;
 				$send = array (
 					'subject' => $post_title,
 					'message' => $post_content,
@@ -840,7 +851,10 @@ $token = false;
 	}
 
 	function json_list_fb_albums () {
-		$albums = $this->model->get_current_albums();
+		$albums = $this->data->get_option('wdfb_grant', 'allow_fb_photos_access')
+			? $this->model->get_current_albums()
+			: array()
+		;
 		$status = $albums ? 1 : 0;
 		header('Content-type: application/json');
 		echo json_encode(array(
@@ -852,7 +866,10 @@ $token = false;
 
 	function json_list_fb_album_photos () {
 		$album_id = $_POST['album_id'];
-		$photos = $this->model->get_album_photos($album_id);
+		$photos = $this->data->get_option('wdfb_grant', 'allow_fb_photos_access')
+			? $this->model->get_album_photos($album_id)
+			: array()
+		;
 		$status = $photos ? 1 : 0;
 		header('Content-type: application/json');
 		echo json_encode(array(
@@ -924,7 +941,10 @@ $token = false;
 	function json_check_api_status () {
 		header("Content-type: application/json");
 		$app_key = trim($this->data->get_option('wdfb_api', 'app_key'));
-		$resp = wp_remote_get("https://graph.facebook.com/{$app_key}", array('sslverify' => false));
+		$resp = wp_remote_get("https://graph.facebook.com/{$app_key}", array(
+			'sslverify' => false,
+			'timeout' => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya
+		));
 		
 		if(is_wp_error($resp)) die(json_encode(array("status" => 0))); // Request fail
 		if ((int)$resp['response']['code'] != 200) die(json_encode(array("status" => 0))); // Request fail
@@ -959,6 +979,30 @@ $token = false;
 		)));
 	}
 
+	function json_fbc_notify_author () {
+		$data = stripslashes_deep($_POST);
+		if (empty($data['post_id']) || empty($data['hash']) || empty($data['cid'])) die;
+		if (!is_numeric($data['post_id'])) die;
+
+		$post = get_post($data['post_id']);
+		if (empty($post->ID)) die;
+
+		// Level 1 check - post hash comparison
+		$link = get_permalink($post->ID);
+		if ($data['hash'] != wp_hash($link)) die;
+
+		// Level 2 check - comment ID comparison
+		$resp = $this->model->get('/' . $data['cid']);
+		if (empty($resp['id']) || empty($resp['message'])) die;
+		if ($resp['id'] != $data['cid']) die;
+
+		if (function_exists('wdfb_notify_post_author')) {
+			wdfb_notify_post_author($post, $resp);
+		}
+
+		die;
+	}
+
 	function json_cache_purge () {
 		$purge = !empty($_POST['purge']) ? trim(strtolower($_POST['purge'])) : false;
 		if (!$purge) die;
@@ -978,7 +1022,7 @@ $token = false;
 
 		$data = array();
 		parse_str($_POST['data'], $data);
-		
+
 		$new_data = array_merge($old_data, $data[$key]);
 		update_option($key, $new_data);
 		
@@ -1119,6 +1163,9 @@ $token = false;
 
 		add_action('wp_ajax_wdfb_partial_data_save', array($this, 'json_partial_data_save'));
 		add_action('wp_ajax_wdfb_network_partial_data_save', array($this, 'json_network_partial_data_save'));
+
+		add_action('wp_ajax_wdfb_notify_author', array($this, 'json_fbc_notify_author'));
+		add_action('wp_ajax_nopriv_wdfb_notify_author', array($this, 'json_fbc_notify_author'));
 
 		// Step 3: Process conditional features:
 

@@ -216,6 +216,8 @@ class Wdfb_MarkerReplacer {
 	}
 
 	function process_events_code ($atts, $content='') {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return $content;
+
 		$post_id = get_the_ID();
 		if (!$post_id) return '';
 
@@ -273,6 +275,8 @@ class Wdfb_MarkerReplacer {
 	}
 	
 	function process_album_code ($atts, $content='') {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return $content;
+		
 		$post_id = get_the_ID();
 		if (!$post_id) return '';
 

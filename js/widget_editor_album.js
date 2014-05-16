@@ -4,11 +4,11 @@ $(function() {
 var $parent;
 	
 function parseAlbumIdHref (href) {
-	return parseInt(href.substr(1));
+	return parseInt(href.substr(1), 10);
 }
 	
 function createAlbumsMarkup (data) {
-	var status = parseInt(data.status);
+	var status = parseInt(data.status, 10);
 	if (!status) {
 		$("#wdfb_album_container").html(
 			"Please log in to your FB account first"
@@ -48,7 +48,7 @@ function insertAlbum ($me) {
  * Inserts the map marker into editor.
  * Supports TinyMCE and regular editor (textarea).
  */
-function updateEditorContents (markup) {	
+function updateEditorContents (markup) {
 	if (window.tinyMCE && ! $('#content').is(':visible')) window.tinyMCE.execCommand("mceInsertContent", true, markup);
 	else insertAtCursor($("#content").get(0), markup);
 }
@@ -59,7 +59,7 @@ function updateEditorContents (markup) {
 function insertAtCursor(fld, text) {
     // IE
     if (document.selection && !window.opera) {
-    	fld.focus();
+		fld.focus();
         sel = window.opener.document.selection.createRange();
         sel.text = text;
     }
@@ -67,11 +67,12 @@ function insertAtCursor(fld, text) {
     else if (fld.selectionStart || fld.selectionStart == '0') {
         var startPos = fld.selectionStart;
         var endPos = fld.selectionEnd;
-        fld.value = fld.value.substring(0, startPos)
-        + text
-        + fld.value.substring(endPos, fld.value.length);
+        fld.value = fld.value.substring(0, startPos) +
+			text +
+			fld.value.substring(endPos, fld.value.length)
+        ;
     } else {
-    	fld.value += text;
+		fld.value += text;
     }
 }
 

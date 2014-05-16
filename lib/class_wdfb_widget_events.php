@@ -3,10 +3,12 @@
  * Shows Facebook Events box.
  */
 class Wdfb_WidgetEvents extends WP_Widget {
-	var $model;
+	private $model;
+	private $data;
 
 	function Wdfb_WidgetEvents () {
 		$this->model = new Wdfb_Model();
+		$this->data = Wdfb_OptionsRegistry::get_instance();
 		$widget_ops = array('classname' => __CLASS__, 'description' => __('Shows Facebook Events', 'wdfb'));
 
 		add_action('wp_print_styles', array($this, 'css_load_styles'));
@@ -18,12 +20,15 @@ class Wdfb_WidgetEvents extends WP_Widget {
 	}
 
 	function css_load_styles () {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return false;
 		wp_enqueue_style('wdfb_widget_events', WDFB_PLUGIN_URL . '/css/wdfb_widget_events.css');
 	}
 	function css_load_admin_styles () {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return false;
 		wp_enqueue_style('wdfb_jquery_ui_style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/ui-lightness/jquery-ui.css');
 	}
 	function js_load_scripts () {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return false;
 		wp_enqueue_script('jquery-ui-datepicker');
 		wp_enqueue_script('wdfb_widget_events', WDFB_PLUGIN_URL . '/js/wdfb_widget_events.js', array('jquery', 'jquery-ui-datepicker'));
 		wp_localize_script('wdfb_widget_events', 'l10nWdfbEventsEditor', array(
@@ -32,7 +37,13 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		));
 	}
 
+	private function _grant_box_html () {
+		echo '<div class="error below-h2"><p>' . __('You need to allow Events access in the plugin settings for this.', 'wdfb') . '</p></div>';
+	}
+
 	function form($instance) {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return $this->_grant_box_html();
+
 		$title = esc_attr($instance['title']);
 		$for = esc_attr($instance['for']);
 		$limit = esc_attr($instance['limit']);
@@ -143,6 +154,8 @@ class Wdfb_WidgetEvents extends WP_Widget {
 	}
 
 	function widget($args, $instance) {
+		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return '';
+
 		extract($args);
 		$title = apply_filters('widget_title', $instance['title']);
 		$for = $instance['for'];

@@ -158,7 +158,7 @@ add_filter('wdfb-login-redirect_url', 'wdfb_expand_buddypress_macros', 1);
  * Creates post excerpt.
  */
 function wdfb_get_excerpt ($post) {
-	if (!is_object($post) || (empty($post->post_excerpt) && empty($post->post_content))) return $post;
+	if (!is_object($post) || (empty($post->post_excerpt) && empty($post->post_content))) return '';//return $post;
 	$content = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
 
 	if (preg_match('/(<!--more(.*?)?-->)/', $content, $matches)) {
@@ -945,3 +945,37 @@ function wdfb__connection_complex_profile_field_interests ($data, $name, $model)
 	return wdfb__profile_sync_connections_process_connection('interests', $model);
 }
 add_filter('wdfb-profile_sync-connection-interests', 'wdfb__connection_complex_profile_field_interests', 10, 3);
+
+
+// It's also pluggable
+if (!function_exists('wdfb_notify_post_author')) {
+	function wdfb_notify_post_author ($post, $fb_response) {
+		$author = false;
+		if (!empty($post->post_author)) $author = get_userdata($post->post_author);
+		if (empty($author->user_email)) return false;
+
+		$message = !empty($fb_response['message'])
+			? wp_specialchars_decode(wp_strip_all_tags($fb_response['message']))
+			: ''
+		;
+		$from = !empty($fb_response['from']['name'])
+			? wp_specialchars_decode(wp_strip_all_tags($fb_response['from']['name']))
+			: ''
+		;
+
+		$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+		$subject = sprintf(__('[%1$s] Facebook Comment: "%2$s"', 'wdfb'), $blogname, $post->post_title);
+		$body = '' .
+			sprintf(__('New Facebook comment on your post: "%s"', 'wdfb'), $post->post_title) .
+			"\r\n" .
+			(!empty($message) ? sprintf(__('Comment excerpt: %s', 'wdfb'), $message) . "\r\n" : '') .
+			(!empty($from) ? sprintf(__('From: %s', 'wdfb'), $from) . "\r\n" : '') .
+			get_permalink($post->ID) .
+		'';
+
+		$subject = apply_filters('wdfb-comments-notify-subject', $subject, $post, $fb_response);
+		$body = apply_filters('wdfb-comments-notify-body', $body, $post, $fb_response);
+
+		return wp_mail($author->user_email, $subject, $body);
+	}
+}

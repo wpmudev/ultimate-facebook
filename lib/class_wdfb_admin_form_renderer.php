@@ -80,6 +80,55 @@ class Wdfb_AdminFormRenderer {
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
 	}
 
+	function extra_permissions () {
+		$opts = $this->_get_option('wdfb_grant');
+		$opts = is_array($opts) ? $opts : array();
+
+		echo '<div class="updated below-h2">' .
+			'<p>' . __('<b>Note:</b> Allowing any of the additional functionality listed here will require additional Facebook privileges to be granted to your app.', 'wdfb') . '</p>' .
+			'<p>' . __('Please, remember to re-grant the extended permissions once you made your changes here', 'wdfb') . '</p>' .
+		'</div>';
+
+		echo '' .
+			$this->_create_checkbox('grant', 'allow_fb_events_access', $opts['allow_fb_events_access']) .
+			'&nbsp;' .
+			'<label for="allow_fb_events_access">' . __('Allow Events functionality', 'wdfb') . '</label>' .
+		'<br />';
+		echo '' .
+			$this->_create_checkbox('grant', 'allow_fb_photos_access', $opts['allow_fb_photos_access']) .
+			'&nbsp;' .
+			'<label for="allow_fb_photos_access">' . __('Allow Photos functionality', 'wdfb') . '</label>' .
+		'<br />';
+		echo '' .
+			$this->_create_checkbox('grant', 'allow_fb_notes_access', $opts['allow_fb_notes_access']) .
+			'&nbsp;' .
+			'<label for="allow_fb_notes_access">' . __('Allow publishing Notes', 'wdfb') . '</label>' .
+		'<br />';
+		echo '<hr />';
+		echo '' .
+			$this->_create_checkbox('grant', 'use_actions_over_streams', $opts['use_actions_over_streams']) .
+			'&nbsp;' .
+			'<label for="use_actions_over_streams">' . __('Use actions over streams', 'wdfb') . '</label>' .
+		'<br />';
+		echo '' .
+			$this->_create_checkbox('grant', 'use_minimal_permissions', $opts['use_minimal_permissions']) .
+			'&nbsp;' .
+			'<label for="use_minimal_permissions">' . __('Use minimal possible permission set', 'wdfb') . '</label>' .
+		'<br />';
+
+		echo '<div>' .
+			'<h4>' . __('Permissions list', 'wdfb') . '</h4>' .
+			'<dl>' .
+				'<dt>' . __('New users', 'wdfb') . '</dt>' .
+				'<dd>' . Wdfb_Permissions::get_new_user_permissions() . '</dd>' .
+				'<dt>' . __('Non-publishing users', 'wdfb') . '</dt>' .
+				'<dd>' . Wdfb_Permissions::get_non_publisher_permissions() . '</dd>' .
+				'<dt>' . __('Publishing users', 'wdfb') . '</dt>' .
+				'<dd>' . Wdfb_Permissions::get_publisher_permissions() . '</dd>' .
+			'</dl>' .
+		'</div>';
+	}
+
 	function cache_operations () {
 		echo '<p>' .
 			'<input type="button" class="button wdfb-cache_purge" data-wdfb_purge="events" value="' . esc_attr(__('Purge Events cache', 'wdfb')) . '" />' .
@@ -533,7 +582,7 @@ class Wdfb_AdminFormRenderer {
 				'&nbsp;' .
 				$this->_create_checkbox('comments', 'reverse_skip_logic', $reverse) .
 			'';
-			echo '<div><small>' . __('Togglig this option will reverse import skipping options.', 'wdfb') . '</small></div>';
+			echo '<div><small>' . __('Toggling this option will reverse import skipping options.', 'wdfb') . '</small></div>';
 			echo '</div>';
 		}
 	}
@@ -549,7 +598,12 @@ class Wdfb_AdminFormRenderer {
 	function create_notify_authors_box () {
 		$opt = $this->_get_option('wdfb_comments');
 		echo $this->_create_checkbox('comments', 'notify_authors',  @$opt['notify_authors']);
-		echo '<div><small>' . __('If checked, post authors will be notified when new comments from Facebook are added to their posts.', 'wdfb') . '</small></div>';
+		echo '<div><small>' . __('If checked, post authors will be notified when new comments from Facebook are imported and added to their posts.', 'wdfb') . '</small></div>';
+	}
+	function create_fbc_notify_authors_box () {
+		$opt = $this->_get_option('wdfb_comments');
+		echo $this->_create_checkbox('comments', 'fbc_notify_authors',  @$opt['fbc_notify_authors']);
+		echo '<div><small>' . __('If checked, post authors will be notified when new comments are added to their posts using Facebook comments.', 'wdfb') . '</small></div>';
 	}
 	function create_import_now_box () {
 		echo '<a href="#" class="wdfb_import_comments_now">' . __("Import comments now (this can take a while)", 'wdfb') . '<a>';
@@ -639,8 +693,11 @@ class Wdfb_AdminFormRenderer {
 			'0' => __("Don't post this type to Facebook", 'wdfb'),
 			'feed' => __("Facebook wall", 'wdfb'),
 			'events' => __("Facebook events", 'wdfb'),
-			'notes' => __("Facebook notes", 'wdfb'),
 		);
+		$data = Wdfb_OptionsRegistry::get_instance();
+		if ($data->get_option('wdfb_grant', 'allow_fb_notes_access')) {
+			$fb_locations['notes'] = __("Facebook notes", 'wdfb');
+		}
 		$opts = $this->_get_option('wdfb_autopost');
 
 		$user = wp_get_current_user();

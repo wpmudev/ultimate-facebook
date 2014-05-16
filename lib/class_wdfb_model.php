@@ -800,6 +800,16 @@ class Wdfb_Model {
 		;
 	}
 
+	function get ($what) {
+		$response = false;
+		try {
+			$response = $this->fb->api($what, 'GET');
+		} catch (Exception $e) {
+			$response = false;
+		}
+		return $response;
+	}
+
 	function map_bp_group_info ($bp_group, $fb_group, $token=false) {
 		if (!function_exists('groups_edit_base_group_details')) return false;
 		$data = false;

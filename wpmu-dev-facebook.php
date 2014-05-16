@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall and notes, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.6.6
+Version: 2.7
 Text Domain: wdfb
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
@@ -86,10 +86,12 @@ function wdfb_add_dashboard_profile_widget () {
 	wp_add_dashboard_widget('wdfb_dashboard_profile_widget', "My {$profile} profile", 'wdfb_dashboard_profile_widget');
 }
 
-
+/*
+// Deprecated
 if (file_exists(WDFB_PLUGIN_BASE_DIR . '/lib/external/wpmudev-dash-notification.php')) {
 	require_once WDFB_PLUGIN_BASE_DIR . '/lib/external/wpmudev-dash-notification.php';
 }
+*/
 if (!class_exists('Facebook')) {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/external/facebook.php');
 }
@@ -160,14 +162,13 @@ function wdfb_comment_import () {
 add_action('wdfb_import_comments', 'wdfb_comment_import');//array($importer, 'serve'));
 if (!wp_next_scheduled('wdfb_import_comments')) wp_schedule_event(time()+600, 'hourly', 'wdfb_import_comments');
 
-
-require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_metabox.php');
-$og = new Wdfb_Metabox_OpenGraph;
-
-
 define("WDFB_CORE_IS_ADMIN", (is_admin() || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) || (defined('DOING_CRON') && DOING_CRON)), true);
 
 function _wdfb_initialize () {
+	// Include the metabox abstraction
+	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_metabox.php');
+	$og = new Wdfb_Metabox_OpenGraph;
+
 	if (apply_filters('wdfb-core-is_admin', WDFB_CORE_IS_ADMIN)) {
 		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_help.php');
 		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_form_renderer.php');
@@ -183,3 +184,23 @@ function _wdfb_initialize () {
 	Wdfb_UniversalWorker::serve();
 }
 add_action('plugins_loaded', '_wdfb_initialize');
+
+if (is_admin() && file_exists(WDFB_PLUGIN_BASE_DIR . '/lib/external/wpmudev-dash-notification.php')) {
+	// Dashboard notification
+	global $wpmudev_notices;
+	if (!is_array($wpmudev_notices)) $wpmudev_notices = array();
+	$wpmudev_notices[] = array(
+		'id' => 228,
+		'name' => 'Ultimate Facebook',
+		'screens' => array(
+			'toplevel_page_wdfb',
+			'toplevel_page_wdfb-network',
+			'facebook_page_wdfb_widgets',
+			'facebook_page_wdfb_widgets-network',
+			'facebook_page_wdfb_shortcodes',
+			'facebook_page_wdfb_shortcodes-network',
+			'facebook_page_wdfb_error_log',
+		),
+	);
+	require_once WDFB_PLUGIN_BASE_DIR . '/lib/external/wpmudev-dash-notification.php';
+}
