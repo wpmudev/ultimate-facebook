@@ -90,20 +90,9 @@ class Wdfb_AdminFormRenderer {
 		'</div>';
 
 		echo '' .
-			$this->_create_checkbox('grant', 'allow_fb_events_access', $opts['allow_fb_events_access']) .
-			'&nbsp;' .
-			'<label for="allow_fb_events_access">' . __('Allow Events functionality', 'wdfb') . '</label>' .
-		'<br />';
-		echo '' .
 			$this->_create_checkbox('grant', 'allow_fb_photos_access', $opts['allow_fb_photos_access']) .
 			'&nbsp;' .
-			'<label for="allow_fb_photos_access">' . __('Allow Photos functionality', 'wdfb') . '</label>' .
-		'<br />';
-		echo '' .
-			$this->_create_checkbox('grant', 'allow_fb_notes_access', $opts['allow_fb_notes_access']) .
-			'&nbsp;' .
-			'<label for="allow_fb_notes_access">' . __('Allow publishing Notes', 'wdfb') . '</label>' .
-		'<br />';
+			'<label for="allow_fb_photos_access">' . __('Allow Photos functionality', 'wdfb') . '</label>';
 		echo '<hr />';
 		echo '' .
 			$this->_create_checkbox('grant', 'use_actions_over_streams', $opts['use_actions_over_streams']) .
@@ -131,8 +120,6 @@ class Wdfb_AdminFormRenderer {
 
 	function cache_operations () {
 		echo '<p>' .
-			'<input type="button" class="button wdfb-cache_purge" data-wdfb_purge="events" value="' . esc_attr(__('Purge Events cache', 'wdfb')) . '" />' .
-			'&nbsp;' .
 			'<input type="button" class="button wdfb-cache_purge" data-wdfb_purge="album_photos" value="' . esc_attr(__('Purge Albums cache', 'wdfb')) . '" />' .
 		'</p>';
 	}
@@ -412,7 +399,7 @@ class Wdfb_AdminFormRenderer {
 		$positions = array('top' => __('Before', 'wdfb'), 'bottom' => __('After', 'wdfb'), 'both' => __('Before and after', 'wdfb'), 'manual' => __('Manual, use shortcodes in ', 'wdfb'));
 
 		foreach ($positions as $pos => $label) {
-			echo '<input type="radio" name="wdfb_button[button_position]" value="' . $pos . '" ' . (($opt['button_position'] == $pos) ? 'checked="checked"' : '') . ' /> ';
+			echo '<input type="radio" name="wdfb_button[button_position]" value="' . $pos . '" ' . ( isset( $opt['button_position'] ) && ( $opt['button_position'] == $pos ) ? 'checked="checked"' : '' ) . ' /> ';
 			printf(__("%s the contents of your post <br />", 'wdfb'), $label);
 		}
 	}
@@ -499,23 +486,27 @@ class Wdfb_AdminFormRenderer {
 	}
 	function create_og_extras_box () {
 		$opt = $this->_get_option('wdfb_opengraph');
+		$last = 1;
 		$extras = @$opt['og_extra_headers'] ? $opt['og_extra_headers'] : array();
-
-		foreach ($extras as $idx=>$extra) {
-			$name = esc_attr(@$extra['name']);
-			if (!$name) continue;
-			$value = esc_attr(@$extra['value']);
-			echo '<div class="wdfb_og_extra_mapping">';
-			echo "<label for='og_extra_name-{$idx}'>" . __('OpenGraph name:', 'wdfb') . '</label> ' .
-				"<input id='og_extra_name-{$idx}' size='24' name='wdfb_opengraph[og_extra_headers][{$idx}][name]' value='{$name}' />" .
-			"&nbsp;&nbsp;&nbsp;";
-			echo "<label for='og_extra_value-{$idx}'>" . __('OpenGraph value:', 'wdfb') . '</label> ' .
-				"<input id='og_extra_value-{$idx}' size='24' name='wdfb_opengraph[og_extra_headers][{$idx}][value]' value='{$value}' />" .
-			"&nbsp;&nbsp;&nbsp;";
-			echo "<a href='' class='wdfb_og_remove_extra'>" . __('Remove', 'wdfb') . '</a>';
-			echo "</div>";
+		if ( ! empty ( $extras ) ) {
+			foreach ( $extras as $idx => $extra ) {
+				$name = esc_attr( @$extra['name'] );
+				if ( ! $name ) {
+					continue;
+				}
+				$value = esc_attr( @$extra['value'] );
+				echo '<div class="wdfb_og_extra_mapping">';
+				echo "<label for='og_extra_name-{$idx}'>" . __( 'OpenGraph name:', 'wdfb' ) . '</label> ' .
+				     "<input id='og_extra_name-{$idx}' size='24' name='wdfb_opengraph[og_extra_headers][{$idx}][name]' value='{$name}' />" .
+				     "&nbsp;&nbsp;&nbsp;";
+				echo "<label for='og_extra_value-{$idx}'>" . __( 'OpenGraph value:', 'wdfb' ) . '</label> ' .
+				     "<input id='og_extra_value-{$idx}' size='24' name='wdfb_opengraph[og_extra_headers][{$idx}][value]' value='{$value}' />" .
+				     "&nbsp;&nbsp;&nbsp;";
+				echo "<a href='' class='wdfb_og_remove_extra'>" . __( 'Remove', 'wdfb' ) . '</a>';
+				echo "</div>";
+			}
+			$last = max( count( $extras ), $idx ) + 1;
 		}
-		$last = max(count($extras), $idx) + 1;
 		echo '<div class="wdfb_og_extra_mapping">';
 			echo "<label for='og_extra_name'>" . __('OpenGraph name:', 'wdfb') . '</label> ' .
 				"<input id='og_extra_name' size='24' name='wdfb_opengraph[og_extra_headers][{$last}][name]' value='' />" .
@@ -673,9 +664,6 @@ class Wdfb_AdminFormRenderer {
 	function create_allow_autopost_box () {
 		$opt = $this->_get_option('wdfb_autopost');
 		echo $this->_create_checkbox('autopost', 'allow_autopost',  @$opt['allow_autopost']);
-		echo '<p class="wdfb_perms_not_granted">' .
-			__('If you haven\'t done so already, you will need to <a href="#" class="wdfb_skip_to_step_1">grant <strong>extended permissions</strong> to the plugin</a> for this to work.', 'wdfb') .
-		'</p>';
 	}
 	function create_allow_frontend_autopost_box () {
 		$opt = $this->_get_option('wdfb_autopost');
@@ -691,13 +679,9 @@ class Wdfb_AdminFormRenderer {
 		$post_types = get_post_types(array('public'=>true), 'objects');
 		$fb_locations = array (
 			'0' => __("Don't post this type to Facebook", 'wdfb'),
-			'feed' => __("Facebook wall", 'wdfb'),
-			'events' => __("Facebook events", 'wdfb'),
+			'feed' => __("Facebook wall", 'wdfb')
 		);
 		$data = Wdfb_OptionsRegistry::get_instance();
-		if ($data->get_option('wdfb_grant', 'allow_fb_notes_access')) {
-			$fb_locations['notes'] = __("Facebook notes", 'wdfb');
-		}
 		$opts = $this->_get_option('wdfb_autopost');
 
 		$user = wp_get_current_user();
@@ -807,10 +791,6 @@ class Wdfb_AdminFormRenderer {
 	function create_widget_albums_box () {
 		$description = sprintf(__('Easily display Facebook Albums. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/albums_allowed.jpg" /></td><td valign="top"><img src="%s/img/albums_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('albums', $description);
-	}
-	function create_widget_events_box () {
-		$description = sprintf(__('Easily display Facebook Events. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/events_allowed.jpg" /></td><td valign="top"><img src="%s/img/events_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
-		$this->_create_widget_box('events', $description);
 	}
 	function create_widget_facepile_box () {
 		$description = sprintf(__('Easily display Facebook Facepile. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/facepile_allowed.jpg" /></td><td valign="top"><img src="%s/img/facepile_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);

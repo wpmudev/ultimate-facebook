@@ -63,7 +63,7 @@ class Wdfb_Installer {
 	/**
 	 * @static
 	 */
-	function get_keys () {
+	public static function get_keys () {
 		$me = new Wdfb_Installer;
 		return array_keys($me->_defaults);
 	}

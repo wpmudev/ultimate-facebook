@@ -482,7 +482,7 @@ EOBpFormInjection;
 		$post_id = $id;
 		if ($rev = wp_is_post_revision($post_id)) $post_id = $rev;
 
-		// Should we even try?
+//		// Should we even try?
 		if (!$this->data->get_option('wdfb_autopost', 'allow_autopost')) return false;
 		if (!$this->data->get_option('wdfb_autopost', 'allow_frontend_autopost')) return false;
 
@@ -508,32 +508,6 @@ EOBpFormInjection;
 		if (!$post_as) return true; // Skip this type
 
 		switch ($post_as) {
-			case "notes":
-				if (!$this->data->get_option('wdfb_grant', 'allow_fb_notes_access')) return false;
-				$send = array (
-					'subject' => $post_title,
-					'message' => $post_content,
-				);
-				break;
-			case "events":
-				if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return false;
-				$time = time();
-				$start_timestamp = apply_filters('wdfb-autopost-events-start_time', $time, $post);
-				$end_timestamp = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
-				$location = apply_filters('wdfb-autopost-events-location', false, $post);
-				
-				$start_time = date('Y-m-d\TH:i:s', $start_timestamp);
-				$end_time = date('Y-m-d\TH:i:s', $end_timestamp);
-				$send = array(
-					'name' => $post_title,
-					'description' => $post_content,
-					'start_time' => $start_time,
-					'end_time' => $end_time,
-				);
-				if ($location) {
-					$send['location'] = $location;
-				}
-				break;
 			case "feed":
 			default:
 				$use_shortlink = $this->data->get_option('wdfb_autopost', "type_{$post_type}_use_shortlink");

@@ -121,7 +121,6 @@ class Wdfb_AdminPages {
 		add_settings_section('wdfb_widget_pack', __('Widget pack', 'wdfb'), create_function('', ''), 'wdfb_widget_options_page');
 		add_settings_field('wdfb_widget_connect', __('Use Facebook Connect widget', 'wdfb'), array($form, 'create_widget_connect_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_albums', __('Use Facebook Albums widget', 'wdfb'), array($form, 'create_widget_albums_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
-		add_settings_field('wdfb_widget_events', __('Use Facebook Events widget', 'wdfb'), array($form, 'create_widget_events_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_facepile', __('Use Facebook Facepile widget', 'wdfb'), array($form, 'create_widget_facepile_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_likebox', __('Use Facebook Like Box widget', 'wdfb'), array($form, 'create_widget_likebox_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_recommendations', __('Use Facebook Recommendations widget', 'wdfb'), array($form, 'create_widget_recommendations_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
@@ -231,7 +230,6 @@ class Wdfb_AdminPages {
 		add_settings_section('wdfb_widget_pack', __('Widget pack', 'wdfb'), create_function('', ''), 'wdfb_widget_options_page');
 		add_settings_field('wdfb_widget_connect', __('Use Facebook Connect widget', 'wdfb'), array($form, 'create_widget_connect_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_albums', __('Use Facebook Albums widget', 'wdfb'), array($form, 'create_widget_albums_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
-		add_settings_field('wdfb_widget_events', __('Use Facebook Events widget', 'wdfb'), array($form, 'create_widget_events_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_facepile', __('Use Facebook Facepile widget', 'wdfb'), array($form, 'create_widget_facepile_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_likebox', __('Use Facebook Like Box widget', 'wdfb'), array($form, 'create_widget_likebox_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_recommendations', __('Use Facebook Recommendations widget', 'wdfb'), array($form, 'create_widget_recommendations_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
@@ -615,55 +613,6 @@ $token = false;
 		$frm = new Wdfb_AdminFormRenderer;
 		echo $frm->facebook_publishing_metabox();
 	}
-
-	/**
-	 * Events publishing gets postponed, so all the metas are tucked in and ready.
-	 */
-	function publish_event_on_facebook ($post_id, $post) {
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return false;
-
-		$post_type = $post->post_type;
-		$post_as = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_type");
-		$post_to = $this->data->get_option('wdfb_autopost', "type_{$post_type}_fb_user");
-		if (!$post_to) return false; // Don't know where to post, bail
-
-		$as_page = false;
-		if ($post_to != $this->model->get_current_user_fb_id()) {
-			$as_page = $this->data->get_option('wdfb_autopost', 'post_as_page');
-		}
-
-		if (!$post_as) return true; // Skip this type
-		$post_content = wp_strip_all_tags(strip_shortcodes($post->post_content));
-		$post_title = @$_POST['wdfb_metabox_publishing_title'] ? stripslashes($_POST['wdfb_metabox_publishing_title']) : $post->post_title;
-
-		$time = time();
-		$start_timestamp = apply_filters('wdfb-autopost-events-start_time', $time, $post);
-		$end_timestamp = apply_filters('wdfb-autopost-events-end_time', $time+86400, $post);
-		$location = apply_filters('wdfb-autopost-events-location', false, $post);
-		$start_time = date('Y-m-d\TH:i:sO', $start_timestamp);
-		$end_time = date('Y-m-d\TH:i:sO', $end_timestamp);
-		
-		$send = array(
-			'name' => $post_title,
-			'description' => $post_content,
-			'start_time' => $start_time,
-			'end_time' => $end_time,
-		);
-		if ($location) {
-			$send['location'] = $location;
-		}
-
-		$send = apply_filters('wdfb-autopost-post_update', $send, $post_id);
-		$send = apply_filters('wdfb-autopost-send', $send, $post_as, $post_to);
-		$res = $this->model->post_on_facebook($post_as, $post_to, $send, $as_page);
-		if ($res) {
-			update_post_meta($post_id, 'wdfb_published_on_fb', 1);
-			do_action('wdfb-autopost-posting_successful', $post_id);
-		}
-		add_filter('redirect_post_location', create_function('$loc', 'return add_query_arg("wdfb_published", ' . (int)$res . ', $loc);'));
-		do_action('wdfb-autopost-posting_complete', $res);
-	}
-
 	/**
 	 * Default catch-all publishing procedure.
 	 */
@@ -684,15 +633,17 @@ $token = false;
 		}
 
 		$post = get_post($post_id);
-		if ('publish' != $post->post_status) {
-			if (
-				'future' == $post->post_status && 
-				(!empty($_POST['wdfb_metabox_publishing_publish']) || !empty($_POST['wdfb_metabox_publishing_title']) || !empty($_POST['wdfb_metabox_publishing_account']))
-			) update_post_meta($post_id, 'wdfb_scheduled_publish', array(
-				'wdfb_metabox_publishing_publish' => $_POST['wdfb_metabox_publishing_publish'],
-				'wdfb_metabox_publishing_title' => $_POST['wdfb_metabox_publishing_title'],
-				'wdfb_metabox_publishing_account' => $_POST['wdfb_metabox_publishing_account'],
-			));
+		if ( 'publish' != $post->post_status ) {
+			if ( 'future' == $post->post_status &&
+				( ! empty( $_POST['wdfb_metabox_publishing_publish'] ) || ! empty( $_POST['wdfb_metabox_publishing_title'] ) || ! empty( $_POST['wdfb_metabox_publishing_account'] ) )
+			) {
+				update_post_meta( $post_id, 'wdfb_scheduled_publish', array(
+					'wdfb_metabox_publishing_publish' => $_POST['wdfb_metabox_publishing_publish'],
+					'wdfb_metabox_publishing_title'   => $_POST['wdfb_metabox_publishing_title'],
+					'wdfb_metabox_publishing_account' => $_POST['wdfb_metabox_publishing_account'],
+				) );
+			}
+
 			return false; // Draft, auto-save or something else we don't want
 		}
 		
@@ -722,16 +673,6 @@ $token = false;
 		$post_content = wdfb_get_excerpt($post);
 
 		switch ($post_as) {
-			case "notes":
-				if (!$this->data->get_option('wdfb_grant', 'allow_fb_notes_access')) return false;
-				$send = array (
-					'subject' => $post_title,
-					'message' => $post_content,
-				);
-				break;
-			case "events":
-				add_action('wp_insert_post', array($this, 'publish_event_on_facebook'), 999, 2); // Delay long enough for Events+ to kick in
-				return false;
 			case "feed":
 			default:
 				$use_shortlink = $this->data->get_option('wdfb_autopost', "type_{$post_type}_use_shortlink");
@@ -813,31 +754,6 @@ $token = false;
 		$class = $done ? 'updated' : 'error';
 		$msg = $done ? __("Post published on Facebook", "wdfb") : __("Publishing on Facebook failed", "wdfb");
 		echo "<div class='{$class}'><p>{$msg}</p></div>";
-	}
-
-	function insert_events_into_post_meta ($post) {
-		if (!$post['post_content']) return $post;
-
-		$post_id = (int)$_POST['post_ID'];
-		if (!$post_id) return $post;
-
-		// We need to have active FB session for this, else skip
-		$fb_uid = $this->model->fb->getUser();
-		if (!$fb_uid) return $post;
-
-		// Process the shortcode
-		$txt = stripslashes($post['post_content']);
-		if (preg_match('~\[wdfb_events\s+for\s*=~', $txt)) {
-			preg_match_all('~\[wdfb_events\s+for\s*=\s*(.+)\s*]~', $txt, $matches);
-			$fors = $matches[1];
-			if (!empty($fors)) foreach ($fors as $for) {
-				$for = trim($for, '\'" ');
-				$events = $this->model->get_events_for($for);
-				if (!is_array($events) || empty($events['data'])) continue; // No events, skip to next
-				update_post_meta($post_id, 'wdfb_events', $events['data']);
-			}
-		}
-		return $post;
 	}
 
 	function add_published_status_column ($cols) {
@@ -940,12 +856,11 @@ $token = false;
 	
 	function json_check_api_status () {
 		header("Content-type: application/json");
-		$app_key = trim($this->data->get_option('wdfb_api', 'app_key'));
+		$app_key = (int) trim($this->data->get_option('wdfb_api', 'app_key'));
 		$resp = wp_remote_get("https://graph.facebook.com/{$app_key}", array(
 			'sslverify' => false,
 			'timeout' => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya
 		));
-		
 		if(is_wp_error($resp)) die(json_encode(array("status" => 0))); // Request fail
 		if ((int)$resp['response']['code'] != 200) die(json_encode(array("status" => 0))); // Request fail
 		die($resp['body']);
@@ -1044,23 +959,30 @@ $token = false;
 			$override = (int)@$data['_override_all'];
 			$preserve_api = (int)@$data['_preserve_api'];
 		}
-		
+
 		$new_data = array_merge($old_data, $data[$key]);
 		update_site_option($key, $new_data);
-		
-		if ($keys && $override) {
-			$page = !empty($data['page']) ? (int)$data['page'] : 0;
-			$blogs = $this->model->get_paged_blog_ids($page); // Get this list only once
-			if (empty($blogs)) die; // We're done with paging
-			foreach ($keys as $key) {
-				if ('api' == $key && $preserve_api) continue; // Preserve API
-				$site_opt = get_site_option("wdfb_{$key}");
-				foreach ($blogs as $blog) update_blog_option($blog['blog_id'], "wdfb_{$key}", $site_opt);
+
+		if ( $keys && $override ) {
+			$page  = ! empty( $data['page'] ) ? (int) $data['page'] : 0;
+			$blogs = $this->model->get_paged_blog_ids( $page ); // Get this list only once
+
+			if ( empty( $blogs ) ) {
+				wp_send_json_success('success');
+			} // We're done with paging
+			foreach ( $keys as $key ) {
+				if ( 'api' == $key && $preserve_api ) {
+					continue;
+				} // Preserve API
+				$site_opt = get_site_option( "wdfb_{$key}" );
+				foreach ( $blogs as $blog ) {
+					update_blog_option( $blog['blog_id'], "wdfb_{$key}", $site_opt );
+				}
 			}
-			die(json_encode(array("page" => $page+1))); // Paged resource, respond with next page
+			die( json_encode( array( "page" => $page + 1 ) ) ); // Paged resource, respond with next page
 		}
-		
-		die;
+
+		wp_send_json_success('success');
 	}
 
 	function inject_identity_reset_link () {
@@ -1207,9 +1129,6 @@ $token = false;
 			add_action('post_updated', array($this, 'publish_post_on_facebook'), 999, 3);
 		}
 		add_action('admin_notices', array($this, 'show_post_publish_error'));
-
-		// Events shortcode
-		add_action('wp_insert_post_data', array($this, 'insert_events_into_post_meta'));
 
 		// Internal actions definitions
 		add_action('wdfb-api-handle_fb_auth_tokens', array($this, 'handle_fb_auth_tokens'));

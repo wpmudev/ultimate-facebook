@@ -8,10 +8,6 @@ class Wdfb_Permissions {
 
 	const EXTRA_READ = 'read_stream';
 
-	const EXTRA_PUBLISH_PAGES = 'manage_pages';
-	const EXTRA_PUBLISH_ACTION = 'publish_actions';
-	const EXTRA_PUBLISH_STREAM = 'publish_stream';
-
 	const EXTRA_ABOUT = 'user_about_me';
 	const EXTRA_BIRTHDAY = 'user_birthday';
 	const EXTRA_LOCATION = 'user_location';
@@ -24,9 +20,7 @@ class Wdfb_Permissions {
 	const EXTRA_EDUCATION = 'user_education_history';
 	const EXTRA_WORK = 'user_work_history';
 
-	const EXTRA_EVENTS = 'user_events,create_event';
 	const EXTRA_PHOTOS = 'user_photos';
-	const EXTRA_NOTES = 'create_note';
 
 	private function __construct () {}
 
@@ -119,22 +113,13 @@ class Wdfb_Permissions {
 	public static function get_publisher_permissions () {
 		$data = Wdfb_OptionsRegistry::get_instance();
 		$extras = array();
-		
-		if ($data->get_option('wdfb_grant', 'allow_fb_events_access')) $extras[] = self::EXTRA_EVENTS;
+
 		if ($data->get_option('wdfb_grant', 'allow_fb_photos_access')) $extras[] = self::EXTRA_PHOTOS;
-		if ($data->get_option('wdfb_grant', 'allow_fb_notes_access')) $extras[] = self::EXTRA_NOTES;
 
 		$include_posting = defined('WDFB_CORE_MINIMAL_PERMISSIONS_SET') && WDFB_CORE_MINIMAL_PERMISSIONS_SET
 			? $data->get_option('wdfb_autopost', 'allow_autopost') || !$data->get_option('wdfb_autopost', 'prevent_post_metabox')
 			: true
 		;
-		if ($include_posting) {
-			$extras[] = $data->get_option('wdfb_grant', 'use_actions_over_streams')
-				? self::EXTRA_PUBLISH_ACTION
-				: self::EXTRA_PUBLISH_STREAM
-			;
-			$extras[] = self::EXTRA_PUBLISH_PAGES;
-		}
 		
 		$extras = array_values(array_unique($extras));
 

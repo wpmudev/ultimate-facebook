@@ -311,8 +311,8 @@ class Wdfb_Model {
 	 * Gets an existing app token for the user.
 	 */
 	function get_user_api_token ($fb_uid) {
-		global $current_user;
-		$meta = get_user_meta($current_user->id, 'wdfb_api_accounts', true);
+		$current_user = get_current_user_id();
+		$meta         = get_user_meta( $current_user, 'wdfb_api_accounts', true );
 		$token = isset($meta['auth_tokens']) ? $meta['auth_tokens'] : array();
 		if (!$token) return false;
 		if (!isset($token[$fb_uid])) return false;
@@ -557,14 +557,11 @@ class Wdfb_Model {
 
 	function post_on_facebook ($type, $fid, $post, $as_page=false) {
 		$type = $type ? $type : 'feed';
-		
+
 		if (empty($post)) return false;
 
 		$fid = $fid ? $fid : $this->get_current_user_fb_id();
 		$token = $this->get_user_api_token($fid);
-
-		// Events sanity check
-		if ('events' == $type && (empty($post['start_time']) || empty($post['end_time']))) return false;
 
 		//$post['auth_token'] = $tokens[$fid];
 		if (!$token) {
@@ -598,54 +595,6 @@ class Wdfb_Model {
 		}
 		$this->log->notice("Posting to Facebook finished.");
 		return $ret;
-	}
-
-	function get_events_for ($for, $limit=false, $offset=false) {
-		if (!$for) return false;
-
-		$page_size = 5;
-		$max_limit = apply_filters('wdfb-albums-max_photos_limit', 
-			(defined('WDFB_EVENTS_MAX_EVENT_LIMIT') && WDFB_EVENTS_MAX_EVENT_LIMIT ? WDFB_EVENTS_MAX_EVENT_LIMIT : 200)
-		);
-
-		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
-		$token = !empty($tokens[$for]) 
-			? $tokens[$for] 
-			: $this->fb->getAppId() . '|' . $this->fb->getAppSecret()
-		;
-
-		if ($limit && $limit > $page_size) {
-			$limit = $limit > $max_limit ? $max_limit : $limit;
-			$batch = array();
-			for ($i=0; $i<$limit; $i+=$page_size) {
-				$batch[] = json_encode(array(
-					'method' => 'GET',
-					'relative_url' => "/{$for}/events/?limit={$page_size}&offset={$i}&fields=id,name,description,start_time,end_time,location,venue,picture,ticket_uri,owner,privacy"
-				));
-			}
-			try {
-				$res = $this->fb->api('/', 'POST', array('batch' => '[' . implode(',',$batch) . ']', 'access_token' => $token));
-			} catch (Exception $e) {
-				$this->log->error(__FUNCTION__, $e);
-				return false;
-			}
-			$return = array();
-			foreach ($res as $key => $data) {
-				if (!$data || !isset($data['body'])) continue;
-				$data = json_decode($data['body'],true);
-				$return = array_merge($return, $data['data']);
-			}
-			return array('data' => $return);
-		} else {
-			try {
-				//$res = $this->fb->api("/{$for}/events/?access_token={$token}");
-				$res = $this->fb->api("/{$for}/events/", 'GET', array('access_token' => $token));
-			} catch (Exception $e) {
-				return false;
-			}
-			return $res;
-		}
-		return false;
 	}
 
 	function get_albums_for ($for) {

@@ -2,8 +2,8 @@
 /*
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
-Description: Easy Facebook integration: share your blog posts, autopost to your wall and notes, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.7
+Description: Easy Facebook integration: share your blog posts, autopost to your wall, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
+Version: 2.7.1
 Text Domain: wdfb
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
@@ -11,6 +11,7 @@ WDP ID: 228
 
 Copyright 2009-2011 Incsub (http://incsub.com)
 Author - Ve Bailovity (Incsub)
+Contributor - Umesh Kumar
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
 the Free Software Foundation.
@@ -114,10 +115,6 @@ $data = Wdfb_OptionsRegistry::get_instance();
 if ($data->get_option('wdfb_widget_pack', 'albums_allowed')) {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_albums.php');
 	add_action('widgets_init', create_function('', "register_widget('Wdfb_WidgetAlbums');"));
-}
-if ($data->get_option('wdfb_widget_pack', 'events_allowed')) {
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_events.php');
-	add_action('widgets_init', create_function('', "register_widget('Wdfb_WidgetEvents');"));
 }
 if ($data->get_option('wdfb_widget_pack', 'facepile_allowed')) {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_facepile.php');

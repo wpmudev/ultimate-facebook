@@ -95,6 +95,7 @@ function check_hash () {
  */
 function check_autopost_prerequisites () {
 	FB.getLoginStatus(function (resp) {
+		console.log(resp);
 		if (resp.authResponse && resp.authResponse.userID) return true; // All good
 		$selects = $('#wdfb-section-wdfb_autopost select[name^="wdfb_autopost"], #wdfb-section-wdfb_autopost .wdfb-autopost-shortlink');
 		$selects.attr("disabled", true);
@@ -217,11 +218,13 @@ function wdfb_send_save_request (part, data) {
 					: data + '&page=' + response.page
 				;
 				wdfb_send_save_request(part, data); // More paging to do, rebind deferred recursively
-			} else dreq.resolve(); // We're done paging, resolve the deferred
+			} else {
+				dreq.resolve();
+			} // We're done paging, resolve the deferred
 		}, 'json');
 	});
 	
-	// Reload when we're done
+//	Reload when we're done
 	$.when(dreq).then(function () {
 		$("#wdfb-save_settings-waiting").after(
 			"<?php echo esc_js(__('Done. Applying new settings, please hold on.', 'wdfb')); ?>"

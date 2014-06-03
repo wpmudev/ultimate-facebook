@@ -8,7 +8,6 @@ class Wdfb_MarkerReplacer {
 	var $model;
 	var $buttons = array (
 		'like_button' => 'wdfb_like_button',
-		'events' => 'wdfb_events',
 		'album' => 'wdfb_album',
 		'connect' => 'wdfb_connect',
 		'recent_comments' => 'wdfb_recent_comments',
@@ -214,65 +213,6 @@ class Wdfb_MarkerReplacer {
 			))) .
 		'</div>';
 	}
-
-	function process_events_code ($atts, $content='') {
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_events_access')) return $content;
-
-		$post_id = get_the_ID();
-		if (!$post_id) return '';
-
-		$atts = shortcode_atts(array(
-			'for' => false,
-			'starting_from' => false,
-			'only_future' => false,
-			'show_image' => "true",
-			'show_location' => "true",
-			'show_start_date' => "true",
-			'show_end_date' => "true",
-			'order' => false,
-		), $atts);
-
-		if (!$atts['for']) return ''; // We don't know whose events to show
-
-		$api = new Wdfb_EventsBuffer;
-		$events = $api->get_for($atts['for']);
-		if (!is_array($events) || empty($events)) return $content;
-
-		if ($atts['order']) {
-			$events = $this->_sort_by_time($events, $atts['order']);
-		}
-
-		$show_image = ("true" == $atts['show_image']) ? true : false;
-		$show_location = ("true" == $atts['show_location']) ? true : false;
-		$show_start_date = ("true" == $atts['show_start_date']) ? true : false;
-		$show_end_date = ("true" == $atts['show_end_date']) ? true : false;
-		$timestamp_format = get_option('date_format') . ' ' . get_option('time_format');
-
-		$date_threshold = $atts['starting_from'] ? strtotime($atts['starting_from']) : false;
-		if ($atts['only_future'] && 'false' != $atts['only_future']) {
-			$now = time();
-			$date_threshold = ($date_threshold && $date_threshold > $now) ? $date_threshold : $now;
-		}
-
-		$current_tz = function_exists('date_default_timezone_get') ? @date_default_timezone_get() : 'UTC';
-		ob_start();
-		foreach ($events as $event) {
-			if (function_exists('date_default_timezone_set') && !empty($event['timezone'])) {
-				$start_time = strtotime($event['start_time']);
-				$end_time = strtotime($event['end_time']);
-				date_default_timezone_set($event['timezone']);
-				$event['start_time'] = date('Y-m-d H:i:s', $start_time);
-				$event['end_time'] = date('Y-m-d H:i:s', $end_time);
-				date_default_timezone_set($current_tz);
-			}
-			if ($date_threshold > strtotime($event['start_time'])) continue;
-			include (WDFB_PLUGIN_BASE_DIR . '/lib/forms/event_item.php');
-		}
-		$ret = ob_get_contents();
-		ob_end_clean();
-
-		return "<div><ul>{$ret}</ul></div>";
-	}
 	
 	function process_album_code ($atts, $content='') {
 		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return $content;
@@ -332,18 +272,6 @@ class Wdfb_MarkerReplacer {
 			$current++;
 		}
 		return "<div class='{$atts['album_class']}'>{$ret}</div>";
-	}
-
-	/**
-	 * Helper for sorting events by their start_time.
-	 */
-	function _sort_by_time ($events, $direction="ASC") {
-		usort($events, create_function(
-			'$a,$b',
-			'if (strtotime($a["start_time"]) == strtotime($b["start_time"])) return 0;' .
-			'return (strtotime($a["start_time"]) > strtotime($b["start_time"])) ? 1 : -1;'
-		));
-		return ("DESC" == $direction) ? array_reverse($events) : $events;
 	}
 
 	/**

@@ -128,7 +128,7 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 		if ($title) echo $before_title . $title . $after_title;
 
 		if (!$iframe) {
-			echo wdfb_get_fb_plugin_markup('activity', compact(array('url', 'width', 'height', 'recommendations', 'links', 'color_scheme')));
+			echo wdfb_get_fb_plugin_markup('activity', compact(array('url', 'width', 'height', 'recommendations', 'links', 'color_scheme', 'show_header')));
 		} else {
 			$data = Wdfb_OptionsRegistry::get_instance();
 			$key = $data->get_option('wdfb_api', 'app_key');
