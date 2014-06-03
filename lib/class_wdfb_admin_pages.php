@@ -856,7 +856,7 @@ $token = false;
 	
 	function json_check_api_status () {
 		header("Content-type: application/json");
-		$app_key = (int) trim($this->data->get_option('wdfb_api', 'app_key'));
+		$app_key = trim($this->data->get_option('wdfb_api', 'app_key'));
 		$resp = wp_remote_get("https://graph.facebook.com/{$app_key}", array(
 			'sslverify' => false,
 			'timeout' => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya
@@ -940,7 +940,6 @@ $token = false;
 
 		$new_data = array_merge($old_data, $data[$key]);
 		update_option($key, $new_data);
-		
 		die;
 	}
 
