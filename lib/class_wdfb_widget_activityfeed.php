@@ -11,16 +11,17 @@ class Wdfb_WidgetActivityFeed extends WP_Widget {
 	}
 
 	function form($instance) {
-		$title = esc_attr($instance['title']);
-		$url = esc_attr($instance['url']);
-		$width = esc_attr($instance['width']);
-		$height = esc_attr($instance['height']);
-		$show_header = esc_attr($instance['show_header']);
-		$recommendations = esc_attr($instance['recommendations']);
-		$filter = esc_attr($instance['filter']);
-		$color_scheme = esc_attr($instance['color_scheme']);
-		$links = esc_attr($instance['links']);
-		$iframe = esc_attr($instance['iframe']);
+		$html = '';
+		$title           = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$url             = ! empty( $instance['url'] ) ? esc_attr( $instance['url'] ) : '';
+		$width           = ! empty( $instance['width'] ) ? esc_attr( $instance['width'] ) : '';
+		$height          = ! empty( $instance['height'] ) ? esc_attr( $instance['height'] ) : '';
+		$show_header     = ! empty( $instance['show_header'] ) ? esc_attr( $instance['show_header'] ) : '';
+		$recommendations = ! empty( $instance['recommendations'] ) ? esc_attr( $instance['recommendations'] ) : '';
+		$filter          = ! empty( $instance['filter'] ) ? esc_attr( $instance['filter'] ) : '';
+		$color_scheme    = ! empty( $instance['color_scheme'] ) ? esc_attr( $instance['color_scheme'] ) : '';
+		$links           = ! empty( $instance['links'] ) ? esc_attr( $instance['links'] ) : '';
+		$iframe          = ! empty( $instance['iframe'] ) ? esc_attr( $instance['iframe'] ) : '';
 
 		// Set defaults
 		// ...

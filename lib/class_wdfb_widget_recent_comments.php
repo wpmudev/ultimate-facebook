@@ -10,16 +10,12 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 	}
 
 	function form($instance) {
-		$title = esc_attr(@$instance['title']);
-		$limit = esc_attr(@$instance['limit']);
-		$avatar_size = esc_attr(@$instance['avatar_size']);
-		$hide_text = esc_attr(@$instance['hide_text']);
+		$html        = '';
+		$title       = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$limit       = ! empty( $instance['limit'] ) ? esc_attr( $instance['limit'] ) : 5;
+		$avatar_size = ! empty( $instance['avatar_size'] ) ? esc_attr( $instance['avatar_size'] ) : '';
+		$hide_text   = ! empty( $instance['hide_text'] ) ? esc_attr( $instance['hide_text'] ) : '';
 
-		// Set defaults
-		// ...
-		$html = '';
-		$limit = $limit ? $limit : 5;
-		
 		// Sanity check
 		$data =& Wdfb_OptionsRegistry::get_instance();
 		if (!$data->get_option('wdfb_comments', 'import_fb_comments')) {

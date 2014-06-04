@@ -31,14 +31,14 @@ class Wdfb_AlbumPhotosBuffer extends Wdfb_TransientBuffer {
 	public function get_for ($album_id, $limit=false) {
 		if (!$album_id) return false;
 		$transient = $this->get_transient_name('album_photos', $album_id);
-		
+
 		$result = $this->fetch($transient);
 		if ($result) return $result;
 		
 		$model = new Wdfb_Model;
 		$photos = $model->get_album_photos($album_id, $limit);
 		if (!$photos) return false;
-		
+
 		$this->store($transient, $photos['data']);
 		return $photos['data']; 
 	}

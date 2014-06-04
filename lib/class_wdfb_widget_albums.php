@@ -44,20 +44,15 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 	function form($instance) {
 		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return $this->_grant_box_html();
-		
-		$title = esc_attr($instance['title']);
-		$album_id = esc_attr($instance['album_id']);
-		$limit = esc_attr($instance['limit']);
-		$per_row = esc_attr($instance['per_row']);
-		$img_h = esc_attr($instance['img_h']);
-		$img_w = esc_attr($instance['img_w']);
 
-		// Set defaults
-		// ...
-		$img_w = isset($instance['img_h']) ? $img_w : '75';
-		$img_h = isset($instance['img_w']) ? $img_h : '75';
-		$img_crop = $instance['img_crop'];
-		$fb_open = $instance['fb_open'];
+		$title    = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$album_id = ! empty( $instance['album_id'] ) ? esc_attr( $instance['album_id'] ) : '';
+		$limit    = ! empty( $instance['limit'] ) ? esc_attr( $instance['limit'] ) : '';
+		$per_row  = ! empty( $instance['per_row'] ) ? esc_attr( $instance['per_row'] ) : '';
+		$img_h    = ! empty( $instance['img_h'] ) ? esc_attr( $instance['img_h'] ) : 75;
+		$img_w    = ! empty( $instance['img_w'] ) ? esc_attr( $instance['img_w'] ) : 75;
+		$img_crop = ! empty( $instance['img_crop'] ) ? esc_attr( $instance['img_crop'] ) : '';
+		$fb_open  = ! empty( $instance['fb_open'] ) ? esc_attr( $instance['fb_open'] ) : '';
 
 		$html = '';
 
@@ -157,7 +152,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		if (is_array($photos)) {
+		if ( is_array( $photos ) && ! empty( $photos ) ) {
 			echo '<table cellspacing="0" cellpadding="0" border="0" class="wdfb_album_photos">';
 			$count = $overall = 0;
 			echo '<tr>';

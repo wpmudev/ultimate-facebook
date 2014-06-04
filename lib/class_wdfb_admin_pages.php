@@ -424,7 +424,6 @@ class Wdfb_AdminPages {
 	
 	function js_editors () {
 		wp_enqueue_script('thickbox');
-		
 		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return false;
 
 		wp_enqueue_script('wdfb_editor_album', WDFB_PLUGIN_URL . '/js/editor_album.js');

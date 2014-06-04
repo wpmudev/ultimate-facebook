@@ -98,9 +98,6 @@ class Wdfb_Permissions {
 
 	public static function get_non_publisher_permissions () {
 		$extras = explode(',', self::NON_PUBLISHER);
-		if (!(defined('WDFB_CORE_MINIMAL_PERMISSIONS_SET') && WDFB_CORE_MINIMAL_PERMISSIONS_SET)) {
-			$extras[] = self::EXTRA_READ;
-		}
 		$perms = array_merge(
 			explode(',', self::get_new_user_permissions()),
 			$extras

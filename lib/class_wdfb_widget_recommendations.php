@@ -11,11 +11,12 @@ class Wdfb_WidgetRecommendations extends WP_Widget {
 	}
 
 	function form($instance) {
-		$title = esc_attr($instance['title']);
-		$width = esc_attr($instance['width']);
-		$height = esc_attr($instance['height']);
-		$show_header = esc_attr($instance['show_header']);
-		$color_scheme = esc_attr($instance['color_scheme']);
+		$html         = '';
+		$title        = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$width        = ! empty( $instance['width'] ) ? esc_attr( $instance['width'] ) : '';
+		$height       = ! empty( $instance['height'] ) ? esc_attr( $instance['height'] ) : '';
+		$show_header  = ! empty( $instance['show_header'] ) ? esc_attr( $instance['show_header'] ) : '';
+		$color_scheme = ! empty( $instance['color_scheme'] ) ? esc_attr( $instance['color_scheme'] ) : '';
 
 		// Set defaults
 		// ...

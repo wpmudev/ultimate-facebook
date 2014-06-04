@@ -7,8 +7,10 @@ Change Log:
 
 2.7.1 - 2014-06-5 - Umesh Kumar
 ----------------------------------------------------------------------
+- Updated code to support facebook API v2
+- Removed: Facebook events and notes support
+- Updated permission list
 - Fixed warnings, fixed js reload on settings page
-- Fixed API Key status
 
 2.7 - 2014-05-16
 ----------------------------------------------------------------------

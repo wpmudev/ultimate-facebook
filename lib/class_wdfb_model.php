@@ -38,7 +38,7 @@ class Wdfb_Model {
 
 		$this->log = new Wdfb_ErrorLog;
 
-		$this->_batch_page_size = apply_filters('wdfb-fb_core-batch_request-page_size', 
+		$this->_batch_page_size = apply_filters('wdfb-fb_core-batch_request-page_size',
 			(defined('WDFB_BATCH_REQUEST_PAGE_SIZE') && WDFB_BATCH_REQUEST_PAGE_SIZE ? WDFB_BATCH_REQUEST_PAGE_SIZE : 25)
 		);
 	}
@@ -115,7 +115,7 @@ class Wdfb_Model {
 		if ($current_blog) {
 			$site_id = $current_blog->site_id;
 		}
-		
+
 		$_limit = defined('WDFB_NETWORK_BLOGS_PAGE_SIZE') && WDFB_NETWORK_BLOGS_PAGE_SIZE
 			? WDFB_NETWORK_BLOGS_PAGE_SIZE
 			: 25
@@ -192,7 +192,7 @@ class Wdfb_Model {
 		if (function_exists('xprofile_avatar_upload_dir')) {
 			$xpath = xprofile_avatar_upload_dir(false, $user_id);
 			$path = $xpath['path'];
-		} 
+		}
 		if (!function_exists('xprofile_avatar_upload_dir') || empty($path)) {
 			$object = 'user';
 			$avatar_dir = apply_filters('bp_core_avatar_dir', 'avatars', $object);
@@ -216,7 +216,7 @@ class Wdfb_Model {
 		if(is_wp_error($page)) return false; // Request fail
 		if ((int)$page['response']['code'] != 200) return false; // Request fail
 		$fb_img = $page['body'];
-		
+
 		$filename = md5($fb_uid);
 		$filepath = "{$path}/{$filename}";
 		file_put_contents($filepath, $fb_img);
@@ -306,7 +306,7 @@ class Wdfb_Model {
 		$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
 		return apply_filters('wdfb-api-connected_accounts', $fb_accounts, $user_id);
 	}
-	
+
 	/**
 	 * Gets an existing app token for the user.
 	 */
@@ -468,7 +468,7 @@ class Wdfb_Model {
 
 		foreach($wp_mappings as $map) {
 			$field_value = false;
-			
+
 			if (empty($map['wp']) || empty($map['fb'])) continue;
 			$field_name = $map['fb'];
 
@@ -478,7 +478,7 @@ class Wdfb_Model {
 			}
 			if (!$field_value && empty($me[$field_name])) continue;
 			$field_value = $field_value ? $field_value : $me[$field_name];
-			
+
 			if (is_array($field_value) && isset($field_value['name'])) $data = $field_value['name'];
 			else if (is_array($field_value) && isset($field_value[0]) && isset($field_value[0]['name'])) $data = join(', ', array_map(create_function('$m', 'return $m["name"];'), $field_value));
 			else $data = $field_value;
@@ -569,7 +569,7 @@ class Wdfb_Model {
 			$token = $tokens[$fid];
 		}
 		$post['access_token'] = $token;
-		
+
 		$title = ('feed' == $type) ? @$post['message'] : '';
 		$_ap = $as_page ? 'as page' : '';
 		$this->log->notice("Posting {$title} to Facebook [{$type}] - [{$fid}] {$_ap} [{$token}].");
@@ -580,7 +580,7 @@ class Wdfb_Model {
 			} catch (Exception $e) {
 				$this->log->notice("Unable to post to Facebook as page.");
 			}
-			
+
 			// can_post checks perms for posting as user
 			if (@$resp['can_post']) $post['access_token'] = $tokens[$fid];
 			else $this->log->notice("Unable to post to Facebook as page.");
@@ -625,20 +625,31 @@ class Wdfb_Model {
 		return $albums ? $albums : false;
 	}
 
+	/**
+	 * Fetch photos for a provided album ID
+	 * @param $aid, Album ID
+	 * @param bool $limit,max no. og photos
+	 * @param bool $offset, Skip the no. of photos
+	 *
+	 * @return bool|mixed
+	 */
 	function get_album_photos ($aid, $limit=false, $offset=false) {
 		if (!$aid) return false;
 		$page_size = $this->_batch_page_size;
-		$max_limit = apply_filters('wdfb-albums-max_photos_limit', 
+		$max_limit = apply_filters('wdfb-albums-max_photos_limit',
 			(defined('WDFB_ALBUMS_MAX_PHOTOS_LIMIT') && WDFB_ALBUMS_MAX_PHOTOS_LIMIT ? WDFB_ALBUMS_MAX_PHOTOS_LIMIT : 200)
 		);
 
+		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
+		$accounts = $this->data->get_option('wdfb_api', 'auth_accounts');
+		$token = $tokens[key($accounts)];
 		if ($limit && $limit > $page_size) {
 			$limit = $limit > $max_limit ? $max_limit : $limit;
 			$batch = array();
 			for ($i=0; $i<$limit; $i+=$page_size) {
 				$batch[] = json_encode(array(
 					'method' => 'GET',
-					'relative_url' => "/{$aid}/photos/?limit={$page_size}&offset={$i}&fields=id,name,picture,source,height,width,images,link,icon,created_time,updated_time"
+					'relative_url' => "/{$aid}/photos/?access_token=$token&limit={$page_size}&offset={$i}&fields=created_time,height,icon,id,images,link,name,picture,source,updated_time,width"
 				));
 			}
 			try {
@@ -649,9 +660,10 @@ class Wdfb_Model {
 			}
 			$return = array();
 			foreach ($res as $key => $data) {
-				if (!$data || !isset($data['body'])) continue;
+				//Skip loop if response code is not 200 ot the res array do not contains body
+				if (!$data || !isset($data['body']) || $data['code'] != 200 ) continue;
 				$data = json_decode($data['body'],true);
-				$return = array_merge($return, $data['data']);
+				$return = !empty($return) ? array_merge($return, $data['data']) : $data['data'];
 			}
 			return array('data' => $return);
 		} else {
@@ -693,12 +705,12 @@ class Wdfb_Model {
 
 	function get_item_comments ($for) {
 		$uid = $this->get_current_user_fb_id();
-		
+
 		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
 		$token = isset($tokens[$uid]) ? $tokens[$uid] : false;
 
 		$page_size = $this->_batch_page_size;
-		$max_limit = apply_filters('wdfb-comments-max_comments_limit', 
+		$max_limit = apply_filters('wdfb-comments-max_comments_limit',
 			(defined('WDFB_COMMENTS_MAX_COMMENTS_LIMIT') && WDFB_COMMENTS_MAX_COMMENTS_LIMIT ? WDFB_COMMENTS_MAX_COMMENTS_LIMIT : 200)
 		);
 
@@ -743,8 +755,8 @@ class Wdfb_Model {
 		} catch (Exception $e) {
 			$groups = array();
 		}
-		return !empty($groups['data']) 
-			? $groups['data'] 
+		return !empty($groups['data'])
+			? $groups['data']
 			: array()
 		;
 	}
