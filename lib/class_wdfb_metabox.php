@@ -178,6 +178,7 @@ class Wdfb_Metabox_OpenGraph extends Wdfb_Metabox {
 	}
 
 	private function _add_images_field ($help=false) {
+		$markup = '';
 		$help = $help ? "<small><em>{$help}</em></small>" : '';
 		$images = $this->_get_value('wdfb_og_images');
 

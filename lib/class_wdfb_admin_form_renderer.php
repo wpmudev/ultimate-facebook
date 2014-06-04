@@ -30,8 +30,8 @@ class Wdfb_AdminFormRenderer {
 
 	function _create_widget_box ($widget, $description) {
 		$opt = $this->_get_option('wdfb_widget_pack');
-		echo $this->_create_checkbox('widget_pack', "{$widget}_allowed", @$opt["{$widget}_allowed"]);
-		echo "<div class='wdfb_widget_description'>{$description}</div>";
+		echo "</td></tr><tr><td>";
+		echo "<div class='wdfb_widget_description'>" . $this->_create_checkbox('widget_pack', "{$widget}_allowed", @$opt["{$widget}_allowed"]) . $description ."</div>";
 	}
 
 	function api_info () {
@@ -98,11 +98,6 @@ class Wdfb_AdminFormRenderer {
 			$this->_create_checkbox('grant', 'use_actions_over_streams', $opts['use_actions_over_streams']) .
 			'&nbsp;' .
 			'<label for="use_actions_over_streams">' . __('Use actions over streams', 'wdfb') . '</label>' .
-		'<br />';
-		echo '' .
-			$this->_create_checkbox('grant', 'use_minimal_permissions', $opts['use_minimal_permissions']) .
-			'&nbsp;' .
-			'<label for="use_minimal_permissions">' . __('Use minimal possible permission set', 'wdfb') . '</label>' .
 		'<br />';
 
 		echo '<div>' .
@@ -785,35 +780,35 @@ class Wdfb_AdminFormRenderer {
 	}
 
 	function create_widget_connect_box () {
-		$description = sprintf(__('Easily display Facebook Connect options on your front page. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/connect_allowed.jpg" /></td><td valign="top"><img src="%s/img/connect_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$description = sprintf(__('Easily display Facebook Connect options on your front page. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/connect_allowed.png" /></td><td valign="top"><img src="%s/img/connect_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('connect', $description);
 	}
 	function create_widget_albums_box () {
-		$description = sprintf(__('Easily display Facebook Albums. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/albums_allowed.jpg" /></td><td valign="top"><img src="%s/img/albums_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$description = sprintf(__('Easily display Facebook Albums. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/albums_allowed.png" /></td><td valign="top"><img src="%s/img/albums_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('albums', $description);
 	}
 	function create_widget_facepile_box () {
-		$description = sprintf(__('Easily display Facebook Facepile. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/facepile_allowed.jpg" /></td><td valign="top"><img src="%s/img/facepile_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$description = sprintf(__('Easily display Facebook Facepile. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/facepile_allowed.png" /></td><td valign="top"><img src="%s/img/facepile_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('facepile', $description);
 	}
 	function create_widget_likebox_box () {
-		$description = sprintf(__('Easily display Facebook Like Box. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/likebox_allowed.jpg" /></td><td valign="top"><img src="%s/img/likebox_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$description = sprintf(__('Easily display Facebook Like Box. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/likebox_allowed.png" /></td><td valign="top"><img src="%s/img/likebox_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('likebox', $description);
 	}
 	function create_widget_recommendations_box () {
-		$description = sprintf(__('Easily display Facebook Recommendations. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/recommendations_allowed.jpg" /></td><td valign="top"><img src="%s/img/recommendations_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$description = sprintf(__('Easily display Facebook Recommendations. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/recommendations_allowed.png" /></td><td valign="top"><img src="%s/img/recommendations_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('recommendations', $description);
 	}
 	function create_widget_activityfeed_box () {
-		$description = sprintf(__('Easily display Facebook Activity Feed. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/activityfeed_allowed.jpg" /></td><td valign="top"><img src="%s/img/activityfeed_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$description = sprintf(__('Easily display Facebook Activity Feed. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/activityfeed_allowed.png" /></td><td valign="top"><img src="%s/img/activityfeed_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('activityfeed', $description);
 	}
 	function create_widget_recent_comments_box () {
-		$description = sprintf(__('Easily display your recently imported Facebook comments. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/recent_comments_allowed.jpg" /></td><td valign="top"><img src="%s/img/recent_comments_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
+		$description = sprintf(__('Easily display your recently imported Facebook comments. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/recent_comments_allowed.png" /></td><td valign="top"><img src="%s/img/recent_comments_allowed_result.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL);
 		$this->_create_widget_box('recent_comments', $description);
 	}
 	function create_dashboard_permissions_box () {
-		$description = sprintf(__('Display extended permissions granting box for your users in the Dashboard. <table> <th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/dashboard_permissions_allowed.jpg" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL);
+		$description = sprintf(__('Display extended permissions granting box for your users in the Dashboard. <table> <th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/dashboard_permissions_allowed.png" /></td></tr> </table>', 'wdfb'), WDFB_PLUGIN_URL);
 		$this->_create_widget_box('dashboard_permissions', $description);
 	}
 

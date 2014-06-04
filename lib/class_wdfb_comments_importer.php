@@ -86,7 +86,7 @@ class Wdfb_CommentsImporter {
 	/**
 	 * @static
 	 */
-	function serve () {
+	public static function serve () {
 		$me = new Wdfb_CommentsImporter;
 		$me->import_comments();
 	}

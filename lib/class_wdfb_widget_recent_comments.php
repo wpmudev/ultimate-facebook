@@ -17,7 +17,7 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 		$hide_text   = ! empty( $instance['hide_text'] ) ? esc_attr( $instance['hide_text'] ) : '';
 
 		// Sanity check
-		$data =& Wdfb_OptionsRegistry::get_instance();
+		$data = Wdfb_OptionsRegistry::get_instance();
 		if (!$data->get_option('wdfb_comments', 'import_fb_comments')) {
 			$html .= '<div class="error below-h2"><p>' . 
 				__('Your comments are currently not being imported from Facebook. This will make the widget show stale data, if any.', 'wdfb') . 
@@ -73,12 +73,10 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 
 	function widget($args, $instance) {
 		extract($args);
-		$title = apply_filters('widget_title', $instance['title']);
-		$limit = (int)@$instance['limit'];
-		$size = (int)@$instance['avatar_size'];
-		$hide_text = (int)@$instance['hide_text'];
-		
-		$limit = $limit ? $limit : 5;
+		$title     = apply_filters( 'widget_title', $instance['title'] );
+		$limit     = ! empty( $instance['limit'] ) ? (int) @$instance['limit'] : 5;
+		$size      = ! empty( $instance['avatar_size'] ) ? (int) @$instance['avatar_size'] : '';
+		$hide_text = ! empty( $instance['hide_text'] ) ? (int) @$instance['hide_text'] : '';
 
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;

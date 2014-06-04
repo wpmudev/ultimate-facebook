@@ -152,32 +152,37 @@ if ($data->get_option('wdfb_widget_pack', 'dashboard_permissions_allowed')) {
  * Schedule cron jobs for comments import.
  */
 function wdfb_comment_import () {
-	$data =& Wdfb_OptionsRegistry::get_instance();
-	if (!$data->get_option('wdfb_comments', 'import_fb_comments')) return; // Don't import comments
+	$data = Wdfb_OptionsRegistry::get_instance();
+	if ( ! $data->get_option( 'wdfb_comments', 'import_fb_comments' ) ) {
+		return;
+	} // Don't import comments
 	Wdfb_CommentsImporter::serve();
 }
-add_action('wdfb_import_comments', 'wdfb_comment_import');//array($importer, 'serve'));
-if (!wp_next_scheduled('wdfb_import_comments')) wp_schedule_event(time()+600, 'hourly', 'wdfb_import_comments');
 
-define("WDFB_CORE_IS_ADMIN", (is_admin() || (defined('XMLRPC_REQUEST') && XMLRPC_REQUEST) || (defined('DOING_CRON') && DOING_CRON)), true);
+add_action( 'wdfb_import_comments', 'wdfb_comment_import' ); //array($importer, 'serve'));
+if ( ! wp_next_scheduled( 'wdfb_import_comments' ) ) {
+	wp_schedule_event( time() + 600, 'hourly', 'wdfb_import_comments' );
+}
 
-function _wdfb_initialize () {
+define( "WDFB_CORE_IS_ADMIN", ( is_admin() || ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) ), true );
+
+function _wdfb_initialize() {
 	// Include the metabox abstraction
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_metabox.php');
+	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_metabox.php' );
 	$og = new Wdfb_Metabox_OpenGraph;
 
-	if (apply_filters('wdfb-core-is_admin', WDFB_CORE_IS_ADMIN)) {
-		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_help.php');
-		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_form_renderer.php');
-		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_pages.php');
-		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_tutorial.php');
+	if ( apply_filters( 'wdfb-core-is_admin', WDFB_CORE_IS_ADMIN ) ) {
+		require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_help.php' );
+		require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_form_renderer.php' );
+		require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_admin_pages.php' );
+		require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_tutorial.php' );
 		Wdfb_Tutorial::serve();
 		Wdfb_AdminPages::serve();
 	} else {
-		require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_public_pages.php');
+		require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_public_pages.php' );
 		Wdfb_PublicPages::serve();
 	}
-	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_universal_worker.php');
+	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_universal_worker.php' );
 	Wdfb_UniversalWorker::serve();
 }
 add_action('plugins_loaded', '_wdfb_initialize');
