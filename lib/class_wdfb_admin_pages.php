@@ -424,7 +424,6 @@ class Wdfb_AdminPages {
 	
 	function js_editors () {
 		wp_enqueue_script('thickbox');
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return false;
 
 		wp_enqueue_script('wdfb_editor_album', WDFB_PLUGIN_URL . '/js/editor_album.js');
 		wp_localize_script('wdfb_editor_album', 'l10nWdfbEditor', array(
@@ -439,7 +438,6 @@ class Wdfb_AdminPages {
 	}
 	
 	function css_load_styles () {
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return false;
 		wp_enqueue_style('wdfb_album_editor', WDFB_PLUGIN_URL . '/css/wdfb_album_editor.css');
 	}
 	
@@ -766,10 +764,7 @@ $token = false;
 	}
 
 	function json_list_fb_albums () {
-		$albums = $this->data->get_option('wdfb_grant', 'allow_fb_photos_access')
-			? $this->model->get_current_albums()
-			: array()
-		;
+		$albums = $this->model->get_current_albums();
 		$status = $albums ? 1 : 0;
 		header('Content-type: application/json');
 		echo json_encode(array(
@@ -781,10 +776,7 @@ $token = false;
 
 	function json_list_fb_album_photos () {
 		$album_id = $_POST['album_id'];
-		$photos = $this->data->get_option('wdfb_grant', 'allow_fb_photos_access')
-			? $this->model->get_album_photos($album_id)
-			: array()
-		;
+		$photos = $this->model->get_album_photos($album_id);
 		$status = $photos ? 1 : 0;
 		header('Content-type: application/json');
 		echo json_encode(array(

@@ -19,11 +19,9 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 	}
 
 	function css_load_styles () {
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return false;
 		wp_enqueue_style('wdfb_album_editor', WDFB_PLUGIN_URL . '/css/wdfb_album_editor.css');
 	}
 	function js_load_editor () {
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return false;
 		wp_enqueue_script('wdfb_widget_editor_album', WDFB_PLUGIN_URL . '/js/widget_editor_album.js');
 		wp_localize_script('wdfb_widget_editor_album', 'l10nWdfbEditor', array(
 			'add_fb_photo' => __('Add FB Photo', 'wdfb'),
@@ -38,12 +36,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		));
 	}
 
-	private function _grant_box_html () {
-		echo '<div class="error below-h2"><p>' . __('You need to allow Photos access in the plugin settings for this.', 'wdfb') . '</p></div>';
-	}
-
 	function form($instance) {
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return $this->_grant_box_html();
 
 		$title    = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
 		$album_id = ! empty( $instance['album_id'] ) ? esc_attr( $instance['album_id'] ) : '';
@@ -134,7 +127,6 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 	}
 
 	function widget($args, $instance) {
-		if (!$this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) return '';
 		
 		extract($args);
 		$title = apply_filters('widget_title', $instance['title']);

@@ -11,15 +11,15 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 	}
 
 	function form($instance) {
-		$title = esc_attr($instance['title']);
-		$url = esc_attr($instance['url']);
-		$width = esc_attr($instance['width']);
-		$height = esc_attr($instance['height']);
-		$show_header = esc_attr($instance['show_header']);
-		$show_faces = esc_attr($instance['show_faces']);
-		$show_stream = esc_attr($instance['show_stream']);
-		$color_scheme = esc_attr($instance['color_scheme']);
-		$hide_if_logged_out = esc_attr($instance['hide_if_logged_out']);
+		$title              = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$url                = ! empty( $instance['url'] ) ? esc_attr( $instance['url'] ) : '';
+		$width              = ! empty( $instance['width'] ) ? esc_attr( $instance['width'] ) : '';
+		$height             = ! empty( $instance['height'] ) ? esc_attr( $instance['height'] ) : '';
+		$show_header        = ! empty( $instance['show_header'] ) ? esc_attr( $instance['show_header'] ) : '';
+		$show_faces         = ! empty( $instance['show_faces'] ) ? esc_attr( $instance['show_faces'] ) : '';
+		$show_stream        = ! empty( $instance['show_stream'] ) ? esc_attr( $instance['show_stream'] ) : '';
+		$color_scheme       = ! empty( $instance['color_scheme'] ) ? esc_attr( $instance['color_scheme'] ) : '';
+		$hide_if_logged_out = !empty( $instance['hide_if_logged_out'] ) ? esc_attr($instance['hide_if_logged_out']) : '';
 
 		// Set defaults
 		// ...

@@ -30,7 +30,6 @@
 </p>
 <p><strong>Note:</strong> you have to <a href="?page=wdfb">allow</a> registering with Facebook in your plugin settings (under &quot;Facebook Connect&quot;) for this shortcode to work.</p>
 
-<?php if ($this->data->get_option('wdfb_grant', 'allow_fb_photos_access')) { ?>
 <h3>Album shortcode</h3>
 <p><em>Tag:</em> <code>[wdfb_album]</code></p>
 <p>
@@ -54,6 +53,5 @@
 		<li><code>[wdfb_album id="379473193359" photo_class="thickbox" columns="5" photo_height="50" crop="true"]</code> - same as above, but image height will be cropped to better fit the row height.</li>
 	</ul>
 </p>
-<?php } ?>
 
 </div>

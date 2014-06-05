@@ -20,8 +20,6 @@ class Wdfb_Permissions {
 	const EXTRA_EDUCATION = 'user_education_history';
 	const EXTRA_WORK = 'user_work_history';
 
-	const EXTRA_PHOTOS = 'user_photos';
-
 	private function __construct () {}
 
 	public static function get_permissions () {
@@ -110,8 +108,6 @@ class Wdfb_Permissions {
 	public static function get_publisher_permissions () {
 		$data = Wdfb_OptionsRegistry::get_instance();
 		$extras = array();
-
-//		if ($data->get_option('wdfb_grant', 'allow_fb_photos_access')) $extras[] = self::EXTRA_PHOTOS;
 
 		$include_posting = defined('WDFB_CORE_MINIMAL_PERMISSIONS_SET') && WDFB_CORE_MINIMAL_PERMISSIONS_SET
 			? $data->get_option('wdfb_autopost', 'allow_autopost') || !$data->get_option('wdfb_autopost', 'prevent_post_metabox')

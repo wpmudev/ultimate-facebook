@@ -89,28 +89,7 @@ class Wdfb_AdminFormRenderer {
 			'<p>' . __('Please, remember to re-grant the extended permissions once you made your changes here', 'wdfb') . '</p>' .
 		'</div>';
 
-		echo '' .
-			$this->_create_checkbox('grant', 'allow_fb_photos_access', $opts['allow_fb_photos_access']) .
-			'&nbsp;' .
-			'<label for="allow_fb_photos_access">' . __('Allow Photos functionality', 'wdfb') . '</label>';
 		echo '<hr />';
-		echo '' .
-			$this->_create_checkbox('grant', 'use_actions_over_streams', $opts['use_actions_over_streams']) .
-			'&nbsp;' .
-			'<label for="use_actions_over_streams">' . __('Use actions over streams', 'wdfb') . '</label>' .
-		'<br />';
-
-		echo '<div>' .
-			'<h4>' . __('Permissions list', 'wdfb') . '</h4>' .
-			'<dl>' .
-				'<dt>' . __('New users', 'wdfb') . '</dt>' .
-				'<dd>' . Wdfb_Permissions::get_new_user_permissions() . '</dd>' .
-				'<dt>' . __('Non-publishing users', 'wdfb') . '</dt>' .
-				'<dd>' . Wdfb_Permissions::get_non_publisher_permissions() . '</dd>' .
-				'<dt>' . __('Publishing users', 'wdfb') . '</dt>' .
-				'<dd>' . Wdfb_Permissions::get_publisher_permissions() . '</dd>' .
-			'</dl>' .
-		'</div>';
 	}
 
 	function cache_operations () {

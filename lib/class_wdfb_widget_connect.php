@@ -22,10 +22,10 @@ class Wdfb_WidgetConnect extends WP_Widget {
 	}
 
 	function form($instance) {
-		$title = esc_attr($instance['title']);
-		$width = esc_attr($instance['width']);
-		$avatar_size = esc_attr($instance['avatar_size']);
-		$register = esc_attr($instance['register']);
+		$title       = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$width       = ! empty( $instance['width'] ) ? esc_attr( $instance['width'] ) : '';
+		$avatar_size = ! empty( $instance['avatar_size'] ) ? esc_attr( $instance['avatar_size'] ) : '';
+		$register    = ! empty( $instance['register'] ) ? esc_attr( $instance['register'] ) : '';
 
 		// Set defaults
 		// ...
