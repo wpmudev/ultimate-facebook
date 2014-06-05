@@ -111,7 +111,7 @@ class Wdfb_Permissions {
 		$data = Wdfb_OptionsRegistry::get_instance();
 		$extras = array();
 
-		if ($data->get_option('wdfb_grant', 'allow_fb_photos_access')) $extras[] = self::EXTRA_PHOTOS;
+//		if ($data->get_option('wdfb_grant', 'allow_fb_photos_access')) $extras[] = self::EXTRA_PHOTOS;
 
 		$include_posting = defined('WDFB_CORE_MINIMAL_PERMISSIONS_SET') && WDFB_CORE_MINIMAL_PERMISSIONS_SET
 			? $data->get_option('wdfb_autopost', 'allow_autopost') || !$data->get_option('wdfb_autopost', 'prevent_post_metabox')
