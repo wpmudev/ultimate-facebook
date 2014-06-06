@@ -504,68 +504,83 @@ class Wdfb_AdminPages {
 		}
 	}
 
-	function handle_fb_auth_tokens () {
-		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
+	function handle_fb_auth_tokens() {
+		$tokens = $this->data->get_option( 'wdfb_api', 'auth_tokens' );
 
-		$fb_uid = $this->model->fb->getUser();
-		$app_id = trim($this->data->get_option('wdfb_api', 'app_key'));
-		$app_secret = trim($this->data->get_option('wdfb_api', 'secret_key'));
-		if (!$app_id || !$app_secret) return false; // Plugin not yet configured
+		$fb_uid     = $this->model->fb->getUser();
+		$app_id     = trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
+		$app_secret = trim( $this->data->get_option( 'wdfb_api', 'secret_key' ) );
+		if ( ! $app_id || ! $app_secret ) {
+			return false;
+		} // Plugin not yet configured
 
 		// Token is now long-term token	
-		$token = $this->model->get_user_api_token($fb_uid);
+		$token = $this->model->get_user_api_token( $fb_uid );
 		// Make sure it is
-		$token = preg_match('/^' . preg_quote("{$app_id}|") . '/', $token) ? false : $token;
-// Just force the token reset, for now
-$token = false;
-
-		if (!$token) {
+		$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? false : $token;
+		// Just force the token reset, for now
+		$token = false;
+		if ( ! $token ) {
 			// Get temporary token
 			$token = $this->model->fb->getAccessToken();
-			if (!$token) return false;
+			if ( ! $token ) {
+				return false;
+			}
 
 			// Exchange it for the actual long-term token
-			$url = "https://graph.facebook.com/oauth/access_token?client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}";
-			$page = wp_remote_get($url, array(
-				'method' 		=> 'GET',
-				'timeout' 		=> '5',
-				'redirection' 	=> '5',
-				'user-agent' 	=> 'wdfb',
-				'blocking'		=> true,
-				'compress'		=> false,
-				'decompress'	=> true,
-				'sslverify'		=> false
-			));
-			if(is_wp_error($page)) return false; // Request fail
-			if ((int)$page['response']['code'] != 200) return false; // Request fail
-			
-			parse_str($page['body'], $response);
-			$token = isset($response['access_token']) ? $response['access_token'] : false;
-			if (!$token) return false;
-		}
+			$url  = "https://graph.facebook.com/oauth/access_token?client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}&access_token={$user_token}";
+			$page = wp_remote_get( $url, array(
+				'method'      => 'GET',
+				'timeout'     => '5',
+				'redirection' => '5',
+				'user-agent'  => 'wdfb',
+				'blocking'    => true,
+				'compress'    => false,
+				'decompress'  => true,
+				'sslverify'   => false
+			) );
+			if ( is_wp_error( $page ) ) {
+				return false;
+			} // Request fail
+			if ( (int) $page['response']['code'] != 200 ) {
+				return false;
+			} // Request fail
 
-		if (!$this->data->get_option('wdfb_api', 'prevent_linked_accounts_access')) {
-			$page_tokens = $this->model->get_pages_tokens($token);
-			$page_tokens = isset($page_tokens['data']) ? $page_tokens['data'] : array();
+			parse_str( $page['body'], $response );
+			$token = isset( $response['access_token'] ) ? $response['access_token'] : false;
+			if ( ! $token ) {
+				return false;
+			}
+		}
+		if ( ! $this->data->get_option( 'wdfb_api', 'prevent_linked_accounts_access' ) ) {
+			$page_tokens = $this->model->get_pages_tokens( $token );
+			$page_tokens = isset( $page_tokens['data'] ) ? $page_tokens['data'] : array();
 		} else {
 			$page_tokens = array();
 		}
 
-		$api = array();
-		$api['auth_tokens'][$fb_uid] = $token;
-		$api['auth_accounts'][$fb_uid] = sprintf(__("Me (%s)", 'wdfb'), $fb_uid);
-		foreach ($page_tokens as $ptk) {
-			$ptk = (array)$ptk;
-			if (!isset($ptk['id']) || !isset($ptk['access_token'])) continue;
-			if ($this->data->get_option('wdfb_api', 'prevent_linked_accounts_access')) if ($ptk['id'] != $app_id) continue;
+		$api                             = array();
+		$api['auth_tokens'][ $fb_uid ]   = $token;
+		$api['auth_accounts'][ $fb_uid ] = sprintf( __( "Me (%s)", 'wdfb' ), $fb_uid );
+		foreach ( $page_tokens as $ptk ) {
+			$ptk = (array) $ptk;
+			if ( ! isset( $ptk['id'] ) || ! isset( $ptk['access_token'] ) ) {
+				continue;
+			}
+			if ( $this->data->get_option( 'wdfb_api', 'prevent_linked_accounts_access' ) ) {
+				if ( $ptk['id'] != $app_id ) {
+					continue;
+				}
+			}
 
-			$api['auth_tokens'][$ptk['id']] = $ptk['access_token'];
-			$api['auth_accounts'][$ptk['id']] = $ptk['name'];
+			$api['auth_tokens'][ $ptk['id'] ]   = $ptk['access_token'];
+			$api['auth_accounts'][ $ptk['id'] ] = $ptk['name'];
 		}
 
 		$user = wp_get_current_user();
-		update_user_meta($user->ID, 'wdfb_api_accounts', $api);
+		update_user_meta( $user->ID, 'wdfb_api_accounts', $api );
 		$this->merge_api_tokens();
+
 		return true;
 	}
 
@@ -708,11 +723,13 @@ $token = false;
 	 * BuddyPress Activity publishing procedure.
 	 */
 	function publish_bp_activity ($content, $user_id, $activity_id) {
+		//If post on wall checkbox is checked
 		$is_particular = (bool)(isset($_POST['wdfb_send_activity']) && $_POST['wdfb_send_activity']);
 		if (!$this->data->get_option('wdfb_autopost', 'type_bp_activity_fb_type')) {
 			if ($this->data->get_option('wdfb_autopost', 'prevent_bp_activity_switch')) return false;
 			if (!$this->data->get_option('wdfb_autopost', 'prevent_bp_activity_switch') && !$is_particular) return false;
 		}
+		//If checkbox post on wall is checked ignore settings, post to User Facebook wall
 		$fb_id = $is_particular 
 			? $this->model->get_fb_user_from_wp($user_id) 
 			: $this->data->get_option('wdfb_autopost', 'type_bp_activity_fb_user')

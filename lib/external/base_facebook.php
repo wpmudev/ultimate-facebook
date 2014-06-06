@@ -965,7 +965,6 @@ abstract class BaseFacebook
           }
         }
     }
-
     if ($result === false) {
       $e = new FacebookApiException(array(
         'error_code' => curl_errno($ch),
