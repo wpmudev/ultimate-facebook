@@ -95,7 +95,6 @@ function check_hash () {
  */
 function check_autopost_prerequisites () {
 	FB.getLoginStatus(function (resp) {
-		console.log(resp);
 		if (resp.authResponse && resp.authResponse.userID) return true; // All good
 		$selects = $('#wdfb-section-wdfb_autopost select[name^="wdfb_autopost"], #wdfb-section-wdfb_autopost .wdfb-autopost-shortlink');
 		$selects.attr("disabled", true);

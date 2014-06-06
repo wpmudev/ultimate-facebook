@@ -640,9 +640,8 @@ class Wdfb_Model {
 			(defined('WDFB_ALBUMS_MAX_PHOTOS_LIMIT') && WDFB_ALBUMS_MAX_PHOTOS_LIMIT ? WDFB_ALBUMS_MAX_PHOTOS_LIMIT : 200)
 		);
 
-		$tokens = $this->data->get_option('wdfb_api', 'auth_tokens');
-		$accounts = $this->data->get_option('wdfb_api', 'auth_accounts');
-		$token = $tokens[key($accounts)];
+		$fid = $this->get_current_user_fb_id();
+		$token = $this->get_user_api_token($fid);
 		if ($limit && $limit > $page_size) {
 			$limit = $limit > $max_limit ? $max_limit : $limit;
 			$batch = array();

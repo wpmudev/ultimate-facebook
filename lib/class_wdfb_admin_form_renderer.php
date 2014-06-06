@@ -90,6 +90,16 @@ class Wdfb_AdminFormRenderer {
 		'</div>';
 
 		echo '<hr />';
+		echo '' .
+		     $this->_create_checkbox('grant', 'use_actions_over_streams', $opts['use_actions_over_streams']) .
+		     '&nbsp;' .
+		     '<label for="use_actions_over_streams">' . __('Use actions over streams', 'wdfb') . '</label>' .
+		     '<br />';
+		echo '' .
+		     $this->_create_checkbox('grant', 'use_minimal_permissions', $opts['use_minimal_permissions']) .
+		     '&nbsp;' .
+		     '<label for="use_minimal_permissions">' . __('Use minimal possible permission set', 'wdfb') . '</label>' .
+		     '<br />';
 	}
 
 	function cache_operations () {

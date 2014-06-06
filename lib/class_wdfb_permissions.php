@@ -8,6 +8,10 @@ class Wdfb_Permissions {
 
 	const EXTRA_READ = 'read_stream';
 
+	const EXTRA_PUBLISH_PAGES = 'manage_pages';
+	const EXTRA_PUBLISH_ACTION = 'publish_actions';
+	const EXTRA_PUBLISH_STREAM = 'publish_stream';
+
 	const EXTRA_ABOUT = 'user_about_me';
 	const EXTRA_BIRTHDAY = 'user_birthday';
 	const EXTRA_LOCATION = 'user_location';
@@ -96,6 +100,9 @@ class Wdfb_Permissions {
 
 	public static function get_non_publisher_permissions () {
 		$extras = explode(',', self::NON_PUBLISHER);
+		if (!(defined('WDFB_CORE_MINIMAL_PERMISSIONS_SET') && WDFB_CORE_MINIMAL_PERMISSIONS_SET)) {
+			$extras[] = self::EXTRA_READ;
+		}
 		$perms = array_merge(
 			explode(',', self::get_new_user_permissions()),
 			$extras
@@ -113,8 +120,13 @@ class Wdfb_Permissions {
 			? $data->get_option('wdfb_autopost', 'allow_autopost') || !$data->get_option('wdfb_autopost', 'prevent_post_metabox')
 			: true
 		;
-		
-		$extras = array_values(array_unique($extras));
+		if ($include_posting) {
+			$extras[] = $data->get_option('wdfb_grant', 'use_actions_over_streams')
+				? self::EXTRA_PUBLISH_ACTION
+				: self::EXTRA_PUBLISH_STREAM
+			;
+			$extras[] = self::EXTRA_PUBLISH_PAGES;
+		}
 
 		$perms = array_merge(
 			explode(',', self::get_new_user_permissions()),
