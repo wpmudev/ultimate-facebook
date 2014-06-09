@@ -85,7 +85,7 @@ class Wdfb_PublicPages {
 			$site_name = get_option('blogname');
 			$description = get_option('blogdescription');
 		}
-		$image = wdfb_get_og_image($id);
+		$image = $id ? wdfb_get_og_image($id) : '';
 
 		// App ID
 		if (!defined('WDFB_APP_ID_OG_SET')) {

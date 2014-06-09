@@ -7,6 +7,7 @@ Change Log:
 
 2.7.1 - 2014-06-5 - Umesh Kumar
 ----------------------------------------------------------------------
+- Fixed: Facebook Registration iframe src
 - Validate email for Facebook registrations
 - Updated code to support facebook API v2
 - Removed: Facebook events and notes support

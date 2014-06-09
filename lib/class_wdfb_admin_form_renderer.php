@@ -83,7 +83,8 @@ class Wdfb_AdminFormRenderer {
 	function extra_permissions () {
 		$opts = $this->_get_option('wdfb_grant');
 		$opts = is_array($opts) ? $opts : array();
-
+		$use_actions_over_streams = isset( $opts['use_actions_over_streams'] ) ? $opts['use_actions_over_streams'] : false;
+		$use_minimal_permissions = isset( $opts['use_minimal_permissions'] ) ? $opts['use_minimal_permissions'] : false;
 		echo '<div class="updated below-h2">' .
 			'<p>' . __('<b>Note:</b> Allowing any of the additional functionality listed here will require additional Facebook privileges to be granted to your app.', 'wdfb') . '</p>' .
 			'<p>' . __('Please, remember to re-grant the extended permissions once you made your changes here', 'wdfb') . '</p>' .
@@ -91,12 +92,12 @@ class Wdfb_AdminFormRenderer {
 
 		echo '<hr />';
 		echo '' .
-		     $this->_create_checkbox('grant', 'use_actions_over_streams', $opts['use_actions_over_streams']) .
+		     $this->_create_checkbox('grant', 'use_actions_over_streams', $use_actions_over_streams) .
 		     '&nbsp;' .
 		     '<label for="use_actions_over_streams">' . __('Use actions over streams', 'wdfb') . '</label>' .
 		     '<br />';
 		echo '' .
-		     $this->_create_checkbox('grant', 'use_minimal_permissions', $opts['use_minimal_permissions']) .
+		     $this->_create_checkbox('grant', 'use_minimal_permissions', $use_minimal_permissions) .
 		     '&nbsp;' .
 		     '<label for="use_minimal_permissions">' . __('Use minimal possible permission set', 'wdfb') . '</label>' .
 		     '<br />';
@@ -232,6 +233,7 @@ class Wdfb_AdminFormRenderer {
 		echo ' <label for="require_facebook_account">' . __('Require Facebook account', 'wdfb') . '</label>';
 		echo '<div><small>' . __('By default, Facebook registration form will allow your users to register with their Facebook account, or with their chosen usernames and emails.', 'wdfb') . '</small></div>';
 		echo '<div><small>' . __('Check this if users will need to have a Facebook account already.', 'wdfb') . '</small></div>';
+		echo '<div><small style="color: red;">' . __('As of the latest Facebook API V2.0, Facebook registration plugin has been deprecated.', 'wdfb') . '</small></div>';
 	}
 	function create_no_main_site_registration_box () {
 		$opt = $this->_get_option('wdfb_connect');

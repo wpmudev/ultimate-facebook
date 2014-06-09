@@ -12,6 +12,8 @@ class Wdfb_Permissions {
 	const EXTRA_PUBLISH_ACTION = 'publish_actions';
 	const EXTRA_PUBLISH_STREAM = 'publish_stream';
 
+	const EXTRA_USER_PHOTOS = 'user_photos';
+
 	const EXTRA_ABOUT = 'user_about_me';
 	const EXTRA_BIRTHDAY = 'user_birthday';
 	const EXTRA_LOCATION = 'user_location';
@@ -126,6 +128,10 @@ class Wdfb_Permissions {
 				: self::EXTRA_PUBLISH_STREAM
 			;
 			$extras[] = self::EXTRA_PUBLISH_PAGES;
+			//If albums allowed
+			if ($data->get_option('wdfb_widget_pack', 'albums_allowed')){
+				$extras[] = self::EXTRA_USER_PHOTOS;
+			}
 		}
 
 		$perms = array_merge(

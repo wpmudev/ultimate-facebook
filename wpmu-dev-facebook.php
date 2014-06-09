@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 define ('WDFB_PLUGIN_SELF_DIRNAME', basename(dirname(__FILE__)), true);
-define ('WDFB_PROTOCOL', (@$_SERVER["HTTPS"] == 'on' ? 'https://' : 'http://'), true);
+define ('WDFB_PROTOCOL', ( is_ssl() ? 'https://' : 'http://'), true);
 define ('WDFB_PLUGIN_CORE_URL', plugins_url(), true);
 define ('WDFB_PLUGIN_CORE_BASENAME', plugin_basename(__FILE__), true);
 if (!defined('WDFB_MEMBERSHIP_INSTALLED')) define ('WDFB_MEMBERSHIP_INSTALLED', (defined('MEMBERSHIP_MASTER_ADMIN') && defined('MEMBERSHIP_SETACTIVATORAS_ADMIN')), true);

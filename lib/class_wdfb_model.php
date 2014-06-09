@@ -395,7 +395,7 @@ class Wdfb_Model {
 		}
 		if (!$me) return false;
 		//Validate email
-		if ( empty( $me['email'] ) || ! filter_var( $me['email'], FILTER_VALIDATE_EMAIL ) ) {
+		if ( empty( $me['email'] ) || ! filter_var( $me['email'], FILTER_VALIDATE_EMAIL ) || email_exists ($me['email']) ) {
 			return false;
 		}
 		$username = $this->_create_username_from_fb_response($me);

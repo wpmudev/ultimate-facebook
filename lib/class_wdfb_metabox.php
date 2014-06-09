@@ -197,6 +197,7 @@ class Wdfb_Metabox_OpenGraph extends Wdfb_Metabox {
 	}
 
 	private function _add_custom_field ($help=false) {
+		$markup = '';
 		$help = $help ? "<small><em>{$help}</em></small>" : '';
 		$names = $this->_get_value('wdfb_og_custom_name');
 		$values = $this->_get_value('wdfb_og_custom_value');
