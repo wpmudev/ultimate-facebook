@@ -253,7 +253,7 @@ EOCOMJS;
 	}
 
 	function bp_inject_form_checkbox () {
-		echo '<span id="wdfb_send_activity-container"><input type="checkbox" name="wdfb_send_activity" id="wdfb_send_activity" value="1" />&nbsp;<label for="wdfb_send_activity">' . __('Publish on Facebook', 'wdfb') . '</label></span>';
+		echo '<span id="wdfb_send_activity-container"><input type="checkbox" name="wdfb_send_activity" id="wdfb_send_activity" value="1" />&nbsp;<label for="wdfb_send_activity">' . __('Publish on your facebook wall', 'wdfb') . '</label></span>';
 		echo <<<EOBpFormInjection
 <script>
 (function ($) {
