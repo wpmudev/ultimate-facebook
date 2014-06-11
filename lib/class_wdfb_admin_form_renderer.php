@@ -89,7 +89,7 @@ class Wdfb_AdminFormRenderer {
 			'<p>' . __('Please, remember to re-grant the extended permissions once you made your changes here', 'wdfb') . '</p>' .
 		'</div>';
 
-		echo '<hr />'
+		echo '<hr />';
 		echo '' .
 		     $this->_create_checkbox('grant', 'use_minimal_permissions', $use_minimal_permissions) .
 		     '&nbsp;' .
