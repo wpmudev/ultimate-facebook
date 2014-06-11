@@ -863,15 +863,19 @@ class Wdfb_AdminPages {
 	}
 	
 	function json_check_api_status () {
-		header("Content-type: application/json");
-		$app_key = trim($this->data->get_option('wdfb_api', 'app_key'));
-		$resp = wp_remote_get("https://graph.facebook.com/{$app_key}", array(
+		header( "Content-type: application/json" );
+		$app_key = trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
+		$resp    = wp_remote_get( "https://graph.facebook.com/{$app_key}", array(
 			'sslverify' => false,
-			'timeout' => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya
-		));
-		if(is_wp_error($resp)) die(json_encode(array("status" => 0))); // Request fail
-		if ((int)$resp['response']['code'] != 200) die(json_encode(array("status" => 0))); // Request fail
-		die($resp['body']);
+			'timeout'   => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya
+		) );
+		if ( is_wp_error( $resp ) ) {
+			die( json_encode( array( "status" => 0 ) ) );
+		} // Request fail
+		if ( (int) $resp['response']['code'] != 200 ) {
+			die( json_encode( array( "status" => 0 ) ) );
+		} // Request fail
+		die( $resp['body'] );
 	}
 
 	function json_get_facebook_groups_map () {

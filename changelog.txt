@@ -10,7 +10,7 @@ Change Log:
 - Fixed: Facebook Registration iframe src
 - Validate email for Facebook registrations
 - Updated code to support facebook API v2
-- Removed: Facebook events and notes support
+- REMOVED: Facebook EVENTS and NOTES support
 - Updated permission list
 - Fixed warnings, fixed js reload on settings page
 

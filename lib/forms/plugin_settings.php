@@ -72,7 +72,7 @@ function invalid_api_settings () {
 	;
 	$(".wdfb-api_connect-success").remove();
 	$("#wdfb-section-wdfb_api .wdfb-api_connect-result").html(
-		"<b class='wdfb-api_connect-failure'><?php echo esc_js(__('Please, enter correct Facebook API settings', 'wdfb')); ?></b>"
+		"<b class='wdfb-api_connect-failure'><?php echo esc_js(__('Please, enter correct Facebook API settings and make sure Facebook app is public', 'wdfb')); ?></b>"
 	);
 }
 
