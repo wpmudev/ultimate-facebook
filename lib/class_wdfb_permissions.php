@@ -10,7 +10,6 @@ class Wdfb_Permissions {
 
 	const EXTRA_PUBLISH_PAGES = 'manage_pages';
 	const EXTRA_PUBLISH_ACTION = 'publish_actions';
-	const EXTRA_PUBLISH_STREAM = 'publish_stream';
 
 	const EXTRA_USER_PHOTOS = 'user_photos';
 
@@ -123,10 +122,7 @@ class Wdfb_Permissions {
 			: true
 		;
 		if ($include_posting) {
-			$extras[] = $data->get_option('wdfb_grant', 'use_actions_over_streams')
-				? self::EXTRA_PUBLISH_ACTION
-				: self::EXTRA_PUBLISH_STREAM
-			;
+			$extras[] = self::EXTRA_PUBLISH_ACTION;
 			$extras[] = self::EXTRA_PUBLISH_PAGES;
 			//If albums allowed
 			if ($data->get_option('wdfb_widget_pack', 'albums_allowed')){

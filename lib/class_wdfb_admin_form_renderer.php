@@ -83,19 +83,13 @@ class Wdfb_AdminFormRenderer {
 	function extra_permissions () {
 		$opts = $this->_get_option('wdfb_grant');
 		$opts = is_array($opts) ? $opts : array();
-		$use_actions_over_streams = isset( $opts['use_actions_over_streams'] ) ? $opts['use_actions_over_streams'] : false;
 		$use_minimal_permissions = isset( $opts['use_minimal_permissions'] ) ? $opts['use_minimal_permissions'] : false;
 		echo '<div class="updated below-h2">' .
 			'<p>' . __('<b>Note:</b> Allowing any of the additional functionality listed here will require additional Facebook privileges to be granted to your app.', 'wdfb') . '</p>' .
 			'<p>' . __('Please, remember to re-grant the extended permissions once you made your changes here', 'wdfb') . '</p>' .
 		'</div>';
 
-		echo '<hr />';
-		echo '' .
-		     $this->_create_checkbox('grant', 'use_actions_over_streams', $use_actions_over_streams) .
-		     '&nbsp;' .
-		     '<label for="use_actions_over_streams">' . __('Use actions over streams', 'wdfb') . '</label>' .
-		     '<br />';
+		echo '<hr />'
 		echo '' .
 		     $this->_create_checkbox('grant', 'use_minimal_permissions', $use_minimal_permissions) .
 		     '&nbsp;' .
