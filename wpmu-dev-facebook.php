@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.7.1
+Version: 2.7.2
 Text Domain: wdfb
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
@@ -187,7 +187,7 @@ function _wdfb_initialize() {
 }
 add_action('plugins_loaded', '_wdfb_initialize');
 
-if (is_admin() && file_exists(WDFB_PLUGIN_BASE_DIR . '/lib/external/wpmudev-dash-notification.php')) {
+if (is_admin() && file_exists(WDFB_PLUGIN_BASE_DIR . '/lib/dash-notice/wpmudev-dash-notification.php')) {
 	// Dashboard notification
 	global $wpmudev_notices;
 	if (!is_array($wpmudev_notices)) $wpmudev_notices = array();
@@ -204,5 +204,5 @@ if (is_admin() && file_exists(WDFB_PLUGIN_BASE_DIR . '/lib/external/wpmudev-dash
 			'facebook_page_wdfb_error_log',
 		),
 	);
-	require_once WDFB_PLUGIN_BASE_DIR . '/lib/external/wpmudev-dash-notification.php';
+	require_once WDFB_PLUGIN_BASE_DIR . '/lib/dash-notice/wpmudev-dash-notification.php';
 }
