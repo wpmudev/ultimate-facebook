@@ -116,6 +116,10 @@ if ($data->get_option('wdfb_widget_pack', 'albums_allowed')) {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_albums.php');
 	add_action('widgets_init', create_function('', "register_widget('Wdfb_WidgetAlbums');"));
 }
+if ($data->get_option('wdfb_widget_pack', 'events_allowed')) {
+	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_events.php');
+	add_action('widgets_init', create_function('', "register_widget('Wdfb_WidgetEvents');"));
+}
 if ($data->get_option('wdfb_widget_pack', 'facepile_allowed')) {
 	require_once (WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_facepile.php');
 	add_action('widgets_init', create_function('', "register_widget('Wdfb_WidgetFacepile');"));

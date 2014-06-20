@@ -121,6 +121,7 @@ class Wdfb_AdminPages {
 		add_settings_section('wdfb_widget_pack', __('Widget pack', 'wdfb'), create_function('', ''), 'wdfb_widget_options_page');
 		add_settings_field('wdfb_widget_connect', __('Use Facebook Connect widget', 'wdfb'), array($form, 'create_widget_connect_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_albums', __('Use Facebook Albums widget', 'wdfb'), array($form, 'create_widget_albums_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
+		add_settings_field('wdfb_widget_events', __('Use Facebook Events widget', 'wdfb'), array($form, 'create_widget_events_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_facepile', __('Use Facebook Facepile widget', 'wdfb'), array($form, 'create_widget_facepile_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_likebox', __('Use Facebook Like Box widget', 'wdfb'), array($form, 'create_widget_likebox_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_recommendations', __('Use Facebook Recommendations widget', 'wdfb'), array($form, 'create_widget_recommendations_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
@@ -230,6 +231,7 @@ class Wdfb_AdminPages {
 		add_settings_section('wdfb_widget_pack', __('Widget pack', 'wdfb'), create_function('', ''), 'wdfb_widget_options_page');
 		add_settings_field('wdfb_widget_connect', __('Use Facebook Connect widget', 'wdfb'), array($form, 'create_widget_connect_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_albums', __('Use Facebook Albums widget', 'wdfb'), array($form, 'create_widget_albums_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
+		add_settings_field('wdfb_widget_events', __('Use Facebook Events widget', 'wdfb'), array($form, 'create_widget_events_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_facepile', __('Use Facebook Facepile widget', 'wdfb'), array($form, 'create_widget_facepile_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_likebox', __('Use Facebook Like Box widget', 'wdfb'), array($form, 'create_widget_likebox_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
 		add_settings_field('wdfb_widget_recommendations', __('Use Facebook Recommendations widget', 'wdfb'), array($form, 'create_widget_recommendations_box'), 'wdfb_widget_options_page', 'wdfb_widget_pack');
@@ -769,7 +771,30 @@ class Wdfb_AdminPages {
 		$msg = $done ? __("Post published on Facebook", "wdfb") : __("Publishing on Facebook failed", "wdfb");
 		echo "<div class='{$class}'><p>{$msg}</p></div>";
 	}
+	function insert_events_into_post_meta ($post) {
+		if (!$post['post_content']) return $post;
 
+		$post_id = (int)$_POST['post_ID'];
+		if (!$post_id) return $post;
+
+		// We need to have active FB session for this, else skip
+		$fb_uid = $this->model->fb->getUser();
+		if (!$fb_uid) return $post;
+
+		// Process the shortcode
+		$txt = stripslashes($post['post_content']);
+		if (preg_match('~\[wdfb_events\s+for\s*=~', $txt)) {
+			preg_match_all('~\[wdfb_events\s+for\s*=\s*(.+)\s*]~', $txt, $matches);
+			$fors = $matches[1];
+			if (!empty($fors)) foreach ($fors as $for) {
+				$for = trim($for, '\'" ');
+				$events = $this->model->get_events_for($for);
+				if (!is_array($events) || empty($events['data'])) continue; // No events, skip to next
+				update_post_meta($post_id, 'wdfb_events', $events['data']);
+			}
+		}
+		return $post;
+	}
 	function add_published_status_column ($cols) {
 		$cols['ufb_published'] = __('On Facebook', 'wdfb');
 		return $cols;
