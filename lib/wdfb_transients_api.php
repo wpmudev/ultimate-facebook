@@ -21,7 +21,26 @@ abstract class Wdfb_TransientBuffer {
 		return set_transient($transient, $value, apply_filters('wdfb-transients-buffer_timeout', self::TRANSIENT_TIMEOUT));
 	}
 }
+/**
+ * Facebook Events concrete implementation.
+ */
+class Wdfb_EventsBuffer extends Wdfb_TransientBuffer {
 
+	public function get_for ($fbid, $limit=false) {
+		if (!$fbid) return false;
+		$transient = $this->get_transient_name('events', $fbid);
+
+		$result = $this->fetch($transient);
+		if ($result) return $result;
+
+		$model = new Wdfb_Model;
+		$events = $model->get_events_for($fbid, $limit);
+		if (!$events) return false;
+
+		$this->store($transient, $events['data']);
+		return $events['data'];
+	}
+}
 
 /**
  * Facebook Album photos concrete implementation.

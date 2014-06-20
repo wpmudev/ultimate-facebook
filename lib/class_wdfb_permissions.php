@@ -24,7 +24,7 @@ class Wdfb_Permissions {
 	const EXTRA_INTERESTS = 'user_interests';
 	const EXTRA_EDUCATION = 'user_education_history';
 	const EXTRA_WORK = 'user_work_history';
-
+	const EXTRA_EVENTS = 'user_events';
 	private function __construct () {}
 
 	public static function get_permissions () {
@@ -127,6 +127,10 @@ class Wdfb_Permissions {
 			//If albums allowed
 			if ($data->get_option('wdfb_widget_pack', 'albums_allowed')){
 				$extras[] = self::EXTRA_USER_PHOTOS;
+			}
+			//If Events allowed
+			if ($data->get_option('wdfb_widget_pack', 'albums_allowed')){
+				$extras[] = self::EXTRA_EVENTS;
 			}
 		}
 
