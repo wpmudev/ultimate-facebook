@@ -743,9 +743,10 @@ class Wdfb_Model {
 				) );
 			}
 			try {
-				$res = $this->fb->api( '/', 'POST', array( 'batch'        => '[' . implode( ',', $batch ) . ']',
-				                                           'access_token' => $token
-					) );
+				$res = $this->fb->api( '/', 'POST', array(
+					'batch'        => '[' . implode( ',', $batch ) . ']',
+					'access_token' => $token
+				) );
 			} catch ( Exception $e ) {
 				$this->log->error( __FUNCTION__, $e );
 
@@ -768,6 +769,7 @@ class Wdfb_Model {
 			} catch ( Exception $e ) {
 				return false;
 			}
+
 			return $res;
 		}
 
@@ -830,6 +832,7 @@ class Wdfb_Model {
 
 		$fid   = $this->get_current_user_fb_id();
 		$token = $this->get_user_api_token( $fid );
+
 		if ( $limit && $limit > $page_size ) {
 			$limit = $limit > $max_limit ? $max_limit : $limit;
 			$batch = array();
@@ -858,12 +861,11 @@ class Wdfb_Model {
 
 			return array( 'data' => $return );
 		} else {
-			$limit = $limit ? '?limit=' . $limit : '';
+			$limit = $limit ? '?limit=' . $limit .'&access_token=' . $token : '?access_token=' . $token ;
 			try {
-				$res = $this->fb->api( '/' . $aid . '/photos/' . $limit );
+				$res = $this->fb->api( '/580043238719672/photos/' . $limit );
 			} catch ( Exception $e ) {
 				$this->log->error( __FUNCTION__, $e );
-
 				return false;
 			}
 

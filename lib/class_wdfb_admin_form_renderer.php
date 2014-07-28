@@ -403,10 +403,11 @@ class Wdfb_AdminFormRenderer {
 
 	function create_button_position_box() {
 		$opt       = $this->_get_option( 'wdfb_button' );
-		$positions = array( 'top'    => __( 'Before', 'wdfb' ),
-		                    'bottom' => __( 'After', 'wdfb' ),
-		                    'both'   => __( 'Before and after', 'wdfb' ),
-		                    'manual' => __( 'Manual, use shortcodes in ', 'wdfb' )
+		$positions = array(
+			'top'    => __( 'Before', 'wdfb' ),
+			'bottom' => __( 'After', 'wdfb' ),
+			'both'   => __( 'Before and after', 'wdfb' ),
+			'manual' => __( 'Manual, use shortcodes in ', 'wdfb' )
 		);
 
 		foreach ( $positions as $pos => $label ) {

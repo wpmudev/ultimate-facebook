@@ -1,9 +1,14 @@
 Plugin Name: Ultimate Facebook
 Author: Ve Bailovity (Incsub)
+Contributor: Umesh Kumar
 
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+2.7.3 - 2014-07-30 - Umesh Kumar
+- Fixed: Album Shortcode
+- Fixed: Facebook comment form not displayed in some cases
+
 2.7.2 - 2014-06-20 - Umesh Kumar
 - Added: Read Events from Facebook shortcode and widget
 
