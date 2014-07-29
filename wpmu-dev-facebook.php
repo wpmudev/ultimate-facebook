@@ -12,6 +12,9 @@ WDP ID: 228
 Copyright 2009-2011 Incsub (http://incsub.com)
 Author - Ve Bailovity (Incsub)
 Contributor - Umesh Kumar
+Thanks:
+KFUK-KFUM for registration page templating function
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
 the Free Software Foundation.

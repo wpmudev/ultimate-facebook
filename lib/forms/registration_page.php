@@ -30,29 +30,45 @@ $registration_url = add_query_arg(
 	),
 	$registration_url
 );
+/**
+ * Fires before the facebook registration form is loaded
+ *
+ * @since Ultimate Facebook 2.7.3
+ */
+do_action('wdfb_before_registration_form');
 ?>
+	<div id="content" class="site-content">
+		<div class="wdfb-registration-page">
+			<h2><?php _e( 'Register with Facebook', 'wdfb' ); ?></h2><?php
 
-	<h2><?php _e( 'Register with Facebook', 'wdfb' ); ?></h2><?php
+			foreach ( $errors as $error ) {
+				$error = is_array( $error ) ? array_reduce( $error, create_function( '$val,$el', 'return "$val <br />$el";' ) ) : $error; ?>
+				<div class="error fade">
+				<p><?php echo $error; ?></p>
+				</div><?php
+			} ?>
 
-	foreach ( $errors as $error ) {
-		$error = is_array( $error ) ? array_reduce( $error, create_function( '$val,$el', 'return "$val <br />$el";' ) ) : $error; ?>
-		<div class="error fade">
-			<p><?php echo $error; ?></p>
-		</div><?php
-	} ?>
+			<div style="margin-top:2em">
 
-	<div style="margin-top:2em">
+				<iframe src="<?php echo $registration_url; ?>"
+					scrolling="auto"
+					frameborder="no"
+					style="border:none"
+					allowTransparency="true"
+					width="100%"
+					height="530">
+				</iframe>
 
-		<iframe src="<?php echo $registration_url; ?>"
-			scrolling="auto"
-			frameborder="no"
-			style="border:none"
-			allowTransparency="true"
-			width="100%"
-			height="530">
-		</iframe>
+			</div>
+		</div>
+	</div>  <!-- Close Content -->
 
-	</div>
 
-<?php //if ($this->data->get_option('wdfb_connect', 'force_facebook_registration')) get_footer(); ?>
+<?php
+/**
+ * Fires after the facebook registration form is loaded
+ *
+ * @since Ultimate Facebook 2.7.3
+ */
+do_action('wdfb_after_registration_form'); ?>
 <?php get_footer(); ?>

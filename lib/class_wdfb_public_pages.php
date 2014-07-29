@@ -5,15 +5,13 @@ class Wdfb_PublicPages {
 	var $data;
 	var $replacer;
 	var $fb;
+	var $registration_success;
 
 	function __construct() {
-		$this->data     = Wdfb_OptionsRegistry::get_instance();
-		$this->model    = new Wdfb_Model;
-		$this->replacer = new Wdfb_MarkerReplacer;
-	}
-
-	function Wdfb_PublicPages() {
-		$this->__construct();
+		$this->data                 = Wdfb_OptionsRegistry::get_instance();
+		$this->model                = new Wdfb_Model;
+		$this->replacer             = new Wdfb_MarkerReplacer;
+		$this->registration_success = false;
 	}
 
 	/**
@@ -438,8 +436,6 @@ EOBpFormInjection;
 		}
 		$wp_grant_blog = apply_filters( 'wdfb-registration-allow_blog_creation', $wp_grant_blog );
 
-		// We're here, so registration is allowed
-		$registration_success = false;
 		$user_id              = false;
 		$errors               = array();
 		// Process registration data
@@ -486,18 +482,18 @@ EOBpFormInjection;
 
 					if ( ! $result['errors']->get_error_code() ) {
 						global $current_site;
-						$blog_meta            = array( 'public' => 1 );
-						$blog_id              = wpmu_create_blog( $result['domain'], $result['path'], $result['blog_title'], $user_id, $blog_meta, $current_site->id );
-						$new_blog_title       = $result['blog_title'];
-						$new_blog_url         = get_blog_option( $blog_id, 'siteurl' );
-						$registration_success = true;
+						$blog_meta                  = array( 'public' => 1 );
+						$blog_id                    = wpmu_create_blog( $result['domain'], $result['path'], $result['blog_title'], $user_id, $blog_meta, $current_site->id );
+						$new_blog_title             = $result['blog_title'];
+						$new_blog_url               = get_blog_option( $blog_id, 'siteurl' );
+						$this->registration_success = true;
 					} else {
 						// Remove user
 						$this->model->delete_wp_user( $user_id );
 						$errors = array_merge( $errors, array_values( $result['errors']->errors ) );
 					}
 				} else if ( $user_id ) {
-					$registration_success = true;
+					$this->registration_success = true;
 				} else {
 					$msg = Wdfb_ErrorRegistry::get_last_error_message();
 					if ( $msg ) {
@@ -509,7 +505,7 @@ EOBpFormInjection;
 		}
 
 		// Successful registration stuff
-		if ( $registration_success ) {
+		if ( $this->registration_success ) {
 
 			// Trigger actions
 			if ( $user_id ) {
@@ -517,7 +513,7 @@ EOBpFormInjection;
 				do_action( 'wdfb-registration-facebook_regular_registration', $user_id );
 			}
 
-			// Record activities, if told so		
+			// Record activities, if told so
 			if ( $user_id && defined( 'BP_VERSION' ) && $this->data->get_option( 'wdfb_connect', 'update_feed_on_registration' ) ) {
 				if ( function_exists( 'bp_core_new_user_activity' ) ) {
 					bp_core_new_user_activity( $user_id );
@@ -537,22 +533,20 @@ EOBpFormInjection;
 		}
 
 		// Allow registration page templating
-		// By KFUK-KFUM
 		// Thank you so much!
-		$page = ( isset( $_GET['fb_register'] ) && $registration_success )
+		$page = ( isset( $_GET['fb_register'] ) && $this->registration_success )
 			? $this->get_template_page( 'registration_page_success.php' )
 			: $this->get_template_page( 'registration_page.php' );
-
 		require_once $page;
 		exit();
 	}
 
 	/**
 	 * Allows registration page templating.
-	 * Method by KFUK-KFUM
-	 * Thank you so much!
+	 *
 	 */
 	function get_template_page( $template ) {
+
 		$theme_file = locate_template( array( $template ) );
 		if ( $theme_file ) {
 			// Look for the template file in the theme directory
