@@ -288,6 +288,14 @@ $(window).load(function () {
 </script>
 EOCOMJS;
 		}
+		//Check if override settings has been enabled, close the wordpress comments and display only facebook comment form
+		//delay helps us to display our content and then close WordPress comments
+		if ( ! ( defined( 'WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS' ) && WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS ) ) {
+			$data = Wdfb_OptionsRegistry::get_instance();
+			if ( $data->get_option( 'wdfb_comments', 'override_wp_comments_settings' ) ) {
+				add_filter( 'comments_open', '__return_false' );
+			}
+		}
 
 		return $defaults;
 	}

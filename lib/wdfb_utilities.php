@@ -824,18 +824,6 @@ function wdfb_cleanup_admin_pages( $list ) {
 
 add_filter( 'wdfb-scripts-prevent_inclusion_ids', 'wdfb_cleanup_admin_pages' );
 
-
-if ( ! ( defined( 'WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS' ) && WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS ) ) {
-	function wdfb_wp_core__trump_discussion_settings() {
-		$data = Wdfb_OptionsRegistry::get_instance();
-		if ( $data->get_option( 'wdfb_comments', 'override_wp_comments_settings' ) ) {
-			add_filter( 'comments_open', '__return_false' );
-		}
-	}
-
-	add_action( 'init', 'wdfb_wp_core__trump_discussion_settings' );
-}
-
 if ( ! ( defined( 'WDFB_SKIP_AUTOBLOG_LOOP_PREVENTION' ) && WDFB_SKIP_AUTOBLOG_LOOP_PREVENTION ) ) {
 	function wdfb__stop_abfb_loop() {
 		add_filter( 'wdfb-autopost-post_update', '__return_false' );
@@ -843,7 +831,6 @@ if ( ! ( defined( 'WDFB_SKIP_AUTOBLOG_LOOP_PREVENTION' ) && WDFB_SKIP_AUTOBLOG_L
 
 	add_action( 'autoblog_pre_process_feeds', 'wdfb__stop_abfb_loop' );
 }
-
 
 // ----- API filters -----
 
