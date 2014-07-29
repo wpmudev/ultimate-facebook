@@ -243,6 +243,8 @@ class Wdfb_PublicPages {
 			return $defaults;
 		}
 
+		$post_id = get_the_ID();
+
 		$link = get_permalink();
 		$xid  = rawurlencode( $link );
 
@@ -255,16 +257,27 @@ class Wdfb_PublicPages {
 		$scheme = $this->data->get_option( 'wdfb_comments', 'fb_color_scheme' );
 		$scheme = $scheme ? $scheme : 'light';
 
-		echo wdfb_get_fb_plugin_markup( 'comments', compact( array(
+		$args = array(
 			'link',
 			'xid',
 			'num_posts',
 			'width',
 			'reverse',
 			'scheme'
-		) ) );
+		);
 
-		$post_id = get_the_ID();
+		$fb_comment_form = wdfb_get_fb_plugin_markup( 'comments', compact( $args ) );
+
+		/**
+		 * Allows to optionally hide the facebook comment form
+		 * @bool, true
+		 * @int, $post_id
+		 * @since Ultimate Facebook 2.7.3
+		 */
+		if ( apply_filters('wdfb_show_comment_form', '__return_true', $post_id ) ) {
+			echo $fb_comment_form;
+		}
+
 		if ( $this->data->get_option( 'wdfb_comments', 'fbc_notify_authors' ) && ! empty( $post_id ) ) {
 			$hash = esc_js( wp_hash( $link ) );
 			echo <<<EOCOMJS
