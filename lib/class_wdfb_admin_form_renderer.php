@@ -425,17 +425,17 @@ class Wdfb_AdminFormRenderer {
 
 		echo '<tr>';
 		echo '<td valign="top"><input type="radio" name="wdfb_button[button_appearance]" value="standard" ' . ( ( $opt['button_appearance'] == "standard" ) ? 'checked="checked"' : '' ) . ' /></td>';
-		echo '<td valign="top"><iframe src="http://www.facebook.com/plugins/like.php?href=' . $blog_uri . '&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:25px;" allowTransparency="true"></iframe></td>';
+		echo '<td valign="top"><iframe src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/like.php?href=' . $blog_uri . '&amp;send=false&amp;layout=standard&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=80" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:25px;" allowTransparency="true"></iframe></td>';
 		echo '</tr>';
 
 		echo '<tr>';
 		echo '<td valign="top"><input type="radio" name="wdfb_button[button_appearance]" value="button_count" ' . ( ( $opt['button_appearance'] == "button_count" ) ? 'checked="checked"' : '' ) . ' /></td>';
-		echo '<td valign="top"><iframe src="http://www.facebook.com/plugins/like.php?href=' . $blog_uri . '&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe></td>';
+		echo '<td valign="top"><iframe src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/like.php?href=' . $blog_uri . '&amp;send=false&amp;layout=button_count&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:21px;" allowTransparency="true"></iframe></td>';
 		echo '</tr>';
 
 		echo '<tr>';
 		echo '<td valign="top"><input type="radio" name="wdfb_button[button_appearance]" value="box_count" ' . ( ( $opt['button_appearance'] == "box_count" ) ? 'checked="checked"' : '' ) . ' /></td>';
-		echo '<td valign="top"><iframe src="http://www.facebook.com/plugins/like.php?href=' . $blog_uri . '&amp;send=false&amp;layout=box_count&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=65" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:65px;" allowTransparency="true"></iframe></td>';
+		echo '<td valign="top"><iframe src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/like.php?href=' . $blog_uri . '&amp;send=false&amp;layout=box_count&amp;width=450&amp;show_faces=true&amp;action=like&amp;colorscheme=light&amp;font&amp;height=65" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:50px; height:65px;" allowTransparency="true"></iframe></td>';
 		echo '</tr>';
 
 		echo "</table>";

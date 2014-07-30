@@ -952,6 +952,7 @@ class Wdfb_AdminPages {
 	}
 
 	function handle_fb_auth_tokens() {
+		$log = new Wdfb_ErrorLog;
 		$tokens = $this->data->get_option( 'wdfb_api', 'auth_tokens' );
 
 		$fb_uid     = $this->model->fb->getUser();
@@ -961,22 +962,20 @@ class Wdfb_AdminPages {
 			return false;
 		} // Plugin not yet configured
 
-		// Token is now long-term token	
-		$token = $this->model->get_user_api_token( $fb_uid );
-		// Make sure it is
-		$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? false : $token;
 		// Just force the token reset, for now
 		$token = false;
 		if ( ! $token ) {
 			// Get temporary token
 			$token = $this->model->fb->getAccessToken();
+			$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? false : $token;
+
 			if ( ! $token ) {
 				return false;
 			}
 
 			// Exchange it for the actual long-term token
 			$url  = "https://graph.facebook.com/oauth/access_token?client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}&access_token={$user_token}";
-			$page = wp_remote_get( $url, array(
+			$args = array(
 				'method'      => 'GET',
 				'timeout'     => '5',
 				'redirection' => '5',
@@ -985,12 +984,16 @@ class Wdfb_AdminPages {
 				'compress'    => false,
 				'decompress'  => true,
 				'sslverify'   => false
-			) );
+			);
+			$page = wp_remote_get( $url, $args);
 			if ( is_wp_error( $page ) ) {
 				return false;
 			} // Request fail
 			if ( (int) $page['response']['code'] != 200 ) {
-				return false;
+				//Log error
+				$body = json_decode($page['body']);
+				$error = !empty( $body->error ) ? $body->error : '';
+				$log->error( __FUNCTION__, $error->message );
 			} // Request fail
 
 			parse_str( $page['body'], $response );
