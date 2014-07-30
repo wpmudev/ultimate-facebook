@@ -6,10 +6,12 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 2.7.3 - 2014-07-30 - Umesh Kumar
-- Fixed: Album Shortcode
-- Fixed: Facebook comment form not displayed if Override WordPress Settings is enabled
-- Modified: Registration Page template ( Added hooks before and after facebook registration form )
-- Added: 'wdfb_show_comment_form' Filter to turn off facebook comment form for a specific post id
+
+- Added:    'wdfb_show_comment_form' Filter to turn off facebook comment form for a specific post id
+- Fixed:    Album Shortcode
+- Fixed:    Facebook comment form not displayed if Override WordPress Settings is enabled
+- Improved: Registration Page template ( Added hooks before and after facebook registration form )
+- Improved: Update plugin error log if app id or secret is invalid
 
 2.7.2 - 2014-06-20 - Umesh Kumar
 - Added: Read Events from Facebook shortcode and widget
