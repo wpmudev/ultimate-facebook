@@ -41,7 +41,7 @@ Change Log:
 ----------------------------------------------------------------------
 - Settings for archive pages buttons.
 - Support for events limiting.
-- Fix for redirection issues with certaing parameters.
+- Fix for redirection issues with certain parameters.
 
 2.6.4 - 2013-04-29
 ----------------------------------------------------------------------
