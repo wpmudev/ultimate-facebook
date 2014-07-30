@@ -238,7 +238,6 @@ class Wdfb_PublicPages {
 	}
 
 	function inject_fb_comments( $defaults ) {
-
 		if ( ! comments_open() && ! $this->data->get_option( 'wdfb_comments', 'override_wp_comments_settings' ) ) {
 			return $defaults;
 		}
@@ -274,7 +273,9 @@ class Wdfb_PublicPages {
 		 * @int, $post_id
 		 * @since Ultimate Facebook 2.7.3
 		 */
-		if ( apply_filters('wdfb_show_comment_form', '__return_true', $post_id ) ) {
+		$show_comment_form = apply_filters('wdfb_show_comment_form', 'true', $post_id );
+
+		if ( !empty( $show_comment_form ) && $show_comment_form != 'false' ) {
 			echo $fb_comment_form;
 		}
 

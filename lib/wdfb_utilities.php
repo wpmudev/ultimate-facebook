@@ -824,6 +824,19 @@ function wdfb_cleanup_admin_pages( $list ) {
 
 add_filter( 'wdfb-scripts-prevent_inclusion_ids', 'wdfb_cleanup_admin_pages' );
 
+//Open Comments for all posts, if override settings is enabled
+//Later when we inject comments, we disable wordpress comments if override enabled
+if ( ! ( defined( 'WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS' ) && WDFB_COMMENTS_RESPECT_WP_DISCUSSION_SETTINGS ) ) {
+	function wdfb_wp_core__trump_discussion_settings() {
+		$data = Wdfb_OptionsRegistry::get_instance();
+		if ( $data->get_option( 'wdfb_comments', 'override_wp_comments_settings' ) ) {
+			add_filter( 'comments_open', '__return_true' );
+		}
+	}
+
+	add_action( 'init', 'wdfb_wp_core__trump_discussion_settings' );
+}
+
 if ( ! ( defined( 'WDFB_SKIP_AUTOBLOG_LOOP_PREVENTION' ) && WDFB_SKIP_AUTOBLOG_LOOP_PREVENTION ) ) {
 	function wdfb__stop_abfb_loop() {
 		add_filter( 'wdfb-autopost-post_update', '__return_false' );
