@@ -952,7 +952,7 @@ class Wdfb_AdminPages {
 	}
 
 	function handle_fb_auth_tokens() {
-		$log = new Wdfb_ErrorLog;
+		$log    = new Wdfb_ErrorLog;
 		$tokens = $this->data->get_option( 'wdfb_api', 'auth_tokens' );
 
 		$fb_uid     = $this->model->fb->getUser();
@@ -966,7 +966,7 @@ class Wdfb_AdminPages {
 		$token = false;
 		if ( ! $token ) {
 			// Get temporary token
-			$token = $this->model->fb->getAccessToken();
+			$token      = $this->model->fb->getAccessToken();
 			$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? false : $token;
 
 			if ( ! $token ) {
@@ -985,15 +985,18 @@ class Wdfb_AdminPages {
 				'decompress'  => true,
 				'sslverify'   => false
 			);
-			$page = wp_remote_get( $url, $args);
+			$page = wp_remote_get( $url, $args );
 			if ( is_wp_error( $page ) ) {
 				return false;
 			} // Request fail
 			if ( (int) $page['response']['code'] != 200 ) {
+
 				//Log error
-				$body = json_decode($page['body']);
-				$error = !empty( $body->error ) ? $body->error : '';
+				$body  = json_decode( $page['body'] );
+				$error = ! empty( $body->error ) ? $body->error : '';
 				$log->error( __FUNCTION__, $error->message );
+
+				return false;
 			} // Request fail
 
 			parse_str( $page['body'], $response );
