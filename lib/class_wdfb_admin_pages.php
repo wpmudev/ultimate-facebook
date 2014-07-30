@@ -962,12 +962,19 @@ class Wdfb_AdminPages {
 			return false;
 		} // Plugin not yet configured
 
+		// Token is now long-term token
+		$token = $this->model->get_user_api_token( $fb_uid );
+
+		// Make sure it is
+		$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? false : $token;
+
 		// Just force the token reset, for now
 		$token = false;
 		if ( ! $token ) {
 			// Get temporary token
 			$token      = $this->model->fb->getAccessToken();
-			$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? false : $token;
+
+			$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? $user_token : $token;
 
 			if ( ! $token ) {
 				return false;
@@ -990,11 +997,6 @@ class Wdfb_AdminPages {
 				return false;
 			} // Request fail
 			if ( (int) $page['response']['code'] != 200 ) {
-
-				//Log error
-				$body  = json_decode( $page['body'] );
-				$error = ! empty( $body->error ) ? $body->error : '';
-				$log->error( __FUNCTION__, $error->message );
 
 				return false;
 			} // Request fail
