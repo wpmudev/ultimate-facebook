@@ -10,17 +10,17 @@ class Wdfb_ErrorLog {
 	}
 
 	function get_all_notices() {
-		$notices = get_option( 'wdfb_notice_log' );
+		$notices = get_site_option( 'wdfb_notice_log' );
 
 		return $notices ? $notices : array();
 	}
 
 	function purge_errors() {
-		update_option( 'wdfb_error_log', array() );
+		update_site_option( 'wdfb_error_log', array() );
 	}
 
 	function purge_notices() {
-		update_option( 'wdfb_notice_log', array() );
+		update_site_option( 'wdfb_notice_log', array() );
 	}
 
 	function error( $function, $exception ) {
@@ -61,6 +61,6 @@ class Wdfb_ErrorLog {
 			$notices = array_slice( $notices, - $this->_limit );
 		} // * -1)), $this->_limit-1);
 		$notices[] = $notice;
-		update_option( 'wdfb_notice_log', $notices );
+		update_site_option( 'wdfb_notice_log', $notices );
 	}
 }
