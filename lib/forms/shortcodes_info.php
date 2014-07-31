@@ -18,6 +18,25 @@
 		for this shortcode to have any effect. If you dislike the default button placement options, you can set the
 		placement to "Manual" and use this shortcode in your posts to insert the button wherever you wish.</p>
 
+	<!--	Register Shortcode-->
+	<h3>Register shortcode</h3>
+
+	<p><em>Tag:</em> <code>[wdfb_register_button]</code></p>
+
+	<p>
+		<em>Examples:</em>
+	<ul>
+		<li><code>[wdfb_register_button]</code> - will create a Facebook register button with default text (&quot;Register
+			with
+			Facebook&quot;)
+		</li>
+		<li><code>[wdfb_register_button]My Text[/wdfb_register_button]</code> - will create a Facebook Connect button
+			with text (&quot;My Text&quot;)
+		</li>
+	</ul>
+	</p>
+
+	<!--	Connect Shortcode-->
 	<h3>Connect shortcode</h3>
 
 	<p><em>Tag:</em> <code>[wdfb_connect]</code></p>

@@ -644,7 +644,7 @@ class Wdfb_AdminPages {
 		add_menu_page( 'Ultimate Facebook', 'Facebook', 'manage_options', 'wdfb', array(
 			$this,
 			'create_admin_page'
-		), WDFB_PLUGIN_URL . '/img/facebook_icon.gif' );
+		), 'dashicons-facebook' );
 		add_submenu_page( 'wdfb', 'Ultimate Facebook', 'Facebook Settings', 'manage_options', 'wdfb', array(
 			$this,
 			'create_admin_page'
@@ -711,7 +711,7 @@ class Wdfb_AdminPages {
 		add_menu_page( 'Ultimate Facebook', 'Facebook', 'manage_network_options', 'wdfb', array(
 			$this,
 			'create_admin_page'
-		), WDFB_PLUGIN_URL . '/img/facebook_icon.gif' );
+		), 'dashicons-facebook' );
 		add_submenu_page( 'wdfb', 'Ultimate Facebook', 'Facebook Settings', 'manage_network_options', 'wdfb', array(
 			$this,
 			'create_admin_page'
@@ -972,7 +972,7 @@ class Wdfb_AdminPages {
 		$token = false;
 		if ( ! $token ) {
 			// Get temporary token
-			$token      = $this->model->fb->getAccessToken();
+			$token = $this->model->fb->getAccessToken();
 
 			$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? $user_token : $token;
 
@@ -1073,7 +1073,6 @@ class Wdfb_AdminPages {
 				$api['auth_accounts'][ $fb_uid ] = $acc;
 			}
 		}
-
 		$this->data->set_key( 'wdfb_api', $api );
 		update_option( 'wdfb_api', $api );
 	}
@@ -1419,8 +1418,13 @@ class Wdfb_AdminPages {
 	}
 
 	function json_check_api_status() {
+		$form = new Wdfb_AdminFormRenderer;
 		header( "Content-type: application/json" );
-		$app_key = trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
+
+		$wdfb_api = ! empty( $_POST['network'] ) && $_POST['network'] == 'true' ? get_site_option( 'wdfb_api' ) : get_option( 'wdfb_api' );
+		$app_key = ( ! empty( $wdfb_api ) && ! empty( $wdfb_api['app_key'] ) ) ? $wdfb_api['app_key'] : '';
+
+		$app_key = !empty( $app_key ) ? $app_key : trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
 		$resp    = wp_remote_get( "https://graph.facebook.com/{$app_key}", array(
 			'sslverify' => false,
 			'timeout'   => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya

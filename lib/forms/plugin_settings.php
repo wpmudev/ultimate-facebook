@@ -144,7 +144,8 @@ function wdfb_do_settings_sections( $page ) {
 		} else {
 			// Validate app ID
 			$.post(ajaxurl, {
-				"action": "wdfb_check_api_status"
+				"action": "wdfb_check_api_status",
+				"network": false
 			}, function (data) {
 				var name = false;
 				try {
@@ -175,7 +176,8 @@ function wdfb_do_settings_sections( $page ) {
 			);
 		} else {
 			$.post(ajaxurl, {
-				"action": "wdfb_check_api_status"
+				"action": "wdfb_check_api_status",
+				"network": true
 			}, function (data) {
 				var name = false;
 				try {
