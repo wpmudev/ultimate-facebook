@@ -5,6 +5,9 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+2.7.5 - 2014-07-30 - Umesh Kumar
+- Fixed: Facebook incorrect album id
+
 2.7.4 - 2014-07-30 - Umesh Kumar
 - Fixed: Facebook login form not hooked in wp_login_form
 
