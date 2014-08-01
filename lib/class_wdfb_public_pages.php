@@ -212,17 +212,18 @@ class Wdfb_PublicPages {
 		     '</p>';
 	}
 
-	function inject_fb_login_return ( $content ) {
+	function inject_fb_login_return( $content ) {
 		if ( ! apply_filters( 'wdfb-login-show_wordpress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
 			return false;
 		}
 		$content .= '<p class="wdfb_login_button">' .
-		     wdfb_get_fb_plugin_markup( 'login-button', array(
-			     'scope'        => Wdfb_Permissions::get_permissions(),
-			     'redirect-url' => wdfb_get_login_redirect( true ),
-			     'content'      => __( "Login with Facebook", 'wdfb' ),
-		     ) ) .
-		     '</p>';
+		            wdfb_get_fb_plugin_markup( 'login-button', array(
+			            'scope'        => Wdfb_Permissions::get_permissions(),
+			            'redirect-url' => wdfb_get_login_redirect( true ),
+			            'content'      => __( "Login with Facebook", 'wdfb' ),
+		            ) ) .
+		            '</p>';
+
 		return $content;
 	}
 
@@ -288,9 +289,9 @@ class Wdfb_PublicPages {
 		 * @int, $post_id
 		 * @since Ultimate Facebook 2.7.3
 		 */
-		$show_comment_form = apply_filters('wdfb_show_comment_form', 'true', $post_id );
+		$show_comment_form = apply_filters( 'wdfb_show_comment_form', 'true', $post_id );
 
-		if ( !empty( $show_comment_form ) && $show_comment_form != 'false' ) {
+		if ( ! empty( $show_comment_form ) && $show_comment_form != 'false' ) {
 			echo $fb_comment_form;
 		}
 
@@ -465,8 +466,8 @@ EOBpFormInjection;
 		}
 		$wp_grant_blog = apply_filters( 'wdfb-registration-allow_blog_creation', $wp_grant_blog );
 
-		$user_id              = false;
-		$errors               = array();
+		$user_id = false;
+		$errors  = array();
 		// Process registration data
 		if ( isset( $_GET['fb_register'] ) ) {
 			list( $encoded_sig, $payload ) = explode( '.', $_REQUEST['signed_request'], 2 );
