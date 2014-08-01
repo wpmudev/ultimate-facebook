@@ -216,6 +216,7 @@ class Wdfb_PublicPages {
 		if ( ! apply_filters( 'wdfb-login-show_wordpress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
 			return false;
 		}
+
 		$content .= '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
 		$content .= '<p class="wdfb_login_button">' .
 		            wdfb_get_fb_plugin_markup( 'login-button', array(
@@ -227,7 +228,17 @@ class Wdfb_PublicPages {
 
 		return $content;
 	}
+	function inject_signup_text( $content ) {
+		if ( function_exists('bp_get_signup_allowed') && bp_get_signup_allowed() ) :
 
+			$content .= '<p id="login-text">';
+
+			$content .= sprintf( __( 'Please <a href="%s" title="Create an account">create an account</a> to get started.', 'buddypress' ), bp_get_signup_page() );
+
+			$content .= '</p>';
+		endif;
+		return $content;
+	}
 
 	function inject_fb_login_for_bp() {
 		if ( ! apply_filters( 'wdfb-login-show_buddypress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
@@ -727,7 +738,7 @@ EOBpFormInjection;
 			add_action( 'login_head', array( $this, 'js_inject_fb_login_script' ) );
 			add_action( 'login_head', array( $this, 'js_setup_ajaxurl' ) );
 			add_action( 'login_form', array( $this, 'inject_fb_login' ) );
-			add_action( 'login_form_bottom', array( $this, 'inject_fb_login_return' ) );
+			add_filter( 'login_form_bottom', array( $this, 'inject_fb_login_return' ) );
 			add_action( 'login_footer', array( $this, 'inject_fb_root_div' ) );
 
 			add_action( 'login_footer', array(
