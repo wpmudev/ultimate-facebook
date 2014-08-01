@@ -216,6 +216,7 @@ class Wdfb_PublicPages {
 		if ( ! apply_filters( 'wdfb-login-show_wordpress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
 			return false;
 		}
+		$content .= '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
 		$content .= '<p class="wdfb_login_button">' .
 		            wdfb_get_fb_plugin_markup( 'login-button', array(
 			            'scope'        => Wdfb_Permissions::get_permissions(),
