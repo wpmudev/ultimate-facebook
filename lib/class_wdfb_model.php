@@ -863,7 +863,7 @@ class Wdfb_Model {
 		} else {
 			$limit = $limit ? '?limit=' . $limit .'&access_token=' . $token : '?access_token=' . $token ;
 			try {
-				$res = $this->fb->api( '/580043238719672/photos/' . $limit );
+				$res = $this->fb->api( '/'. $aid .'/photos/' . $limit );
 			} catch ( Exception $e ) {
 				$this->log->error( __FUNCTION__, $e );
 				return false;
