@@ -5,6 +5,9 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+2.7.4 - 2014-07-30 - Umesh Kumar
+- Fixed: Facebook login form not hooked in wp_login_form
+
 2.7.3 - 2014-07-30 - Umesh Kumar
 
 - Added:    'wdfb_show_comment_form' Filter to turn off facebook comment form for a specific post id

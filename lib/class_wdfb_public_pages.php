@@ -212,6 +212,21 @@ class Wdfb_PublicPages {
 		     '</p>';
 	}
 
+	function inject_fb_login_return ( $content ) {
+		if ( ! apply_filters( 'wdfb-login-show_wordpress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
+			return false;
+		}
+		$content .= '<p class="wdfb_login_button">' .
+		     wdfb_get_fb_plugin_markup( 'login-button', array(
+			     'scope'        => Wdfb_Permissions::get_permissions(),
+			     'redirect-url' => wdfb_get_login_redirect( true ),
+			     'content'      => __( "Login with Facebook", 'wdfb' ),
+		     ) ) .
+		     '</p>';
+		return $content;
+	}
+
+
 	function inject_fb_login_for_bp() {
 		if ( ! apply_filters( 'wdfb-login-show_buddypress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
 			return false;
@@ -710,7 +725,9 @@ EOBpFormInjection;
 			add_action( 'login_head', array( $this, 'js_inject_fb_login_script' ) );
 			add_action( 'login_head', array( $this, 'js_setup_ajaxurl' ) );
 			add_action( 'login_form', array( $this, 'inject_fb_login' ) );
+			add_action( 'login_form_bottom', array( $this, 'inject_fb_login_return' ) );
 			add_action( 'login_footer', array( $this, 'inject_fb_root_div' ) );
+
 			add_action( 'login_footer', array(
 				$this,
 				'inject_fb_init_js'
