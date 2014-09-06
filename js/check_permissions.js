@@ -1,25 +1,32 @@
 (function ($) { 
 	
 function check_perms () {
-	var $perms = $(".wdfb_grant_perms:first");
-	if (!$perms.length) return false;
-	var query = "SELECT " + $perms.attr("data-wdfb_perms") + " FROM permissions WHERE uid=me()";
+	var perms_selector = jQuery(".wdfb_grant_perms:first");
+	if (!perms_selector.length) return false;
 
-	FB.api({
-		"method": "fql.query",
-		//"access_token": FB.getAccessToken(),
-		"query": query
-	}, function (resp) {
+	var perms = perms_selector.attr("data-wdfb_perms");
+	perms = perms.split(',');
+
+	FB.api('me/permissions', function (resp) {
 		var all_good = true;
 		try {
-			$.each(resp[0], function (idx, el) {
-				if(el !== "1") all_good = false;
+			var missing_perm = 0;
+			$.each(perms, function (idx, el) {
+				$.each(resp.data, function(index, val){
+					if(val.permission !== el ) {
+						return;
+					}else{
+						if( val.status !== 'granted' ){
+							missing_perm++;
+						}
+					}
+				});
 			});
 		} catch (e) {
-			all_good = false;
+			missing_perm = 1;
 		}
 		$("img.wdfb_perms_waiting").remove();
-		if (all_good) {
+		if (!missing_perm) {
 			$("p.wdfb_perms_not_granted, div.wdfb_perms_not_granted").hide();
 			$("p.wdfb_perms_granted, div.wdfb_perms_granted").show();
 		} else {

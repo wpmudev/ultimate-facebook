@@ -861,11 +861,12 @@ class Wdfb_Model {
 
 			return array( 'data' => $return );
 		} else {
-			$limit = $limit ? '?limit=' . $limit .'&access_token=' . $token : '?access_token=' . $token ;
+			$limit = $limit ? '?limit=' . $limit . '&access_token=' . $token : '?access_token=' . $token;
 			try {
-				$res = $this->fb->api( '/'. $aid .'/photos/' . $limit );
+				$res = $this->fb->api( '/' . $aid . '/photos/' . $limit );
 			} catch ( Exception $e ) {
 				$this->log->error( __FUNCTION__, $e );
+
 				return false;
 			}
 
@@ -880,10 +881,7 @@ class Wdfb_Model {
 		$limit = $limit ? '?limit=' . $limit : '';
 
 		$tokens = $this->data->get_option( 'wdfb_api', 'auth_tokens' );
-		$token  = ! empty( $tokens[ $uid ] )
-			? $tokens[ $uid ]
-			: reset( $tokens ) // Use any token, if there's no token we need
-		;
+		$token  = ! empty( $tokens[ $uid ] ) ? $tokens[ $uid ] : reset( $tokens ); // Use any token, if there's no token we need
 
 		$old_token = $this->fb->getAccessToken();
 		$this->fb->setAccessToken( $token );
@@ -904,9 +902,8 @@ class Wdfb_Model {
 	function get_item_comments( $for ) {
 		$uid = $this->get_current_user_fb_id();
 
-		$tokens = $this->data->get_option( 'wdfb_api', 'auth_tokens' );
-		$token  = isset( $tokens[ $uid ] ) ? $tokens[ $uid ] : false;
-
+		$tokens    = $this->data->get_option( 'wdfb_api', 'auth_tokens' );
+		$token     = isset( $tokens[ $uid ] ) ? $tokens[ $uid ] : false;
 		$page_size = $this->_batch_page_size;
 		$max_limit = apply_filters( 'wdfb-comments-max_comments_limit',
 			( defined( 'WDFB_COMMENTS_MAX_COMMENTS_LIMIT' ) && WDFB_COMMENTS_MAX_COMMENTS_LIMIT ? WDFB_COMMENTS_MAX_COMMENTS_LIMIT : 200 )

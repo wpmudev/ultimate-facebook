@@ -410,7 +410,7 @@ function wdfb_do_settings_sections( $page ) {
 			).remove();
 			// Do call
 			$.post(ajaxurl, {
-				"action": "wdfb_restart_tutorial",
+				"action": "wdfb_restart_tutorial"
 			}, function () {
 				window.location.reload();
 			});
@@ -420,7 +420,16 @@ function wdfb_do_settings_sections( $page ) {
 		$("#wdfb-refresh_access_token").on("click", function () {
 			var perms = $(this).attr("data-wdfb_perms");
 			FB.login(function (response) {
-				if (response.authResponse) $.post(ajaxurl, {"action": "wdfb_refresh_access_token"}, window.location.reload);
+				if (response.authResponse) {
+					$.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: {"action": "wdfb_refresh_access_token"},
+						success: function (res) {
+							location.reload(true);
+						}
+					});
+				}
 			}, {"scope": perms});
 			return false;
 		});
@@ -428,10 +437,18 @@ function wdfb_do_settings_sections( $page ) {
 			var perms = $(this).attr("data-wdfb_perms"),
 				wdfb_remap_login = function () {
 					FB.login(function (response) {
-						if (response.authResponse) $.post(ajaxurl, {"action": "wdfb_remap_user"}, window.location.reload);
+						if (response.authResponse) {
+							$.ajax({
+								'url': ajaxurl,
+								'type': 'POST',
+								'data': {"action": "wdfb_remap_user"},
+								success: function(res){
+									location.reload(true);
+								}
+							});
+						}
 					}, {"scope": perms});
 				}
-				;
 			FB.getLoginStatus(function (status) {
 				if (status.authResponse) FB.logout(wdfb_remap_login);
 				else wdfb_remap_login();
