@@ -161,8 +161,7 @@ function wdfb_do_settings_sections( $page ) {
 					"<b class='wdfb-api_connect-success'><?php echo esc_js(__('Successfully connected to ', 'wdfb')); ?>" + name + "</b>"
 				);
 				$("#wdfb-section-wdfb_api .wdfb-save_settings").after(
-					' <?php echo esc_js(__('Everything seems to be fine with your API settings.', 'wdfb'));?>' +
-					' <a href="#" class="button wdfb-next_step"><?php echo esc_js(__('You can now move on to next step', 'wdfb'));?></a>'
+					' <a href="#" class="button wdfb-next_step"><?php echo esc_js(__('Next step', 'wdfb'));?></a>'
 				);
 			}, 'json').error(function () {
 				invalid_api_settings();

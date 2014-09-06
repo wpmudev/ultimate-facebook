@@ -87,17 +87,14 @@ class Wdfb_AdminFormRenderer {
 		$opts                    = $this->_get_option( 'wdfb_grant' );
 		$opts                    = is_array( $opts ) ? $opts : array();
 		$use_minimal_permissions = isset( $opts['use_minimal_permissions'] ) ? $opts['use_minimal_permissions'] : false;
-		echo '<div class="updated below-h2">' .
-		     '<p>' . __( '<b>Note:</b> Allowing any of the additional functionality listed here will require additional Facebook privileges to be granted to your app.', 'wdfb' ) . '</p>' .
-		     '<p>' . __( 'Please, remember to re-grant the extended permissions once you made your changes here', 'wdfb' ) . '</p>' .
-		     '</div>';
-
-		echo '<hr />';
 		echo '' .
 		     $this->_create_checkbox( 'grant', 'use_minimal_permissions', $use_minimal_permissions ) .
 		     '&nbsp;' .
 		     '<label for="use_minimal_permissions">' . __( 'Use minimal possible permission set', 'wdfb' ) . '</label>' .
 		     '<br />';
+		echo '<div class="updated below-h2">' .
+		     '<p>' . __( '<b>Note:</b> Please, remember to re-grant the extended permissions once you made your changes here', 'wdfb' ) . '</p>' .
+		     '</div>';
 	}
 
 	function cache_operations() {
