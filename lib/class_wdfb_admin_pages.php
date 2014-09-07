@@ -1408,6 +1408,7 @@ class Wdfb_AdminPages {
 	}
 
 	function json_refresh_access_token() {
+		$this->data->set_option('wdfb_api', 'auth_tokens', '');
 		$this->handle_fb_auth_tokens();
 		die;
 	}

@@ -75,7 +75,7 @@ class Wdfb_AdminFormRenderer {
 		     '<a href="#" class="wdfb_grant_perms" data-wdfb_locale="' . wdfb_get_locale() . '" data-wdfb_perms="' . esc_attr( Wdfb_Permissions::get_permissions() ) . '">' . __( 'Grant extended permissions', 'wdfb' ) . '</a>' .
 		     '</p>' .
 		     '<p>' .
-		     '<input type="button" class="button" id="wdfb-refresh_access_token" data-wdfb_perms="' . esc_attr( Wdfb_Permissions::get_permissions() ) . '" value="' . esc_attr( __( 'Refresh user access token', 'wdfb' ) ) . '" />' .
+		     '<input type="button" class="button" id="wdfb-refresh_access_token" data-wdfb_perms="' . esc_attr( Wdfb_Permissions::get_permissions() ) . '" value="' . esc_attr( __( 'Reset auth tokens', 'wdfb' ) ) . '" />' .
 		     '&nbsp;' .
 		     '<input type="button" class="button" id="wdfb-remap_user" data-wdfb_perms="' . esc_attr( Wdfb_Permissions::get_permissions() ) . '" value="' . esc_attr( $remap_string ) . '" />' .
 		     '</p>' .
