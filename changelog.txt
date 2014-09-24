@@ -5,6 +5,9 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+2.7.6 - 2014-09-8 - Umesh Kumar
+- Updated: Refresh auth tokens code to allow changes in API and user details
+
 2.7.5 - 2014-07-30 - Umesh Kumar
 - Fixed: Facebook incorrect album id
 
