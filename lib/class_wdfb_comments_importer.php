@@ -38,13 +38,16 @@ class Wdfb_CommentsImporter {
 				'comment_date_gmt'   => date( 'Y-m-d H:i:s', strtotime( $comment['created_time'] ) ),
 				'comment_author'     => $comment['from']['name'],
 				'comment_author_url' => 'http://www.facebook.com/profile.php?id=' . $comment['from']['id'],
-				'comment_content'    => $comment['message'],
+				'comment_content'    => utf8_encode( $comment['message'] ),
 			);
 			$meta       = array(
 				'fb_comment_id' => $comment['id'],
 				'fb_author_id'  => $comment['from']['id'],
 			);
 			$data       = wp_filter_comment( $data );
+			echo "<pre>";
+			print_r( $data );
+			echo "</pre>";
 			$comment_id = wp_insert_comment( $data );
 			add_comment_meta( $comment_id, 'wdfb_comment', $meta );
 
