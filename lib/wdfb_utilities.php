@@ -212,7 +212,9 @@ function wdfb_get_og_image( $id = false ) {
 		$thumb_id = false;
 	}
 	if ( $thumb_id ) {
-		$image = wp_get_attachment_image_src( $thumb_id, 'thumbnail' );
+		$opt = get_option( 'wdfb_autopost' );
+		$opt['image_size'] = empty( $opt['image_size'] ) ? ( !empty($sizes['facebook-large']) ? 'facebook-large' : 'facebook-medium' ) : $opt['image_size'];
+		$image = wp_get_attachment_image_src( $thumb_id, $opt['image_size'] );
 		if ( $image ) {
 			return apply_filters(
 				'wdfb-opengraph-image',
@@ -327,7 +329,9 @@ function wdfb_get_fb_plugin_markup_xfbml( $type, $args ) {
 			          $args['links'] . '"></fb:activity>';
 			break;
 	}
-
+	echo "<pre>";
+	print_r($markup);
+	echo "</pre>";exit;
 	return $markup;
 }
 
@@ -384,7 +388,9 @@ function wdfb_get_fb_plugin_markup_html5( $type, $args ) {
 			          $args['links'] . '"></div>';
 			break;
 	}
-
+	echo "<pre>";
+	print_r($markup);
+	echo "</pre>";exit;
 	return $markup;
 }
 

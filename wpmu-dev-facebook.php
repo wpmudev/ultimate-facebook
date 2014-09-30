@@ -216,6 +216,9 @@ add_filter('comment_text', 'decode_utf_8', 1000 );
 function decode_utf_8($content) {
 	return utf8_decode( $content );
 }
+//Register large image size for Facebook
+add_image_size('facebook-large', 1200, 630);
+add_image_size('facebook-medium', 600, 315);
 
 add_action( 'plugins_loaded', '_wdfb_initialize' );
 

@@ -273,6 +273,10 @@ class Wdfb_AdminPages {
 			$form,
 			'create_allow_post_metabox_box'
 		), 'wdfb_options_page', 'wdfb_autopost' );
+		add_settings_field( 'wdfb_image_size', __( 'Image Size for Autopost', 'wdfb' ), array(
+			$form,
+			'image_size_autopost_facebook'
+		), 'wdfb_options_page', 'wdfb_autopost' );
 		if ( defined( 'BP_VERSION' ) ) {
 			add_settings_field( 'wdfb_allow_bp_activity_switch', __( 'Do not allow individual Activity updates to Facebook', 'wdfb' ), array(
 				$form,
@@ -551,6 +555,10 @@ class Wdfb_AdminPages {
 		add_settings_field( 'wdfb_allow_autopost', __( 'Allow autoposting new posts to Facebook', 'wdfb' ), array(
 			$form,
 			'create_allow_autopost_box'
+		), 'wdfb_options_page', 'wdfb_autopost' );
+		add_settings_field( 'wdfb_image_size', __( 'Image Size for Autopost', 'wdfb' ), array(
+			$form,
+			'image_size_autopost_facebook'
 		), 'wdfb_options_page', 'wdfb_autopost' );
 		add_settings_field( 'wdfb_allow_frontend_autopost', __( 'Allow frontend autoposting to Facebook', 'wdfb' ), array(
 			$form,
@@ -1201,6 +1209,9 @@ class Wdfb_AdminPages {
 		}
 		$send = apply_filters( 'wdfb-autopost-post_update', $send, $post_id );
 		$send = apply_filters( 'wdfb-autopost-send', $send, $post_as, $post_to );
+		echo "<pre>";
+		print_r( $send );
+		echo "</pre>";
 		$res  = $this->model->post_on_facebook( $post_as, $post_to, $send, $as_page );
 		if ( $res ) {
 			update_post_meta( $post_id, 'wdfb_published_on_fb', 1 );
