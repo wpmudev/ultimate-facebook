@@ -700,9 +700,6 @@ class Wdfb_Model {
 			else $this->log->notice("Unable to post to Facebook as page.");
 		}
 		*/
-		echo "<pre>";
-		print_r( $post );
-		echo "</pre>";
 		try {
 			$ret = $this->fb->api( '/' . $fid . '/' . $type . '/', 'POST', $post );
 		} catch ( Exception $e ) {

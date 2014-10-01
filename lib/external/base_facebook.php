@@ -975,7 +975,6 @@ abstract class BaseFacebook
 		} else {
 			$opts[CURLOPT_HTTPHEADER] = array('Expect:');
 		}
-
 		curl_setopt_array($ch, $opts);
 		$result = curl_exec($ch);
 

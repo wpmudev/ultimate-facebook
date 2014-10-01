@@ -45,9 +45,6 @@ class Wdfb_CommentsImporter {
 				'fb_author_id'  => $comment['from']['id'],
 			);
 			$data       = wp_filter_comment( $data );
-			echo "<pre>";
-			print_r( $data );
-			echo "</pre>";
 			$comment_id = wp_insert_comment( $data );
 			add_comment_meta( $comment_id, 'wdfb_comment', $meta );
 

@@ -1196,11 +1196,7 @@ class Wdfb_AdminPages {
 					'message'     => $post_title,
 					'link'        => $permalink,
 					'name'        => $post->post_title,
-					'description' => $description,
-					'actions'     => array(
-						'name' => __( 'Share', 'wdfb' ),
-						'link' => 'http://www.facebook.com/sharer.php?u=' . rawurlencode( $permalink ),
-					),
+					'description' => $description
 				);
 				if ( $picture ) {
 					$send['picture'] = $picture;
@@ -1209,9 +1205,6 @@ class Wdfb_AdminPages {
 		}
 		$send = apply_filters( 'wdfb-autopost-post_update', $send, $post_id );
 		$send = apply_filters( 'wdfb-autopost-send', $send, $post_as, $post_to );
-		echo "<pre>";
-		print_r( $send );
-		echo "</pre>";
 		$res  = $this->model->post_on_facebook( $post_as, $post_to, $send, $as_page );
 		if ( $res ) {
 			update_post_meta( $post_id, 'wdfb_published_on_fb', 1 );

@@ -329,9 +329,6 @@ function wdfb_get_fb_plugin_markup_xfbml( $type, $args ) {
 			          $args['links'] . '"></fb:activity>';
 			break;
 	}
-	echo "<pre>";
-	print_r($markup);
-	echo "</pre>";exit;
 	return $markup;
 }
 
@@ -388,9 +385,6 @@ function wdfb_get_fb_plugin_markup_html5( $type, $args ) {
 			          $args['links'] . '"></div>';
 			break;
 	}
-	echo "<pre>";
-	print_r($markup);
-	echo "</pre>";exit;
 	return $markup;
 }
 
