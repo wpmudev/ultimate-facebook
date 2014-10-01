@@ -213,7 +213,7 @@ function wdfb_get_og_image( $id = false ) {
 	}
 	if ( $thumb_id ) {
 		$opt = get_option( 'wdfb_autopost' );
-		$opt['image_size'] = empty( $opt['image_size'] ) ? ( !empty($sizes['facebook-large']) ? 'facebook-large' : 'facebook-medium' ) : $opt['image_size'];
+		$opt['image_size'] = empty( $opt['image_size'] ) ? ( !empty($sizes['large']) ? 'large' : 'full' ) : $opt['image_size'];
 		$image = wp_get_attachment_image_src( $thumb_id, $opt['image_size'] );
 		if ( $image ) {
 			return apply_filters(

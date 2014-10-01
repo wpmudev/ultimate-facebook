@@ -715,7 +715,7 @@ class Wdfb_AdminFormRenderer {
 
 		uasort($sizes, array( $this, 'sortByOrder') );
 		$opt = $this->_get_option( 'wdfb_autopost' );
-		$opt['image_size'] = empty( $opt['image_size'] ) ? ( !empty($sizes['facebook-large']) ? 'facebook-large' : 'facebook-medium' ) : $opt['image_size'];
+		$opt['image_size'] = empty( $opt['image_size'] ) ? ( !empty($sizes['large']) ? 'large' : 'full' ) : $opt['image_size'];
 		?>
 		<select name="wdfb_autopost[image_size]"><?php
 			foreach( $sizes as $size=>$details ){
