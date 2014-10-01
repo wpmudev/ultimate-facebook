@@ -241,7 +241,7 @@ class Wdfb_AdminPages {
 			$form,
 			'create_fb_comments_color_scheme_box'
 		), 'wdfb_options_page', 'wdfb_comments' );
-		add_settings_field( 'wdfb_fb_color_scheme', __( 'Notify post authors', 'wdfb' ), array(
+		add_settings_field( 'wdfb_fb_notify_post_authors', __( 'Notify post authors', 'wdfb' ), array(
 			$form,
 			'create_fbc_notify_authors_box'
 		), 'wdfb_options_page', 'wdfb_comments' );
@@ -540,7 +540,7 @@ class Wdfb_AdminPages {
 			$form,
 			'create_fb_comments_color_scheme_box'
 		), 'wdfb_options_page', 'wdfb_comments' );
-		add_settings_field( 'wdfb_fb_color_scheme', __( 'Notify post authors', 'wdfb' ), array(
+		add_settings_field( 'wdfb_fb_notify_post_authors', __( 'Notify post authors', 'wdfb' ), array(
 			$form,
 			'create_fbc_notify_authors_box'
 		), 'wdfb_options_page', 'wdfb_comments' );

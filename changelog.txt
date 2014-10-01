@@ -11,6 +11,7 @@ Change Log:
 - Updated: Facebook SDK, notification for captcha error on registration page
 - Updated: Refresh auth tokens code to allow changes in API and user details
 - Fixed: Select album for Album widgets
+- Fixed: Color Scheme setting for comments
 
 2.7.5 - 2014-07-30 - Umesh Kumar
 - Fixed: Facebook incorrect album id
