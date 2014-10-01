@@ -6,9 +6,10 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 2.7.6 - 2014-09-8 - Umesh Kumar
+- New:  Added support for importing emoji's in Facebook comments
+- New: Support for bigger images in Autoposting
 - Updated: Facebook SDK, notification for captcha error on registration page
 - Updated: Refresh auth tokens code to allow changes in API and user details
-- New:  Added support for importing emoji's in Facebook comments
 - Fixed: Select album for Album widgets
 
 2.7.5 - 2014-07-30 - Umesh Kumar
