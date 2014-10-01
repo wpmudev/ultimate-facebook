@@ -13,14 +13,12 @@ class Wdfb_CommentsImporter {
 	}
 
 	function process_comments( $post_id, $item_id ) {
-		if ( empty( $post_id ) ) {
-			return;
-		}
-		if ( ! is_numeric( $post_id ) ) {
+		if ( empty( $post_id ) || empty( $item_id ) ) {
 			return;
 		}
 
 		$comments = $this->model->get_item_comments( $item_id );
+
 		if ( ! $comments || ! isset( $comments['data'] ) ) {
 			return;
 		}
