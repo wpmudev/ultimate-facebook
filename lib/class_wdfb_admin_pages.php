@@ -1331,9 +1331,6 @@ class Wdfb_AdminPages {
 
 	function json_list_fb_albums() {
 		$privacy = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : '';
-		echo "<pre>";
-		print_r( $p );
-		echo "</pre>";
 		$albums = $this->model->get_current_albums( $privacy );
 		$status = $albums ? 1 : 0;
 		header( 'Content-type: application/json' );
