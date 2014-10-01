@@ -1330,7 +1330,11 @@ class Wdfb_AdminPages {
 	}
 
 	function json_list_fb_albums() {
-		$albums = $this->model->get_current_albums();
+		$privacy = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : '';
+		echo "<pre>";
+		print_r( $p );
+		echo "</pre>";
+		$albums = $this->model->get_current_albums( $privacy );
 		$status = $albums ? 1 : 0;
 		header( 'Content-type: application/json' );
 		echo json_encode( array(
@@ -1412,7 +1416,7 @@ class Wdfb_AdminPages {
 	}
 
 	function json_refresh_access_token() {
-		$this->data->set_option('wdfb_api', 'auth_tokens', '');
+		$this->data->set_option( 'wdfb_api', 'auth_tokens', '' );
 		$this->handle_fb_auth_tokens();
 		die;
 	}
@@ -1427,9 +1431,9 @@ class Wdfb_AdminPages {
 		header( "Content-type: application/json" );
 
 		$wdfb_api = ! empty( $_POST['network'] ) && $_POST['network'] == 'true' ? get_site_option( 'wdfb_api' ) : get_option( 'wdfb_api' );
-		$app_key = ( ! empty( $wdfb_api ) && ! empty( $wdfb_api['app_key'] ) ) ? $wdfb_api['app_key'] : '';
+		$app_key  = ( ! empty( $wdfb_api ) && ! empty( $wdfb_api['app_key'] ) ) ? $wdfb_api['app_key'] : '';
 
-		$app_key = !empty( $app_key ) ? $app_key : trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
+		$app_key = ! empty( $app_key ) ? $app_key : trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
 		$resp    = wp_remote_get( "https://graph.facebook.com/{$app_key}", array(
 			'sslverify' => false,
 			'timeout'   => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya

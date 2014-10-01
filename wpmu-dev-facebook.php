@@ -212,8 +212,9 @@ function _wdfb_initialize() {
 	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_universal_worker.php' );
 	Wdfb_UniversalWorker::serve();
 }
-add_filter('comment_text', 'decode_utf_8', 1000 );
-function decode_utf_8($content) {
+
+add_filter( 'comment_text', 'decode_utf_8', 1000 );
+function decode_utf_8( $content ) {
 	return utf8_decode( $content );
 }
 
