@@ -43,6 +43,7 @@ function wdfbCloseAlbumEditor() {
 			});
 			html += '</ul>';
 			$("#wdfb_album_container").html(html);
+			jQuery('#wdfb_album_container ul li').css({'display': 'inline-block', 'padding': '5px', 'width': '200px' });
 		}
 
 		function createAlbumPhotosMarkup(data) {

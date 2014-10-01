@@ -7,7 +7,7 @@
 			return parseInt(href.substr(1), 10);
 		}
 
-		function createAlbumsMarkup(data) {
+		function createAlbumsMarkup(data, $type) {
 			var status = parseInt(data.status, 10);
 			if (!status) {
 				$("#wdfb_album_container").html(
@@ -18,21 +18,36 @@
 			var html = '<ul>';
 			$.each(data.albums.data, function (idx, album) {
 				album.count = ("count" in album) ? album.count : 0;
-				html += '<li>';
+				if( typeof $type !== 'undefined' && $type == 'public') {
+					$show_public = true;
+				}else{
+					$show_public = false;
+				}
+				if( !$show_public ) {
+					html += '<li>';
 
-				html += album.name + ' (' + album.count + ') <br />';
-				html += '<a class="wdfb_insert_album" href="#' + album.id + '">' + l10nWdfbEditor.insert_album + '</a>';
+					html += album.name + ' (' + album.count + ') <br />';
+					html += '<a class="wdfb_insert_album" href="#' + album.id + '">' + l10nWdfbEditor.insert_album + '</a>';
 
-				html += '</li>';
+					html += '</li>';
+				}else if( album.privacy == 'everyone' ){
+					html += '<li>';
+
+					html += album.name + ' (' + album.count + ') <br />';
+					html += '<a class="wdfb_insert_album" href="#' + album.id + '">' + l10nWdfbEditor.insert_album + '</a>';
+
+					html += '</li>';
+				}
 			});
 			html += '</ul>';
 			$("#wdfb_album_container").html(html);
+			jQuery('#wdfb_album_container ul li').css({'display': 'inline-block', 'padding': '5px', 'width': '200px' });
 		}
 
-		function loadAlbums() {
+		function loadAlbums($type) {
 			$("#wdfb_album_container").html(l10nWdfbEditor.please_wait + ' <img src="' + _wdfb_root_url + '/img/waiting.gif">');
 			$.post(ajaxurl, {"action": "wdfb_list_fb_albums"}, function (response) {
-				createAlbumsMarkup(response);
+				createAlbumsMarkup(response, $type);
 			});
 		}
 
@@ -81,7 +96,7 @@
 			if ($('body.admin-bar').length) adminbar_height = 28;
 			height = height - 85 - adminbar_height;
 			tb_show(l10nWdfbEditor.add_fb_photo, '#TB_inline?width=640&height=' + height + '&inlineId=wdfb_album_root_container');
-			loadAlbums();
+			loadAlbums('public');
 			return false;
 		}
 
@@ -92,6 +107,11 @@
 			// --- Bind events ---
 
 			$(document).on('click', ".wdfb_grant_events_perms", function () {
+				$parent = $(this).parents('.wdfb_album_widget_select_album');
+				openWidgetEditor();
+				return false;
+			});
+			jQuery('body').on('click', '.wdfb_widget_open_editor', function(){
 				$parent = $(this).parents('.wdfb_album_widget_select_album');
 				openWidgetEditor();
 				return false;

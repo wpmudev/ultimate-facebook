@@ -66,7 +66,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$html .= '<p class="wdfb_album_widget_select_album">';
 		$html .= '<label for="' . $this->get_field_id('album_id') . '">' . __('Album ID:', 'wdfb') . '</label>';
 		$html .= '<input type="text" name="' . $this->get_field_name('album_id') . '" id="' . $this->get_field_id('album_id') . '" value="' . $album_id . '"/>';
-		$html .= '<a href="#" class="wdfb_widget_open_editor">' . __('Select album') . '</a>';
+		$html .= '<br /><a href="#" class="wdfb_widget_open_editor">' . __('Select album') . '</a>';
 		$html .= '</p>';
 
 		$html .= '<p>';
