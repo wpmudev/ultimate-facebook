@@ -5,6 +5,10 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+2.7.7 - 2014-10-27 - Umesh Kumar
+- Fixed: Autoimport for comments
+- Fixed: Character encoding issue due to emojis
+
 2.7.6 - 2014-09-8 - Umesh Kumar
 - New:  Added support for importing emoji's in Facebook comments
 - New: Support for bigger images in Autoposting
