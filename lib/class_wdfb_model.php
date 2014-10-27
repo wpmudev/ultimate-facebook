@@ -618,13 +618,13 @@ class Wdfb_Model {
 			return $fb_uid;
 		} // User is logged into FB, use that
 
-		$user = wp_get_current_user();
-		if ( ! $user || ! $user->ID ) {
+		$user = get_current_user_id();
+
+		if ( ! $user ) {
 			return false;
 		} // User not logged into WP, skip
 
-		$fb_uid = get_user_meta( $user->ID, 'wdfb_fb_uid', true );
-
+		$fb_uid = get_user_meta( $user, 'wdfb_fb_uid', true );
 		return $fb_uid;
 	}
 
@@ -911,9 +911,6 @@ class Wdfb_Model {
 			$token = $token ? "?auth_token={$token}" : '';
 			try {
 				$res = $this->fb->api( '/' . $for . '/comments/' . $token );
-				echo "<pre>";
-				print_r($res);
-				echo "</pre>";exit;
 			} catch ( Exception $e ) {
 				$this->log->error( __FUNCTION__, $e );
 
@@ -930,7 +927,8 @@ class Wdfb_Model {
 				) );
 			}
 			try {
-				$res = $this->fb->api( '/', 'POST', array( 'access_token' => $token, 'batch' => '[' . implode( ',', $batch ) . ']' ) );
+				$res = $this->fb->api( '/', 'POST', array( 'batch' => '[' . implode( ',', $batch ) . ']' ) );
+//				$res = $this->fb->api( '/', 'POST', array( 'access_token' => $token, 'batch' => '[' . implode( ',', $batch ) . ']' ) );
 			} catch ( Exception $e ) {
 				$this->log->error( __FUNCTION__, $e );
 

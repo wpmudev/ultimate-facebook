@@ -16,7 +16,6 @@ class Wdfb_CommentsImporter {
 		if ( empty( $post_id ) || empty( $item_id ) ) {
 			return;
 		}
-
 		$comments = $this->model->get_item_comments( $item_id );
 
 		if ( ! $comments || ! isset( $comments['data'] ) ) {
@@ -32,11 +31,13 @@ class Wdfb_CommentsImporter {
 				continue;
 			} // We already have this comment, continue.
 			$data       = array(
-				'comment_post_ID'    => $post_id,
-				'comment_date_gmt'   => date( 'Y-m-d H:i:s', strtotime( $comment['created_time'] ) ),
-				'comment_author'     => $comment['from']['name'],
-				'comment_author_url' => 'http://www.facebook.com/profile.php?id=' . $comment['from']['id'],
-				'comment_content'    => utf8_encode( $comment['message'] ),
+				'comment_post_ID'      => $post_id,
+				'comment_date_gmt'     => date( 'Y-m-d H:i:s', strtotime( $comment['created_time'] ) ),
+				'comment_author'       => $comment['from']['name'],
+				'comment_author_url'   => 'http://www.facebook.com/profile.php?id=' . $comment['from']['id'],
+				'comment_content'      => utf8_encode( $comment['message'] ),
+				'comment_author_email' => '',
+				'comment_author_IP'    => ''
 			);
 			$meta       = array(
 				'fb_comment_id' => $comment['id'],
@@ -57,12 +58,18 @@ class Wdfb_CommentsImporter {
 			return false;
 		}
 		foreach ( $posts as $post ) {
+			if ( empty( $post['link'] ) || ( ! empty( $post['type'] ) && $post['type'] != 'link' ) ) {
+				continue;
+			}
 			$post_id = wdfb_url_to_postid( $post['link'] );
 			if ( empty( $post_id ) ) {
 				continue;
 			} // Not a post on this blog. Continue.
 			$this->process_comments( $post_id, $post['id'] );
+
+			unset( $post );
 		}
+		unset( $posts );
 	}
 
 	function import_comments() {

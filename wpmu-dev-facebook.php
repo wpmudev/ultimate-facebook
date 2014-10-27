@@ -184,9 +184,12 @@ function wdfb_comment_import() {
 		return;
 	} // Don't import comments
 	Wdfb_CommentsImporter::serve();
+
+	unset( $data );
 }
 
 add_action( 'wdfb_import_comments', 'wdfb_comment_import' ); //array($importer, 'serve'));
+
 if ( ! wp_next_scheduled( 'wdfb_import_comments' ) ) {
 	wp_schedule_event( time() + 600, 'hourly', 'wdfb_import_comments' );
 }
@@ -213,9 +216,16 @@ function _wdfb_initialize() {
 	Wdfb_UniversalWorker::serve();
 }
 
-add_filter( 'comment_text', 'decode_utf_8', 1000 );
-function decode_utf_8( $content ) {
+add_filter( 'comment_text', 'decode_utf_8', 1000, 2 );
+function decode_utf_8( $content, $comment ) {
+	$comment_meta = get_comment_meta( $comment->comment_ID, 'wdfb_comment', true );
+	if ( empty( $comment_meta ) ) {
+		//Do not decode wordpress comments
+		return $content;
+	}
+
 	return html_entity_decode( utf8_decode( $content ) );
+
 }
 
 add_action( 'plugins_loaded', '_wdfb_initialize' );
