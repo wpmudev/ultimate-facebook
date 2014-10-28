@@ -1746,7 +1746,10 @@ class Wdfb_AdminPages {
 
 		// Post metabox
 		add_action( 'add_meta_boxes', array( $this, 'add_facebook_publishing_metabox' ) );
-		if ( ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+		if ( ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) ||
+		     ( defined( 'DOING_CRON' ) && DOING_CRON ) ||
+		     ( defined( 'DOING_AJAX' ) && DOING_AJAX )
+		) {
 			add_action( 'save_post', array( $this, 'publish_post_on_facebook' ) );
 		} else {
 			add_action( 'post_updated', array( $this, 'publish_post_on_facebook' ), 999, 3 );
