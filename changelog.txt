@@ -9,6 +9,7 @@ Change Log:
 - Fixed: Autoimport for comments
 - Fixed: Character encoding issue due to emojis
 - Fixed: Autoposting for posts published using Ajax
+- New:   Allow publishing old posts in editor mode
 
 2.7.6 - 2014-09-8 - Umesh Kumar
 - New:  Added support for importing emoji's in Facebook comments

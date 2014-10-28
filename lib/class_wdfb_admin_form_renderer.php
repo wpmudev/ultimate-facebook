@@ -946,8 +946,7 @@ class Wdfb_AdminFormRenderer {
 		echo '<input type="text" class="widefat" name="wdfb_metabox_publishing_title" id="wdfb_metabox_publishing_title" value="' . esc_attr( $title ) . '" />';
 		echo __( '<p><small>Leave this value blank to use the post title.</small></p>', 'wdfb' );
 		echo '</div>';
-
-		if ( ! @$opt['allow_autopost'] ) {
+		if ( ! $is_published ) {
 			echo '<div>';
 			echo '	<input type="checkbox" name="wdfb_metabox_publishing_publish" id="wdfb_metabox_publishing_publish" value="1" ' . checked( $stored_publish, true, false ) . ' />';
 			echo '	<label for="wdfb_metabox_publishing_publish">' . __( 'I want to publish this post to Facebook', 'wdfb' ) . '</label>';
