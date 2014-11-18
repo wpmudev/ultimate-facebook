@@ -705,7 +705,7 @@ class Wdfb_AdminFormRenderer {
 		echo '<div><small>' . __( 'Enabling this will add a new column that shows if the post has already been published on Facebook to your post management pages.', 'wdfb' ) . '</small></div>';
 	}
 
-	function sortByOrder($a, $b) {
+	function sortByOrder( $a, $b ) {
 		return $a['width'] - $b['width'];
 	}
 
@@ -713,39 +713,40 @@ class Wdfb_AdminFormRenderer {
 		//Get all registered image sizes
 		$sizes = $this->get_image_sizes();
 
-		uasort($sizes, array( $this, 'sortByOrder') );
-		$opt = $this->_get_option( 'wdfb_autopost' );
-		$opt['image_size'] = empty( $opt['image_size'] ) ? ( !empty($sizes['large']) ? 'large' : 'full' ) : $opt['image_size'];
+		uasort( $sizes, array( $this, 'sortByOrder' ) );
+		$opt               = $this->_get_option( 'wdfb_autopost' );
+		$opt['image_size'] = empty( $opt['image_size'] ) ? ( ! empty( $sizes['large'] ) ? 'large' : 'full' ) : $opt['image_size'];
 		?>
 		<select name="wdfb_autopost[image_size]"><?php
-			foreach( $sizes as $size=>$details ){
-				$selected = ( $size == @$opt['image_size'] ) ? ' selected="selected"' : ''; ?>
-				<option value="<?php echo $size; ?>" <?php echo $selected; ?> ><?php echo ucfirst( $size ) . ' - ' . $details['width'] . 'x' . $details['height']; ?></option><?php
-			}?>
-	   </select><?php
+		foreach ( $sizes as $size => $details ) {
+			$selected = ( $size == @$opt['image_size'] ) ? ' selected="selected"' : ''; ?>
+			<option value="<?php echo $size; ?>" <?php echo $selected; ?> ><?php echo ucfirst( $size ) . ' - ' . $details['width'] . 'x' . $details['height']; ?></option><?php
+		}?>
+		</select><?php
 	}
+
 	function get_image_sizes( $size = '' ) {
 
 		global $_wp_additional_image_sizes;
 
-		$sizes = array();
+		$sizes                        = array();
 		$get_intermediate_image_sizes = get_intermediate_image_sizes();
 
 		// Create the full array with sizes and crop info
-		foreach( $get_intermediate_image_sizes as $_size ) {
+		foreach ( $get_intermediate_image_sizes as $_size ) {
 
 			if ( in_array( $_size, array( 'thumbnail', 'medium', 'large' ) ) ) {
 
-				$sizes[ $_size ]['width'] = get_option( $_size . '_size_w' );
+				$sizes[ $_size ]['width']  = get_option( $_size . '_size_w' );
 				$sizes[ $_size ]['height'] = get_option( $_size . '_size_h' );
-				$sizes[ $_size ]['crop'] = (bool) get_option( $_size . '_crop' );
+				$sizes[ $_size ]['crop']   = (bool) get_option( $_size . '_crop' );
 
 			} elseif ( isset( $_wp_additional_image_sizes[ $_size ] ) ) {
 
 				$sizes[ $_size ] = array(
-					'width' => $_wp_additional_image_sizes[ $_size ]['width'],
+					'width'  => $_wp_additional_image_sizes[ $_size ]['width'],
 					'height' => $_wp_additional_image_sizes[ $_size ]['height'],
-					'crop' =>  $_wp_additional_image_sizes[ $_size ]['crop']
+					'crop'   => $_wp_additional_image_sizes[ $_size ]['crop']
 				);
 
 			}
@@ -755,7 +756,7 @@ class Wdfb_AdminFormRenderer {
 		// Get only 1 size if found
 		if ( $size ) {
 
-			if( isset( $sizes[ $size ] ) ) {
+			if ( isset( $sizes[ $size ] ) ) {
 				return $sizes[ $size ];
 			} else {
 				return false;
@@ -765,6 +766,7 @@ class Wdfb_AdminFormRenderer {
 
 		return $sizes;
 	}
+
 	function create_autopost_map_box() {
 		$post_types   = get_post_types( array( 'public' => true ), 'objects' );
 		$fb_locations = array(
@@ -926,10 +928,13 @@ class Wdfb_AdminFormRenderer {
 	function facebook_publishing_metabox() {
 		global $post;
 
-		$opt = $this->_get_option( 'wdfb_autopost' );
+		$opts = $this->_get_option( 'wdfb_autopost' );
+		$type_post_fb_user = !empty( $opts['type_post_fb_user'] ) ? $opts['type_post_fb_user'] : '';
 
-		$is_published = get_post_meta( $post->ID, 'wdfb_published_on_fb', true );
-		if ( $is_published ) {
+		$wdfb_published_on_fb = get_post_meta( $post->ID, 'wdfb_published_on_fb', true );
+		$post_status          = get_post_status( $post->ID );
+
+		if ( $wdfb_published_on_fb ) {
 			echo '<div style="margin: 5px 0 15px; background-color: #FFFFE0; border-color: #E6DB55; border-radius: 3px 3px 3px 3px; border-style: solid; border-width: 1px; padding: 0 0.6em;">' .
 			     '<p>' . __( "This post has already been published on Facebook", 'wdfb' ) . '</p>' .
 			     '</div>';
@@ -939,14 +944,16 @@ class Wdfb_AdminFormRenderer {
 		$stored                 = is_array( $stored ) ? $stored : array();
 		$title                  = ! empty( $stored['wdfb_metabox_publishing_title'] ) ? $stored['wdfb_metabox_publishing_title'] : '';
 		$stored_publish         = ! empty( $stored['wdfb_metabox_publishing_publish'] );
-		$stored_publishing_user = ! empty( $stored['wdfb_metabox_publishing_account'] ) ? $stored['wdfb_metabox_publishing_account'] : '';
+		$stored_publishing_user = ! empty( $stored['wdfb_metabox_publishing_account'] ) ? $stored['wdfb_metabox_publishing_account'] : $type_post_fb_user;
 
 		echo '<div>';
 		echo '<label for="">' . __( 'Publish on Facebook with different title:', 'wdfb' ) . '</label>';
 		echo '<input type="text" class="widefat" name="wdfb_metabox_publishing_title" id="wdfb_metabox_publishing_title" value="' . esc_attr( $title ) . '" />';
 		echo __( '<p><small>Leave this value blank to use the post title.</small></p>', 'wdfb' );
 		echo '</div>';
-		if ( ! $is_published ) {
+		//If post is not already published on facebook, and autopost is off
+		//If post is not already published on facebook, and autopost is on, and its an old post
+		if ( ( ! $wdfb_published_on_fb && ! $opts['allow_autopost'] ) || ( ! $wdfb_published_on_fb && $post_status == 'publish' ) ) {
 			echo '<div>';
 			echo '	<input type="checkbox" name="wdfb_metabox_publishing_publish" id="wdfb_metabox_publishing_publish" value="1" ' . checked( $stored_publish, true, false ) . ' />';
 			echo '	<label for="wdfb_metabox_publishing_publish">' . __( 'I want to publish this post to Facebook', 'wdfb' ) . '</label>';
@@ -973,7 +980,7 @@ class Wdfb_AdminFormRenderer {
 			$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
 			*/
 
-			if ( $fb_accounts ) {
+			if ( $fb_accounts && current_user_can('manage_options') ) {
 				echo '<div>';
 				echo '	<label for="wdfb_metabox_publishing_account">' . __( 'Publish to wall of this Facebook account:', 'wdfb' ) . '</label>';
 				echo '	<select name="wdfb_metabox_publishing_account" id="wdfb_metabox_publishing_account">';
@@ -988,6 +995,12 @@ class Wdfb_AdminFormRenderer {
 				echo '</div>';
 				echo '<p class="wdfb_perms_not_granted"><small>' . __( 'Please make sure that you granted extended permissions to your Facebook App', 'wdfb' ) . '</small></p>';
 			}
+		}else{
+			echo '<div>';
+			echo '	<input type="checkbox" name="wdfb_metabox_publishing_skip_publish" id="wdfb_metabox_publishing_skip_publish" value="1" ' . checked( $stored_publish, true, false ) . ' />';
+			echo '	<label for="wdfb_metabox_publishing_publish">' . __( 'Do not publish this post to Facebook', 'wdfb' ) . '</label>';
+			echo __( '<p><small>If checked, the post will not be published on Facebook</small></p>', 'wdfb' );
+			echo '</div>';
 		}
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
 	}

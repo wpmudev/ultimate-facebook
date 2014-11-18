@@ -1121,11 +1121,12 @@ class Wdfb_AdminPages {
 			$post_id = $rev;
 		}
 
-		// Should we even try?
+		// Should we even try? ( Autopost is off, and post to facebook is not checked, or if Autopost is on and
+		//Skip posting is turned on
 		if (
-			! $this->data->get_option( 'wdfb_autopost', 'allow_autopost' )
-			&&
-			! @$_POST['wdfb_metabox_publishing_publish']
+			( ! $this->data->get_option( 'wdfb_autopost', 'allow_autopost' ) && ! @$_POST['wdfb_metabox_publishing_publish'] ) ||
+
+			( ! empty( $_POST['wdfb_metabox_publishing_skip_publish'] ) && $_POST['wdfb_metabox_publishing_skip_publish'] )
 		) {
 			$stored_publish_test = get_post_meta( $post_id, 'wdfb_scheduled_publish', true ); // Allow scheduled semi-auto publishing
 			if ( empty( $stored_publish_test['wdfb_metabox_publishing_publish'] ) ) {
@@ -1331,8 +1332,8 @@ class Wdfb_AdminPages {
 
 	function json_list_fb_albums() {
 		$privacy = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : '';
-		$albums = $this->model->get_current_albums( $privacy );
-		$status = $albums ? 1 : 0;
+		$albums  = $this->model->get_current_albums( $privacy );
+		$status  = $albums ? 1 : 0;
 		header( 'Content-type: application/json' );
 		echo json_encode( array(
 			'status' => $status,
