@@ -6,6 +6,7 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 2.7.8 - 2014-11-20 - Umesh Kumar
+- New: 'wdfb-opengraph_apply_the_content_filter' filter added for developers. Returns a boolean.
 - Updated: Manual Publishing on Facebook for posts
 - Fixed: Warnings
 

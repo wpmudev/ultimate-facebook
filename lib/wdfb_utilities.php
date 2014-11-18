@@ -229,7 +229,9 @@ function wdfb_get_og_image( $id = false ) {
 	if ( $id ) {
 		$post = get_post( $id );
 		$html = $post->post_content;
-		if ( ! function_exists( 'load_membership_plugins' ) && ! defined( 'GRUNION_PLUGIN_DIR' ) && ! ( defined( 'WDFB_OG_IMAGE_SKIP_CONTENT_FILTER' ) && WDFB_OG_IMAGE_SKIP_CONTENT_FILTER ) ) {
+		
+		$apply_the_content_filter = apply_filters( 'wdfb-opengraph_apply_the_content_filter', true );
+		if ( $apply_the_content_filter && ! function_exists( 'load_membership_plugins' ) && ! defined( 'GRUNION_PLUGIN_DIR' ) && ! ( defined( 'WDFB_OG_IMAGE_SKIP_CONTENT_FILTER' ) && WDFB_OG_IMAGE_SKIP_CONTENT_FILTER ) ) {
 			$html = apply_filters( 'the_content', $html );
 		}
 	} else if ( is_home() && $data->get_option( 'wdfb_opengraph', 'fallback_image' ) ) {
