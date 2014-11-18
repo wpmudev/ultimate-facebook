@@ -757,7 +757,9 @@ class Wdfb_Model {
 					continue;
 				}
 				$data   = json_decode( $data['body'], true );
-				$return = array_merge( $return, $data['data'] );
+				if( !empty( $data ) && is_array( $data ) ) {
+					$return = array_merge( $return, $data['data'] );
+				}
 			}
 
 			return array( 'data' => $return );
