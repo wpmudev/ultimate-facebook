@@ -257,6 +257,10 @@ class Wdfb_AdminPages {
 			$form,
 			'create_allow_autopost_box'
 		), 'wdfb_options_page', 'wdfb_autopost' );
+		add_settings_field( 'wdfb_allow_skip_autopost', __( 'Allow users to skip autopost', 'wdfb' ), array(
+			$form,
+			'skip_autopost'
+		), 'wdfb_options_page', 'wdfb_autopost' );
 		add_settings_field( 'wdfb_allow_frontend_autopost', __( 'Allow frontend autoposting to Facebook', 'wdfb' ), array(
 			$form,
 			'create_allow_frontend_autopost_box'
@@ -555,6 +559,10 @@ class Wdfb_AdminPages {
 		add_settings_field( 'wdfb_allow_autopost', __( 'Allow autoposting new posts to Facebook', 'wdfb' ), array(
 			$form,
 			'create_allow_autopost_box'
+		), 'wdfb_options_page', 'wdfb_autopost' );
+		add_settings_field( 'wdfb_allow_skip_autopost', __( 'Allow users to skip autopost', 'wdfb' ), array(
+			$form,
+			'skip_autopost'
 		), 'wdfb_options_page', 'wdfb_autopost' );
 		add_settings_field( 'wdfb_image_size', __( 'Image Size for Autopost', 'wdfb' ), array(
 			$form,

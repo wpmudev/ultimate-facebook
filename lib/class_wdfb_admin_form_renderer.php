@@ -693,6 +693,11 @@ class Wdfb_AdminFormRenderer {
 		echo $this->_create_checkbox( 'autopost', 'allow_autopost', @$opt['allow_autopost'] );
 	}
 
+	function skip_autopost() {
+		$opt = $this->_get_option( 'wdfb_autopost' );
+		echo $this->_create_checkbox( 'autopost', 'allow_skip_autopost', @$opt['allow_skip_autopost'] );
+	}
+
 	function create_allow_frontend_autopost_box() {
 		$opt = $this->_get_option( 'wdfb_autopost' );
 		echo $this->_create_checkbox( 'autopost', 'allow_frontend_autopost', @$opt['allow_frontend_autopost'] );
@@ -996,11 +1001,13 @@ class Wdfb_AdminFormRenderer {
 				echo '<p class="wdfb_perms_not_granted"><small>' . __( 'Please make sure that you granted extended permissions to your Facebook App', 'wdfb' ) . '</small></p>';
 			}
 		}else{
-			echo '<div>';
-			echo '	<input type="checkbox" name="wdfb_metabox_publishing_skip_publish" id="wdfb_metabox_publishing_skip_publish" value="1" ' . checked( $stored_publish, true, false ) . ' />';
-			echo '	<label for="wdfb_metabox_publishing_publish">' . __( 'Do not publish this post to Facebook', 'wdfb' ) . '</label>';
-			echo __( '<p><small>If checked, the post will not be published on Facebook</small></p>', 'wdfb' );
-			echo '</div>';
+			if( !empty( $opts['allow_skip_autopost'] ) && $opts['allow_skip_autopost'] == 1 ) {
+				echo '<div>';
+				echo '	<input type="checkbox" name="wdfb_metabox_publishing_skip_publish" id="wdfb_metabox_publishing_skip_publish" value="1" ' . checked( $stored_publish, true, false ) . ' />';
+				echo '	<label for="wdfb_metabox_publishing_publish">' . __( 'Do not publish this post to Facebook', 'wdfb' ) . '</label>';
+				echo __( '<p><small>If checked, the post will not be published on Facebook</small></p>', 'wdfb' );
+				echo '</div>';
+			}
 		}
 		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script>';
 	}
