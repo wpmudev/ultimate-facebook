@@ -5,7 +5,7 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
-2.7.8 - 2014-11-26 - Umesh Kumar
+2.7.8 - 2014-11-24 - Umesh Kumar
 - New: Skip autopost option for individual posts
 - New: 'wdfb-opengraph_apply_the_content_filter' filter added for developers. Returns a boolean.
 - Updated: Manual Publishing on Facebook for posts
