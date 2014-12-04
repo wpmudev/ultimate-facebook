@@ -5,6 +5,9 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+2.7.9 - 2014-12-6 - Umesh Kumar
+- Fixed: Userid and token issue ( Albums not showing up, due to invalid token )
+
 2.7.8 - 2014-11-24 - Umesh Kumar
 - New: Skip autopost option for individual posts
 - New: 'wdfb-opengraph_apply_the_content_filter' filter added for developers. Returns a boolean.
