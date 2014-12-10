@@ -9,6 +9,7 @@ Change Log:
 - Fixed: Userid and token issue ( Albums not showing up, due to invalid token )
 - Update: Facebook registration plugin expiry notice
 - Fixed: Permissions dialog
+- New: Validate Facebook APP Secret with APP ID
 
 2.7.8 - 2014-11-24 - Umesh Kumar
 - New: Skip autopost option for individual posts

@@ -146,10 +146,10 @@ function wdfb_do_settings_sections( $page ) {
 			$.post(ajaxurl, {
 				"action": "wdfb_check_api_status",
 				"network": false
-			}, function (data) {
+			}, function (res) {
 				var name = false;
 				try {
-					name = data.name;
+					name = res.data;
 				} catch (e) {
 					name = false;
 				}
@@ -177,10 +177,10 @@ function wdfb_do_settings_sections( $page ) {
 			$.post(ajaxurl, {
 				"action": "wdfb_check_api_status",
 				"network": true
-			}, function (data) {
+			}, function (res) {
 				var name = false;
 				try {
-					name = data.name;
+					name = res.data;
 				} catch (e) {
 					name = false;
 				}

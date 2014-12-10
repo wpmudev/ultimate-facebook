@@ -1439,18 +1439,29 @@ class Wdfb_AdminPages {
 		$wdfb_api = ! empty( $_POST['network'] ) && $_POST['network'] == 'true' ? get_site_option( 'wdfb_api' ) : get_option( 'wdfb_api' );
 		$app_key  = ( ! empty( $wdfb_api ) && ! empty( $wdfb_api['app_key'] ) ) ? $wdfb_api['app_key'] : '';
 
+		//get app secret
+		$secret_key = ( ! empty( $wdfb_api ) && ! empty( $wdfb_api['secret_key'] ) ) ? $wdfb_api['secret_key'] : '';
+
 		$app_key = ! empty( $app_key ) ? $app_key : trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
-		$resp    = wp_remote_get( "https://graph.facebook.com/{$app_key}", array(
+		$secret_key = ! empty( $secret_key ) ? $secret_key : trim( $this->data->get_option( 'wdfb_api', 'secret_key' ) );
+
+		$resp    = wp_remote_get( "https://graph.facebook.com/{$app_key}?fields=name&access_token={$app_key}|{$secret_key}", array(
 			'sslverify' => false,
 			'timeout'   => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya
 		) );
 		if ( is_wp_error( $resp ) ) {
-			die( json_encode( array( "status" => 0 ) ) );
+			wp_send_json_error();
 		} // Request fail
-		if ( (int) $resp['response']['code'] != 200 ) {
-			die( json_encode( array( "status" => 0 ) ) );
+		else if ( (int) $resp['response']['code'] != 200 ) {
+			wp_send_json_error();
 		} // Request fail
-		die( $resp['body'] );
+		else{
+			$resp = wp_remote_retrieve_body( $resp );
+			$resp = json_decode( $resp );
+			wp_send_json_success( $resp->name );
+		}
+		die();
+
 	}
 
 	function json_get_facebook_groups_map() {
