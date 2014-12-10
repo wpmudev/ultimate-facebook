@@ -349,10 +349,14 @@ class Wdfb_Model {
 	function get_user_api_token( $fb_uid ) {
 		$wdfb_api = get_option( 'wdfb_api' );
 		$token    = isset( $wdfb_api['auth_tokens'] ) ? $wdfb_api['auth_tokens'] : array();
-		if ( ! $token ) {
+		if ( ! $token || empty( $fb_uid ) ) {
+			$this->log->error( 'WDFBModel::get_user_api_token', 'Token not found or no Facebook user id was provided' );
+
 			return false;
 		}
 		if ( ! isset( $token[ $fb_uid ] ) ) {
+			$this->log->error( 'WDFBModel::get_user_api_token', 'No valid Facebook token found for the given Facebook user id' );
+
 			return false;
 		}
 
@@ -616,7 +620,7 @@ class Wdfb_Model {
 	 * @return bool|int|mixed|string
 	 */
 	function get_current_user_fb_id() {
-		//Get UID for admin account
+		//Get all details for the blog
 		$wdfb_api = get_option( 'wdfb_api' );
 
 		$fb_uid = $this->fb->getUser();
@@ -624,26 +628,29 @@ class Wdfb_Model {
 			return $fb_uid;
 		} // User is logged into FB, use that
 
+		//If a user is logged in, check if they have authorized app
 		$user = get_current_user_id();
-		//if user logged in
-		if ( !empty( $user ) ) {
+		//if user logged in and we have a auth token respective th their FB id, return the fb id
+		if ( ! empty( $user ) ) {
 			$fb_uid = get_user_meta( $user, 'wdfb_fb_uid', true );
 			if ( ! empty( $fb_uid ) && ! empty( $wdfb_api['auth_tokens'] ) && ! empty( $wdfb_api['auth_tokens'][ $fb_uid ] ) ) {
 				return $fb_uid;
-			}else{
+			} else {
 				$fb_uid = '';
 			}
 		}
 
+		//no auth token available for logged in user
 		if ( empty( $fb_uid ) ) {
 			if ( empty( $wdfb_api ) || empty( $wdfb_api['auth_accounts'] ) ) {
 				return false;
 			}
 			foreach ( $wdfb_api['auth_accounts'] as $id => $auth_account ) {
+				//Search for auth tokens for user, looking for 10120020120 => ME(10120020120) in auth tokens array
 				if ( strpos( $auth_account, $id ) !== false && ! empty( $wdfb_api['auth_tokens'][ $id ] ) ) {
 					return $id;
 				} else {
-					//return the id, for which we have auth token
+					//return the first id, for which we have auth token
 					return key( $wdfb_api['auth_tokens'] );
 				}
 			}
@@ -916,9 +923,6 @@ class Wdfb_Model {
 
 //		$old_token = $this->fb->getAccessToken();
 //		$this->fb->setAccessToken( $token );
-		echo "<pre>";
-		print_r( $uid );
-		echo "</pre>";
 		try {
 			$res = $this->fb->api( "/{$uid}/feed/{$limit}" );
 		} catch ( Exception $e ) {
