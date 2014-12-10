@@ -235,7 +235,7 @@ class Wdfb_AdminFormRenderer {
 		echo ' <label for="require_facebook_account">' . __( 'Require Facebook account', 'wdfb' ) . '</label>';
 		echo '<div><small>' . __( 'By default, Facebook registration form will allow your users to register with their Facebook account, or with their chosen usernames and emails.', 'wdfb' ) . '</small></div>';
 		echo '<div><small>' . __( 'Check this if users will need to have a Facebook account already.', 'wdfb' ) . '</small></div>';
-		echo '<div style="color: #FF8F00; font-size: 13px; font-weight: 600;">' . __( 'As of the latest Facebook API V2.0, signup using facebook is no more supported. We recommend to use the WordPress signup process, as this feature will stop working on 30th April, 2015', 'wdfb' ) . '</small></div>';
+		echo '<div style="color: #FF8F00; font-size: 13px; font-weight: 600;">' . __( 'As of the latest Facebook API V2.0, Facebook registration plugin( Allow users to register with Facebook ) will be discontinued after July 30, 2015. For registration you should use "Allow single-click registration"', 'wdfb' ) . '</small></div>';
 	}
 
 	function create_no_main_site_registration_box() {

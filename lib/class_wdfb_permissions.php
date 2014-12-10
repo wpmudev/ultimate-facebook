@@ -134,6 +134,13 @@ class Wdfb_Permissions {
 		$data   = Wdfb_OptionsRegistry::get_instance();
 		$extras = array();
 
+		//Access User photos
+		$extras[] = self::EXTRA_USER_PHOTOS;
+
+		//Access User events
+		$extras[] = self::EXTRA_EVENTS;
+
+		//Manage pages and publish permission, if Autopost is selected or if single post is not disabled
 		$include_posting = defined( 'WDFB_CORE_MINIMAL_PERMISSIONS_SET' ) && WDFB_CORE_MINIMAL_PERMISSIONS_SET
 			? $data->get_option( 'wdfb_autopost', 'allow_autopost' ) || ! $data->get_option( 'wdfb_autopost', 'prevent_post_metabox' )
 			: true;
@@ -143,14 +150,6 @@ class Wdfb_Permissions {
 
 			//Publish on page
 			$extras[] = self::EXTRA_PUBLISH_PAGES;
-
-			//Access User photos
-			$extras[] = self::EXTRA_USER_PHOTOS;
-
-			//If Events allowed
-			if ( $data->get_option( 'wdfb_widget_pack', 'albums_allowed' ) ) {
-				$extras[] = self::EXTRA_EVENTS;
-			}
 		}
 
 		$perms = array_merge(
