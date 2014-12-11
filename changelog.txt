@@ -8,7 +8,7 @@ Change Log:
 2.7.9 - 2014-12-6 - Umesh Kumar
 - Fixed: Userid and token issue ( Albums not showing up, due to invalid token )
 - Update: Facebook registration plugin expiry notice
-- Fixed: Permissions dialog
+- Fixed: Permissions logic
 - New: Validate Facebook APP Secret with APP ID
 
 2.7.8 - 2014-11-24 - Umesh Kumar
