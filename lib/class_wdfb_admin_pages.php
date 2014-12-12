@@ -1386,6 +1386,7 @@ class Wdfb_AdminPages {
 	function json_perhaps_create_wp_user() {
 		$user = wp_get_current_user();
 		if ( $user->ID ) {
+			wp_send_json_error( "User already logged in" );
 			die();
 		}
 
@@ -1417,6 +1418,12 @@ class Wdfb_AdminPages {
 				}
 			}
 			$this->handle_fb_session_state();
+			if ( empty( $user_id ) ) {
+				$message = apply_filters('wdfb_warn_disabled_registration', __( "Registration has been disabled.", 'wdfb' ) );
+				wp_send_json_error( $message );
+			} else {
+				wp_send_json_success( "Logging in" );
+			}
 		}
 		exit();
 	}
@@ -1442,10 +1449,10 @@ class Wdfb_AdminPages {
 		//get app secret
 		$secret_key = ( ! empty( $wdfb_api ) && ! empty( $wdfb_api['secret_key'] ) ) ? $wdfb_api['secret_key'] : '';
 
-		$app_key = ! empty( $app_key ) ? $app_key : trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
+		$app_key    = ! empty( $app_key ) ? $app_key : trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
 		$secret_key = ! empty( $secret_key ) ? $secret_key : trim( $this->data->get_option( 'wdfb_api', 'secret_key' ) );
 
-		$resp    = wp_remote_get( "https://graph.facebook.com/{$app_key}?fields=name&access_token={$app_key}|{$secret_key}", array(
+		$resp = wp_remote_get( "https://graph.facebook.com/{$app_key}?fields=name&access_token={$app_key}|{$secret_key}", array(
 			'sslverify' => false,
 			'timeout'   => 120, // Allow for extra long timeout here. Props @Dharmendra Vekariya
 		) );
@@ -1455,7 +1462,7 @@ class Wdfb_AdminPages {
 		else if ( (int) $resp['response']['code'] != 200 ) {
 			wp_send_json_error();
 		} // Request fail
-		else{
+		else {
 			$resp = wp_remote_retrieve_body( $resp );
 			$resp = json_decode( $resp );
 			wp_send_json_success( $resp->name );
@@ -1737,6 +1744,7 @@ class Wdfb_AdminPages {
 			// ... but allow avatars selection in the admin > Settings > Discussion
 			add_filter( 'avatar_defaults', array( $this, 'allow_default_avatars_selection' ) );
 			// Single-click registration enabled
+			add_action( 'wp_ajax_wdfb_perhaps_create_wp_user', array( $this, 'json_perhaps_create_wp_user' ) );
 			add_action( 'wp_ajax_nopriv_wdfb_perhaps_create_wp_user', array( $this, 'json_perhaps_create_wp_user' ) );
 
 			// Allow users to map their user profile fields from profile page

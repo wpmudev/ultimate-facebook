@@ -424,14 +424,35 @@ class Wdfb_Model {
 		$this->map_fb_to_wp_user( $id );
 
 	}
+	function registration_allowed() {
+		$registration_allowed = true;
+		//Check if registrations are allowed
+		if ( is_multisite() ) {
+			$reg = get_site_option( 'registration' );
+			//user and blog registrations are not allowed
+			if ( 'all' != $reg && 'user' != $reg ) {
+				$registration_allowed = false;
+			}
+		} else {
+			if ( ! (int) get_option( 'users_can_register' ) ) {
+				$registration_allowed = false;
+			}
+		}
+		return $registration_allowed;
+	}
 
 	function register_fb_user() {
 		$uid = $this->get_wp_user_from_fb();
 		if ( $uid ) {
 			return $this->map_fb_to_wp_user( $uid );
 		}
+		$registration_allowed = $this->registration_allowed();
 
-		return $this->create_new_wp_user_from_fb();
+		if( $registration_allowed ) {
+			return $this->create_new_wp_user_from_fb();
+		}else{
+			return false;
+		}
 	}
 
 	function delete_wp_user( $uid ) {

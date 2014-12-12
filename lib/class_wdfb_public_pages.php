@@ -425,6 +425,10 @@ EOBpFormInjection;
 	}
 
 	function inject_optional_facebook_registration_button() {
+		//if registrations are disabled
+		if ( ! $this->model->registration_allowed() ) {
+			return;
+		}
 		$url = add_query_arg( 'fb_registration_page', 1 );
 		echo '<p><a class="wdfb_register_button" href="' . $url . '"><span>' . __( 'Register with Facebook', 'wdfb' ) . '</span></a></p>';
 	}
@@ -451,20 +455,13 @@ EOBpFormInjection;
 			return false;
 		}
 
-		// Are registrations allowed?
 		$wp_grant_blog = false;
-		if ( is_multisite() ) {
-			$reg = get_site_option( 'registration' );
-			if ( 'all' == $reg ) {
-				$wp_grant_blog = true;
-			} else if ( 'user' != $reg ) {
-				return false;
-			}
-		} else {
-			if ( ! (int) get_option( 'users_can_register' ) ) {
-				return false;
-			}
+
+		// Are registrations allowed?
+		if ( ! $this->model->registration_allowed() ) {
+			return false;
 		}
+
 		$wp_grant_blog = apply_filters( 'wdfb-registration-allow_blog_creation', $wp_grant_blog );
 
 		$user_id = false;
