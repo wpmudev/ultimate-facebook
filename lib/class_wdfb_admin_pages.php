@@ -1419,7 +1419,7 @@ class Wdfb_AdminPages {
 			}
 			$this->handle_fb_session_state();
 			if ( empty( $user_id ) ) {
-				$message = apply_filters('wdfb_warn_disabled_registration', __( "Registration has been disabled.", 'wdfb' ) );
+				$message = apply_filters('wdfb_warn_disabled_registration', __( "User  registration is currently not allowed.", 'wdfb' ) );
 				wp_send_json_error( $message );
 			} else {
 				wp_send_json_success( "Logging in" );

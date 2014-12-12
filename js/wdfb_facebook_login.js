@@ -34,12 +34,13 @@ var _wdfb_notifyAndRedirect;
 							if (res.success) {
 								window.location = redir;
 							} else {
+								//remove waiting image
+								$('.wdfb_login_button').remove();
+
 								if( typeof res.data !== 'undefined' ) {
 									//remove waiting image
-									$('.wdfb_login_button').replaceWith('<p>'+ res.data +'</p>');
-								}else{
-									//remove waiting image
-									$('.wdfb_login_button').remove();
+									var login_error = '<div id="login_error">' + res.data + '<br> </div>';
+									$('.login h1').after(login_error);
 								}
 							}
 						});
@@ -50,12 +51,13 @@ var _wdfb_notifyAndRedirect;
 								if (res.success) {
 									window.location = redir;
 								} else {
+									//remove waiting image
+									$('.wdfb_login_button').remove();
+
 									if( typeof res.data !== 'undefined' ) {
 										//remove waiting image
-										$('.wdfb_login_button').replaceWith('<p>'+ res.data +'</p>');
-									}else{
-										//remove waiting image
-										$('.wdfb_login_button').remove();
+										var login_error = '<div id="login_error">' + res.data + '</div><br>';
+										$('.login h1').after(login_error);
 									}
 								}
 							}
