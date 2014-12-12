@@ -64,7 +64,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 			$html .= '<div class="wdfb_admin_message message">Facebook user ID: ' . $fb_user . '</div>';
 		}
 
-		$html .= '<p>';
+		$html .= '<p class="wdfb_album_title">';
 		$html .= '<label for="' . $this->get_field_id( 'title' ) . '">' . __( 'Title:', 'wdfb' ) . '</label>';
 		$html .= '<input type="text" name="' . $this->get_field_name( 'title' ) . '" id="' . $this->get_field_id( 'title' ) . '" class="widefat" value="' . $title . '"/>';
 		$html .= '</p>';

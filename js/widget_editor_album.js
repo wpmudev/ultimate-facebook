@@ -27,14 +27,14 @@
 					html += '<li>';
 
 					html += album.name + ' (' + album.count + ') <br />';
-					html += '<a class="wdfb_insert_album" href="#' + album.id + '">' + l10nWdfbEditor.insert_album + '</a>';
+					html += '<a class="wdfb_insert_album" href="#' + album.id + '" data-name="' + album.name + '">' + l10nWdfbEditor.insert_album + '</a>';
 
 					html += '</li>';
 				}else if( album.privacy == 'everyone' ){
 					html += '<li>';
 
 					html += album.name + ' (' + album.count + ') <br />';
-					html += '<a class="wdfb_insert_album" href="#' + album.id + '">' + l10nWdfbEditor.insert_album + '</a>';
+					html += '<a class="wdfb_insert_album" href="#' + album.id + '" data-name="' + album.name + '">' + l10nWdfbEditor.insert_album + '</a>';
 
 					html += '</li>';
 				}
@@ -54,6 +54,11 @@
 		function insertAlbum($me) {
 			var albumId = parseAlbumIdHref($me.attr('href'));
 			$parent.find('input:text').val(albumId);
+			console.log($parent.parent());
+			var title = $parent.parent().find('.wdfb_album_title input');
+			if( !title.val() ) {
+				title.val($me.data('name'));
+			}
 			tb_remove();
 			return false;
 		}

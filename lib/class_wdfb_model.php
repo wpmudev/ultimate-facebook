@@ -840,7 +840,7 @@ class Wdfb_Model {
 
 		try {
 			$res = $this->fb->api( '/' . $for . '/albums/', array(
-					'auth_tokens' => $token
+					'access_token' => $token
 				)
 			);
 		} catch ( Exception $e ) {
