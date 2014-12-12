@@ -58,7 +58,7 @@ class Wdfb_AlbumPhotosBuffer extends Wdfb_TransientBuffer {
 		$photos = $model->get_album_photos($album_id, $limit);
 		if (!$photos) return false;
 
-		$this->store($transient, $photos['data']);
+//		$this->store($transient, $photos['data']);
 		return $photos['data']; 
 	}
 }

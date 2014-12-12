@@ -172,6 +172,19 @@
 						});
 						return false;
 					});
+					$(document).on("change", ".wdfb_fb_open_wrapper input", function () {
+						var $me = $(this);
+						if( $me.attr('checked') ) {
+							jQuery('.wdfb_thickbox_wrapper input').removeAttr('checked');
+
+						}
+					});
+					$(document).on("change", ".wdfb_thickbox_wrapper input", function () {
+						var $me = $(this);
+						if( $me.attr('checked') ) {
+							$('.wdfb_fb_open_wrapper input').removeAttr("checked");
+						}
+					});
 				}
 			});
 		}

@@ -424,6 +424,7 @@ class Wdfb_Model {
 		$this->map_fb_to_wp_user( $id );
 
 	}
+
 	function registration_allowed() {
 		$registration_allowed = true;
 		//Check if registrations are allowed
@@ -438,6 +439,7 @@ class Wdfb_Model {
 				$registration_allowed = false;
 			}
 		}
+
 		return $registration_allowed;
 	}
 
@@ -448,9 +450,9 @@ class Wdfb_Model {
 		}
 		$registration_allowed = $this->registration_allowed();
 
-		if( $registration_allowed ) {
+		if ( $registration_allowed ) {
 			return $this->create_new_wp_user_from_fb();
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -887,6 +889,7 @@ class Wdfb_Model {
 
 		$fid   = $this->get_current_user_fb_id();
 		$token = $this->get_user_api_token( $fid );
+		$limit = ! empty( $limit ) ? $limit : 200;
 		if ( $limit && $limit > $page_size ) {
 			$limit = $limit > $max_limit ? $max_limit : $limit;
 			$batch = array();
@@ -921,7 +924,8 @@ class Wdfb_Model {
 			try {
 				$res = $this->fb->api( '/' . $aid . '/photos/', array(
 					'access_token' => $token,
-					'limit'        => $limit
+					'limit'        => $limit,
+					'fields'       => 'created_time,height,icon,id,images,link,name,picture,source,updated_time,width'
 				) );
 			} catch ( Exception $e ) {
 				$this->log->error( __FUNCTION__, $e );
