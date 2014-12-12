@@ -43,15 +43,16 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 	function form( $instance ) {
 
-		$title    = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
-		$album_id = ! empty( $instance['album_id'] ) ? esc_attr( $instance['album_id'] ) : '';
-		$limit    = ! empty( $instance['limit'] ) ? esc_attr( $instance['limit'] ) : '';
-		$per_row  = ! empty( $instance['per_row'] ) ? esc_attr( $instance['per_row'] ) : '';
-		$img_h    = ! empty( $instance['img_h'] ) ? esc_attr( $instance['img_h'] ) : 75;
-		$img_w    = ! empty( $instance['img_w'] ) ? esc_attr( $instance['img_w'] ) : 75;
-		$img_crop = ! empty( $instance['img_crop'] ) ? esc_attr( $instance['img_crop'] ) : '';
-		$fb_open  = ! empty( $instance['fb_open'] ) ? esc_attr( $instance['fb_open'] ) : '';
-		$thickbox = ! empty( $instance['thickbox'] ) ? esc_attr( $instance['thickbox'] ) : '';
+		$title      = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$album_id   = ! empty( $instance['album_id'] ) ? esc_attr( $instance['album_id'] ) : '';
+		$limit      = ! empty( $instance['limit'] ) ? esc_attr( $instance['limit'] ) : '';
+		$per_row    = ! empty( $instance['per_row'] ) ? esc_attr( $instance['per_row'] ) : '';
+		$img_h      = ! empty( $instance['img_h'] ) ? esc_attr( $instance['img_h'] ) : 75;
+		$img_w      = ! empty( $instance['img_w'] ) ? esc_attr( $instance['img_w'] ) : 75;
+		$img_crop   = ! empty( $instance['img_crop'] ) ? esc_attr( $instance['img_crop'] ) : '';
+		$fb_open    = ! empty( $instance['fb_open'] ) ? esc_attr( $instance['fb_open'] ) : '';
+		$thickbox   = ! empty( $instance['thickbox'] ) ? esc_attr( $instance['thickbox'] ) : '';
+		$photo_desc = ! empty( $instance['photo_desc'] ) ? esc_attr( $instance['photo_desc'] ) : '';
 
 		$html = '';
 
@@ -93,6 +94,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$html .= '</select>';
 		$html .= '</p>';
 
+		//Image Width
 		$html .= '<p>';
 		$html .= '<label for="' . $this->get_field_id( 'img_w' ) . '">' . __( 'Image size:', 'wdfb' ) . '</label>';
 		$html .= '<input type="text" name="' . $this->get_field_name( 'img_w' ) . '" size="2" maxsize="3" id="' . $this->get_field_id( 'img_w' ) . '" value="' . $img_w . '"/>';
@@ -101,37 +103,48 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$html .= '<br /><small>' . __( 'Format: width x height. <br />Omitting one of dimensions will show your images in scale.', 'wdfb' ) . '</small>';
 		$html .= '</p>';
 
+		//Crop images
 		$html .= '<p>';
-		$html .= '<label for="' . $this->get_field_id( 'img_crop' ) . '">' . __( 'Crop image height:', 'wdfb' ) . '</label> ';
 		$html .= '<input type="checkbox" name="' . $this->get_field_name( 'img_crop' ) . '" id="' . $this->get_field_id( 'img_crop' ) . '" value="1" ' . ( $img_crop ? 'checked="checked"' : '' ) . ' />';
+		$html .= '<label for="' . $this->get_field_id( 'img_crop' ) . '">' . __( 'Crop image height', 'wdfb' ) . '</label> ';
 		$html .= '<br /><small>' . __( 'Selecting this option will crop your oversized images vertically.', 'wdfb' ) . '</small>';
 		$html .= '</p>';
 
+		//Display Photo description
+		$html .= '<p class="wdfb_photo_desc_wrapper">';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name( 'photo_desc' ) . '" id="' . $this->get_field_id( 'photo_desc' ) . '" value="1" ' . ( $photo_desc ? 'checked="checked"' : '' ) . ' />';
+		$html .= '<label for="' . $this->get_field_id( 'photo_desc' ) . '">' . __( 'Display photo description', 'wdfb' ) . '</label> ';
+		$html .= '<br /><small>' . __( 'Displays the description under a photo.', 'wdfb' ) . '</small>';
+		$html .= '</p>';
+
+		//Link to FB
 		$html .= '<p class="wdfb_fb_open_wrapper">';
-		$html .= '<label for="' . $this->get_field_id( 'fb_open' ) . '">' . __( 'Link to image on Facebook:', 'wdfb' ) . '</label> ';
 		$html .= '<input type="checkbox" name="' . $this->get_field_name( 'fb_open' ) . '" id="' . $this->get_field_id( 'fb_open' ) . '" value="1" ' . ( $fb_open ? 'checked="checked"' : '' ) . ' />';
+		$html .= '<label for="' . $this->get_field_id( 'fb_open' ) . '">' . __( 'Link to image on Facebook', 'wdfb' ) . '</label> ';
 		$html .= '<br /><small>' . __( 'By default, your images will be linked to their full size sources. Selecting this option will link your images to Facebook ones.', 'wdfb' ) . '</small>';
 		$html .= '</p>';
 
+		//Display photos in Thickbox
 		$html .= '<p class="wdfb_thickbox_wrapper">';
-		$html .= '<label for="' . $this->get_field_id( 'thickbox' ) . '">' . __( 'Open images in thickbox', 'wdfb' ) . '</label> ';
 		$html .= '<input type="checkbox" name="' . $this->get_field_name( 'thickbox' ) . '" id="' . $this->get_field_id( 'thickbox' ) . '" value="1" ' . ( $thickbox ? 'checked="checked"' : '' ) . ' />';
+		$html .= '<label for="' . $this->get_field_id( 'thickbox' ) . '">' . __( 'Open images in thickbox', 'wdfb' ) . '</label> ';
 		$html .= '</p>';
 
 		echo $html;
 	}
 
 	function update( $new_instance, $old_instance ) {
-		$instance             = $old_instance;
-		$instance['title']    = strip_tags( $new_instance['title'] );
-		$instance['album_id'] = strip_tags( $new_instance['album_id'] );
-		$instance['limit']    = strip_tags( $new_instance['limit'] );
-		$instance['per_row']  = strip_tags( $new_instance['per_row'] );
-		$instance['img_w']    = strip_tags( $new_instance['img_w'] );
-		$instance['img_h']    = strip_tags( $new_instance['img_h'] );
-		$instance['img_crop'] = isset( $new_instance['img_crop'] ) ? 1 : 0;
-		$instance['fb_open']  = isset( $new_instance['fb_open'] ) ? 1 : 0;
-		$instance['thickbox'] = isset( $new_instance['thickbox'] ) ? 1 : 0;
+		$instance               = $old_instance;
+		$instance['title']      = strip_tags( $new_instance['title'] );
+		$instance['album_id']   = strip_tags( $new_instance['album_id'] );
+		$instance['limit']      = strip_tags( $new_instance['limit'] );
+		$instance['per_row']    = strip_tags( $new_instance['per_row'] );
+		$instance['img_w']      = strip_tags( $new_instance['img_w'] );
+		$instance['img_h']      = strip_tags( $new_instance['img_h'] );
+		$instance['img_crop']   = isset( $new_instance['img_crop'] ) ? 1 : 0;
+		$instance['fb_open']    = isset( $new_instance['fb_open'] ) ? 1 : 0;
+		$instance['thickbox']   = isset( $new_instance['thickbox'] ) ? 1 : 0;
+		$instance['photo_desc'] = isset( $new_instance['photo_desc'] ) ? 1 : 0;
 
 		//$instance['photos'] = empty($instance['photos']) ? $this->model->get_album_photos($instance['album_id'], $limit) : $instance['photos'];
 
@@ -141,15 +154,16 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 	function widget( $args, $instance ) {
 
 		extract( $args );
-		$title    = apply_filters( 'widget_title', $instance['title'] );
-		$limit    = (int) $instance['limit'];
-		$per_row  = (int) $instance['per_row'];
-		$img_w    = (int) $instance['img_w'];
-		$img_h    = (int) $instance['img_h'];
-		$img_crop = (int) $instance['img_crop'];
-		$fb_open  = (int) $instance['fb_open'];
-		$thickbox = (int) $instance['thickbox'];
-		$album_id = $instance['album_id'];
+		$title      = apply_filters( 'widget_title', $instance['title'] );
+		$limit      = (int) $instance['limit'];
+		$per_row    = (int) $instance['per_row'];
+		$img_w      = (int) $instance['img_w'];
+		$img_h      = (int) $instance['img_h'];
+		$img_crop   = (int) $instance['img_crop'];
+		$fb_open    = (int) $instance['fb_open'];
+		$thickbox   = (int) $instance['thickbox'];
+		$photo_desc = (int) $instance['photo_desc'];
+		$album_id   = $instance['album_id'];
 
 		$api    = new Wdfb_AlbumPhotosBuffer;
 		$photos = $api->get_for( $album_id, $limit );
@@ -171,16 +185,22 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 				$url   = $fb_open
 					? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id']
 					: $photo['images'][0]['source'];
+				//Check if photo description is allowed and photo does have a description
+				$photo_text = ( $photo_desc && ! empty( $photo['name'] ) ) ? $photo['name'] : '';
+				$photo_text = apply_filters( 'wdfb_widget_photo_desc', $photo_text );
+
 				$class = ( ! $fb_open && $thickbox ) ? 'thickbox' : '';
 				$class = apply_filters( 'wdfb_photo_link_thickbox', $class );
-				echo '<td valign="top">' .
-				     '<a href="' . $url . '" style="' . $style . '" class="' . $class . '">' .
-				     '<img src="' . $photo['images'][ count( $photo['images'] ) - 1 ]['source'] . '" ' .
-				     ( $img_w ? "width='{$img_w}'" : '' ) .
-				     ( $img_h && ! $img_crop ? "height='{$img_h}'" : '' ) .
-				     ' />' .
-				     '</a>' .
-				     '</td>';
+				$image = '<td valign="top">' .
+				         '<a href="' . $url . '" style="' . $style . '" class="' . $class . '">' .
+				         '<img src="' . $photo['images'][ count( $photo['images'] ) - 1 ]['source'] . '" ' .
+				         ( $img_w ? "width='{$img_w}'" : '' ) .
+				         ( $img_h && ! $img_crop ? "height='{$img_h}'" : '' ) .
+				         ' />';
+				$image .= '</a>';
+				$image .= ! empty( $photo_text ) ? '<p class="wdfb-photo-desc">' . $photo_text . "</p>" : '';
+				'</td>';
+				echo $image;
 				++ $count;
 				++ $overall;
 				if ( $count == $per_row ) {

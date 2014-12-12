@@ -230,12 +230,12 @@ class Wdfb_MarkerReplacer {
 
 			return $use_xfbml
 				? '<div class="wdfb_like_button">' . wdfb_get_fb_plugin_markup( 'like', compact( array(
-							'href',
-							'send',
-							'layout',
-							'width',
-							'scheme'
-						) ) ) . '</div>'
+					'href',
+					'send',
+					'layout',
+					'width',
+					'scheme'
+				) ) ) . '</div>'
 				: "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href=" . rawurlencode( $href ) . "&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme={$scheme}&amp;font&amp;height={$height}&amp;width={$width}&amp;locale={$locale}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>";
 		}
 
@@ -302,8 +302,8 @@ class Wdfb_MarkerReplacer {
 				$start_time = isset ( $event['start_time'] ) ? strtotime( $event['start_time'] ) : '';
 				$end_time   = isset ( $event['end_time'] ) ? strtotime( $event['end_time'] ) : '';
 				date_default_timezone_set( $event['timezone'] );
-				$event['start_time'] = !empty ( $start_time ) ?  date( 'Y-m-d H:i:s', $start_time ) : '';
-				$event['end_time']   = !empty ( $end_time ) ?  date( 'Y-m-d H:i:s', $end_time ) : '';
+				$event['start_time'] = ! empty ( $start_time ) ? date( 'Y-m-d H:i:s', $start_time ) : '';
+				$event['end_time']   = ! empty ( $end_time ) ? date( 'Y-m-d H:i:s', $end_time ) : '';
 				date_default_timezone_set( $current_tz );
 			}
 			if ( $date_threshold > strtotime( $event['start_time'] ) ) {
@@ -325,15 +325,16 @@ class Wdfb_MarkerReplacer {
 		}
 
 		$atts = shortcode_atts( array(
-			'id'           => false,
-			'limit'        => false,
-			'photo_class'  => 'thickbox',
-			'album_class'  => false,
-			'photo_width'  => 75,
-			'photo_height' => false,
-			'crop'         => false,
-			'link_to'      => 'source',
-			'columns'      => false,
+			'id'               => false,
+			'limit'            => false,
+			'photo_class'      => 'thickbox',
+			'show_description' => false,
+			'album_class'      => false,
+			'photo_width'      => 75,
+			'photo_height'     => false,
+			'crop'             => false,
+			'link_to'          => 'source',
+			'columns'          => false,
 		), $atts );
 
 		if ( ! $atts['id'] ) {
@@ -366,14 +367,21 @@ class Wdfb_MarkerReplacer {
 				? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id']
 				: $photo['images'][0]['source'];
 			$name      = ! empty( $photo['name'] ) ? 'title="' . esc_attr( $photo['name'] ) . '"' : '';
+
+			//Check if photo description is allowed and photo does have a description
+			$photo_desc = ( $atts['show_description'] && ! empty( $photo['name'] ) ) ? $photo['name'] : '';
+			$photo_desc = apply_filters( 'wdfb_widget_photo_desc', $photo_desc );
+
 			$ret .= '<a href="' . $url .
 			        '" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' ' . $name . '>' .
 			        '<img src="' . $photo['images'][ $photo_idx ]['source'] . '" ' .
 			        ( $img_w ? "width='{$img_w}'" : '' ) .
 			        ( $img_h && ! $atts['crop'] ? "height='{$img_h}'" : '' ) .
-			        ' />' .
-			        '</a>';
-			if ( $columns && ( ++$i % $columns ) == 0 ) {
+			        ' />';
+			$ret .= '</a>';
+			$ret .= ! empty( $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_desc . "</p>" : '';
+
+			if ( $columns && ( ++ $i % $columns ) == 0 ) {
 				$ret .= '<br ' . ( $style ? 'style="clear:left"' : '' ) . '/>';
 			}
 			if ( (int) $atts['limit'] && $current >= (int) $atts['limit'] ) {
