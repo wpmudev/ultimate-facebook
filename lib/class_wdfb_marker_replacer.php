@@ -370,7 +370,7 @@ class Wdfb_MarkerReplacer {
 
 			//Check if photo description is allowed and photo does have a description
 			$photo_desc = ( $atts['show_description'] && ! empty( $photo['name'] ) ) ? $photo['name'] : '';
-			$photo_desc = apply_filters( 'wdfb_widget_photo_desc', $photo_desc );
+			$photo_desc = apply_filters( 'wdfb_album_photo_desc', $photo_desc );
 
 			$ret .= '<a href="' . $url .
 			        '" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' ' . $name . '>' .

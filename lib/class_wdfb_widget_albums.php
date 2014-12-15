@@ -187,7 +187,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 					: $photo['images'][0]['source'];
 				//Check if photo description is allowed and photo does have a description
 				$photo_text = ( $photo_desc && ! empty( $photo['name'] ) ) ? $photo['name'] : '';
-				$photo_text = apply_filters( 'wdfb_widget_photo_desc', $photo_text );
+				$photo_text = apply_filters( 'wdfb_album_photo_desc', $photo_text );
 
 				$class = ( ! $fb_open && $thickbox ) ? 'thickbox' : '';
 				$class = apply_filters( 'wdfb_photo_link_thickbox', $class );
