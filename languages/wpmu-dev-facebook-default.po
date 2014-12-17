@@ -1,1730 +1,1727 @@
+# Copyright (C) 2014 Ultimate Facebook
+# This file is distributed under the same license as the Ultimate Facebook package.
 msgid ""
 msgstr ""
-"Project-Id-Version: U;timate Facebook\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-11 19:02+0530\n"
-"PO-Revision-Date: 2014-06-11 19:03+0530\n"
-"Last-Translator: Umesh Kumar <umeshsingla05@gmail.com>\n"
-"Language-Team: WPMUDev\n"
-"Language: \n"
+"Project-Id-Version: Ultimate Facebook 2.7.9\n"
+"Report-Msgid-Bugs-To: https://premium.wpmudev.org/project/ultimate-facebook\n"
+"POT-Creation-Date: 2014-12-17 17:15:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-Basepath: /media/Data/umesh/incsub/git/\n"
-"X-Poedit-SearchPath-0: wpmu-dev-facebook\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Umesh Kumar <umeshsingla05@gmail.com>\n"
+"Language-Team: WPMUDev\n"
 
-#: wpmu-dev-facebook/wpmu-dev-facebook.php:54
-msgid "There was an issue determining where Facebook plugin is installed. Please reinstall."
-msgstr ""
-
-#: wpmu-dev-facebook/wpmu-dev-facebook.php:65
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:69
-msgid "You already granted extended permissions"
-msgstr ""
-
-#: wpmu-dev-facebook/wpmu-dev-facebook.php:68
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:72
-msgid "Grant extended permissions"
-msgstr ""
-
-#: wpmu-dev-facebook/wpmu-dev-facebook.php:82
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:1023
-#, php-format
-msgid "Fill my %s profile with Facebook data"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:39
-#, php-format
-msgid "<p><b>This step must be completed before using the plugin. You must make a Facebook Application to continue.</b></p><p>Before we begin, you need to <a target=\"_blank\" href=\"https://developers.facebook.com/apps\">create a Facebook Application</a>.</p><p>To do so, follow these steps (We also have a <a target=\"_blank\" href=\"%1$s\">Guide here</a>):</p><ol><li><a target=\"_blank\" href=\"https://developers.facebook.com/apps\">Create your application</a></li><li>Please, make sure you properly configured <strong>App Domains</strong> for your App (see our <a target=\"_blank\" href=\"%1$s\">guide</a> for more info)</li><li>Look for <strong>Site URL</strong> field in the <em>Web Site</em> tab and enter your site URL in this field: <code>%2$s</code></li><li>After this, go to the <a target=\"_blank\" href=\"https://developers.facebook.com/apps\">Facebook Application List page</a> and select your newly created application</li><li>Copy the values from these fields: <strong>App ID</strong>/<strong>API key</strong>, and <strong>Application Secret</strong>, and enter them here:</li></ol><p>Once you're done with that, please click the \"Save changes\" button below before proceeding onto other steps.<p>"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:55
+#: lib/class_wdfb_admin_form_renderer.php:58
 msgid "Checking API settings..."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:63
+#: lib/class_wdfb_admin_form_renderer.php:65
 msgid "<p>Some parts of the plugin will require you to grant them extended permissions on Facebook. If you haven't done so already, it is highly recommended you do so now:</p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:66
+#: lib/class_wdfb_admin_form_renderer.php:69
 msgid "Use a new Facebook user for setup"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:75
-msgid "Refresh user access token"
+#: lib/class_wdfb_admin_form_renderer.php:72 wpmu-dev-facebook.php:87
+msgid "You already granted extended permissions"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:89
-msgid "<b>Note:</b> Allowing any of the additional functionality listed here will require additional Facebook privileges to be granted to your app."
+#: lib/class_wdfb_admin_form_renderer.php:75 wpmu-dev-facebook.php:91
+msgid "Grant extended permissions"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:90
-msgid "Please, remember to re-grant the extended permissions once you made your changes here"
+#: lib/class_wdfb_admin_form_renderer.php:78
+msgid "Reset auth tokens"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:97
-msgid "Use actions over streams"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:102
+#: lib/class_wdfb_admin_form_renderer.php:93
 msgid "Use minimal possible permission set"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:108
+#: lib/class_wdfb_admin_form_renderer.php:96
+msgid "<b>Note:</b> Please, remember to re-grant the extended permissions once you made your changes here"
+msgstr ""
+
+#: lib/class_wdfb_admin_form_renderer.php:102
+msgid "Purge Events cache"
+msgstr ""
+
+#: lib/class_wdfb_admin_form_renderer.php:104
 msgid "Purge Albums cache"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:126
+#: lib/class_wdfb_admin_form_renderer.php:125
 msgid "Automatic detection"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:211
+#: lib/class_wdfb_admin_form_renderer.php:210
 msgid "By default, the plugin will try to auto-detect your locale settings and load the appropriate API scripts. However, not all locales are supported by Facebook, so your milleage may vary. With this option, you can explicitly tell which language you want to use for communicating with Facebook."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:216
+#: lib/class_wdfb_admin_form_renderer.php:216
 msgid "If this option is set, your linked accounts (e.g. pages) will <b>NOT</b> be accessible by this plugin"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:233
+#: lib/class_wdfb_admin_form_renderer.php:235
 msgid "Require Facebook account"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:234
+#: lib/class_wdfb_admin_form_renderer.php:236
 msgid "By default, Facebook registration form will allow your users to register with their Facebook account, or with their chosen usernames and emails."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:235
+#: lib/class_wdfb_admin_form_renderer.php:237
 msgid "Check this if users will need to have a Facebook account already."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:236
-msgid "As of the latest Facebook API V2.0, signup using facebook is no more supported. We recommend to use the WordPress signup process, as this feature will stop working on 30th April, 2015"
+#: lib/class_wdfb_admin_form_renderer.php:238
+msgid "As of the latest Facebook API V2.0, Facebook registration plugin will be discontinued after July 30, 2015. For registration you should use \"Allow single-click registration\""
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:241
+#: lib/class_wdfb_admin_form_renderer.php:244
 msgid "This option does not apply to single-click registration."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:246
+#: lib/class_wdfb_admin_form_renderer.php:250
 msgid "If enabled, the \"Login with Facebook\" button will work as a single-click register button for your new users"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:251
+#: lib/class_wdfb_admin_form_renderer.php:256
 msgid "New users registration will update your site Activity feed"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:254
+#: lib/class_wdfb_admin_form_renderer.php:259
 msgid "Single-click registration will update your site Activity feed"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:260
+#: lib/class_wdfb_admin_form_renderer.php:266
 msgid "By default, the plugin will use Facebook profile images instead of your users avatars wherever possible. Enable this option to prevent this behavior"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:267
+#: lib/class_wdfb_admin_form_renderer.php:274
 msgid "Site URL"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:268
+#: lib/class_wdfb_admin_form_renderer.php:275
 msgid "Admin URL"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:270
+#: lib/class_wdfb_admin_form_renderer.php:277
 msgid "current page, or plugin default"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:278
+#: lib/class_wdfb_admin_form_renderer.php:285
 msgid "Select your site area (above), then fill in the relative URL fragment:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:281
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:288
 msgid "This is what will happen upon login: my users will be redirected to %s."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:311
+#: lib/class_wdfb_admin_form_renderer.php:324
 msgid "Enabling this option will allow your users to change their associated Facebook profiles to ones they're currently actively using."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:337
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:351
 msgid "Map %s to %s"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:342
+#: lib/class_wdfb_admin_form_renderer.php:356
 msgid "Add another mapping"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:356
+#: lib/class_wdfb_admin_form_renderer.php:372
 msgid "Front page"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:359
+#: lib/class_wdfb_admin_form_renderer.php:375
 msgid "Archives page"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:361
+#: lib/class_wdfb_admin_form_renderer.php:377
 msgid "Use XFBML button on shared pages:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:375
+#: lib/class_wdfb_admin_form_renderer.php:392
 msgid "Allow &quot;Like&quot; button for BuddyPress Activities"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:378
+#: lib/class_wdfb_admin_form_renderer.php:395
 msgid "Use XFBML button for BuddyPress Activities"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:385
+#: lib/class_wdfb_admin_form_renderer.php:404
 msgid "Before"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:385
+#: lib/class_wdfb_admin_form_renderer.php:405
 msgid "After"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:385
+#: lib/class_wdfb_admin_form_renderer.php:406
 msgid "Before and after"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:385
+#: lib/class_wdfb_admin_form_renderer.php:407
 msgid "Manual, use shortcodes in "
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:389
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:412
 msgid "%s the contents of your post <br />"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:420
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:632
+#: lib/class_wdfb_admin_form_renderer.php:444
+#: lib/class_wdfb_admin_form_renderer.php:672
 msgid "Light"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:421
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:633
+#: lib/class_wdfb_admin_form_renderer.php:445
+#: lib/class_wdfb_admin_form_renderer.php:673
 msgid "Dark"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:433
+#: lib/class_wdfb_admin_form_renderer.php:457
 msgid "OpenGraph allows you better control over what is shared on Facebook when someone clicks \"Like/Send\" button."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:439
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:447
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:464
+#: lib/class_wdfb_admin_form_renderer.php:473
 msgid "<p>Preview:<br /><img src=\"%s\" /></p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:441
+#: lib/class_wdfb_admin_form_renderer.php:466
 msgid "Please, use full URL to image (e.g. <code>http://example.com/images/example.jpg</code>). If set, this image will <b>always</b> be used on Facebook for content sharing"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:449
+#: lib/class_wdfb_admin_form_renderer.php:475
 msgid "By default, we will attempt to use featured image or first image from the post for sharing on Facebook."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:450
+#: lib/class_wdfb_admin_form_renderer.php:476
 msgid "If we fail, this image will be used instead. Please, use full URL to image (e.g. <code>http://example.com/images/example.jpg</code>)."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:456
+#: lib/class_wdfb_admin_form_renderer.php:483
 msgid "Do not autodetect my OpenGraph type, I will set it manually"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:457
+#: lib/class_wdfb_admin_form_renderer.php:484
 msgid "If you check this option the plugin will not autodetect your OpenGraph type and you'll be able to set it manually."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:460
+#: lib/class_wdfb_admin_form_renderer.php:487
 msgid "OpenGraph type on my front page"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:463
+#: lib/class_wdfb_admin_form_renderer.php:490
 msgid "OpenGraph type on my taxonomies pages"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:465
+#: lib/class_wdfb_admin_form_renderer.php:492
 msgid "This type will be used on your pages that show multiple content (e.g. archives, tags, categories)."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:467
+#: lib/class_wdfb_admin_form_renderer.php:494
 msgid "OpenGraph type on my content pages"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:469
+#: lib/class_wdfb_admin_form_renderer.php:496
 msgid "This type will be used on your pages that show individual content pieces (e.g. posts and pages)."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:485
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:497
+#: lib/class_wdfb_admin_form_renderer.php:513
+#: lib/class_wdfb_admin_form_renderer.php:525
 msgid "OpenGraph name:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:488
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:500
+#: lib/class_wdfb_admin_form_renderer.php:516
+#: lib/class_wdfb_admin_form_renderer.php:528
 msgid "OpenGraph value:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:491
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:192
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:214
+#: lib/class_wdfb_admin_form_renderer.php:519 lib/class_wdfb_metabox.php:192
+#: lib/class_wdfb_metabox.php:214
 msgid "Remove"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:504
+#: lib/class_wdfb_admin_form_renderer.php:532
 msgid "Add header"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:512
+#: lib/class_wdfb_admin_form_renderer.php:540
 msgid "Allow BuddyPress groups info syncing with Facebook group profile info"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:522
+#: lib/class_wdfb_admin_form_renderer.php:550
 msgid "Also sync group privacy settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:526
+#: lib/class_wdfb_admin_form_renderer.php:554
 msgid "Notify group members on successful data sync"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:533
+#: lib/class_wdfb_admin_form_renderer.php:561
 msgid "If checked, comments on your posts on Facebook will be periodically imported and merged with your regular comments."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:553
+#: lib/class_wdfb_admin_form_renderer.php:584
 msgid "Comments on your posts on Facebook will <b>ONLY</b> be imported for the checked IDs."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:554
+#: lib/class_wdfb_admin_form_renderer.php:585
 msgid "Comments on your posts on Facebook will <b>NOT</b> be imported for any of the checked IDs."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:558
+#: lib/class_wdfb_admin_form_renderer.php:589
 msgid "Reverse checking logic:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:562
+#: lib/class_wdfb_admin_form_renderer.php:593
 msgid "Toggling this option will reverse import skipping options."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:573
+#: lib/class_wdfb_admin_form_renderer.php:605
 msgid "This value is applied to number of Facebook posts inspected for comments. Set the limit to lower value if you experience performance issues."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:578
+#: lib/class_wdfb_admin_form_renderer.php:611
 msgid "If checked, post authors will be notified when new comments from Facebook are imported and added to their posts."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:583
+#: lib/class_wdfb_admin_form_renderer.php:617
 msgid "If checked, post authors will be notified when new comments are added to their posts using Facebook comments."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:586
+#: lib/class_wdfb_admin_form_renderer.php:621
 msgid "Import comments now (this can take a while)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:593
+#: lib/class_wdfb_admin_form_renderer.php:628
 msgid "If checked, <a href=\"http://developers.facebook.com/blog/post/472\">Facebook comments</a> will be used instead of, or in addition to, regular WordPress comments."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:599
-msgid "<p>By default, Facebook comments will appear <em>in addition</em> to WordPress comments.</p><p>Check this box if you wish to disable WordPress comments, but still allow Facebook Comments.</p><p><strong>Note:</strong> if you enable this option, Facebook Comments will always appear, disregarding any WordPress settings.</p>"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:644
+#: lib/class_wdfb_admin_form_renderer.php:685
 msgid "<p><b>Warning:</b> You should leave this box empty unless you know what you&#039;re doing."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:645
+#: lib/class_wdfb_admin_form_renderer.php:686
 msgid "<p>Themes can use different approaches to showing comments, which can cause Facebook Comments not to appear in some cases."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:646
+#: lib/class_wdfb_admin_form_renderer.php:687
 msgid "<p>If you experience such a conflict between Facebook Comments and your theme, you can enter a custom hook for Facebook Comments here."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:647
+#: lib/class_wdfb_admin_form_renderer.php:688
 msgid "<p>If everything else fails, you can enter this code in your theme where you want your comments to appear: <code>&lt;?php do_action(\"my_action_name\");?&gt;</code>, then enter \"my_action_name\" (without quotes) in this box."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:657
+#: lib/class_wdfb_admin_form_renderer.php:704
 msgid "Enable this option to allow auto-publishing on Facebook with frontend posting plugins"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:662
+#: lib/class_wdfb_admin_form_renderer.php:710
 msgid "Enabling this will add a new column that shows if the post has already been published on Facebook to your post management pages."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:667
+#: lib/class_wdfb_admin_form_renderer.php:778
 msgid "Don't post this type to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:668
+#: lib/class_wdfb_admin_form_renderer.php:779
 msgid "Facebook wall"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:703
+#: lib/class_wdfb_admin_form_renderer.php:814
 msgid "Use shortlink"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:707
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:818
 msgid "<li>Autopost %s to %s of this user: %s %s </li>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:715
+#: lib/class_wdfb_admin_form_renderer.php:826
 msgid "BuddyPress Activity update"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:731
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:842
 msgid "<li>Autopost %s to %s of this user: %s </li>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:737
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:869
+#: lib/class_wdfb_admin_form_renderer.php:848
+#: lib/class_wdfb_admin_form_renderer.php:998
 msgid "If posting to a page, post <b>AS</b> page"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:740
-msgid "Choose the Facebook user ID from the <em>user</em> box, or leave selection to &quot;Me&quot; to use your own profile. Remember, the plugin needs to be granted <strong>extended permissions</strong> to access the profile. <br />To post to a fan page as page, you need to be administrator of that page."
-msgstr ""
-
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:749
+#: lib/class_wdfb_admin_form_renderer.php:860
 msgid "If you check this box, your users will <b>NOT</b> be able to make individual posts to Facebook using the post editor metabox."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:754
+#: lib/class_wdfb_admin_form_renderer.php:866
 msgid "If you check this box, your users will <b>NOT</b> be able to make individual posts to Facebook using the Activities form switch."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:759
+#: lib/class_wdfb_admin_form_renderer.php:871
 msgid "If you check this box, all your users individual Facebook settings will be deleted and replaced with what you set here."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:763
+#: lib/class_wdfb_admin_form_renderer.php:876
 msgid "If you check this box, your users individual Facebook API settings will be <em>preserved</em> when replacing their options."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:769
+#: lib/class_wdfb_admin_form_renderer.php:882
 msgid "If you check this box, your users will <b>NOT</b> be able to make individual changes to plugin settings from now on."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:770
+#: lib/class_wdfb_admin_form_renderer.php:883
 msgid "Also, if you want to use this option, you may want to allow your subsites to use your global FB app credentials in <a href=\"#\" class=\"wdfb_skip_to_step_0\">Facebook API settings</a>."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:774
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:887
 msgid "Easily display Facebook Connect options on your front page. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/connect_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/connect_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:778
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:892
 msgid "Easily display Facebook Albums. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/albums_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/albums_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:782
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:897
+msgid "Easily display Facebook Events. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/events_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/events_allowed_result.jpg\" /></td></tr> </table>"
+msgstr ""
+
+#: lib/class_wdfb_admin_form_renderer.php:902
 msgid "Easily display Facebook Facepile. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/facepile_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/facepile_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:786
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:907
 msgid "Easily display Facebook Like Box. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/likebox_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/likebox_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:790
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:912
 msgid "Easily display Facebook Recommendations. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/recommendations_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/recommendations_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:794
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:917
 msgid "Easily display Facebook Activity Feed. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/activityfeed_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/activityfeed_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:798
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:922
 msgid "Easily display your recently imported Facebook comments. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/recent_comments_allowed.png\" /></td><td valign=\"top\"><img src=\"%s/img/recent_comments_allowed_result.jpg\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:802
-#, php-format
+#: lib/class_wdfb_admin_form_renderer.php:927
 msgid "Display extended permissions granting box for your users in the Dashboard. <table> <th>Widget preview<th></tr> <tr><td valign=\"top\"><img src=\"%s/img/dashboard_permissions_allowed.png\" /></td></tr> </table>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:816
+#: lib/class_wdfb_admin_form_renderer.php:944
 msgid "This post has already been published on Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:827
+#: lib/class_wdfb_admin_form_renderer.php:955
 msgid "Publish on Facebook with different title:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:829
+#: lib/class_wdfb_admin_form_renderer.php:957
 msgid "<p><small>Leave this value blank to use the post title.</small></p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:835
+#: lib/class_wdfb_admin_form_renderer.php:964
 msgid "I want to publish this post to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:836
+#: lib/class_wdfb_admin_form_renderer.php:965
 msgid "<p><small>If checked, the post will be unconditionally published on Facebook</small></p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:842
+#: lib/class_wdfb_admin_form_renderer.php:971
 msgid "Your app doesn't have enough permissions to publish on Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:846
+#: lib/class_wdfb_admin_form_renderer.php:975
+#: lib/class_wdfb_widget_albums.php:41 lib/class_wdfb_widget_events.php:37
 msgid "Grant needed permissions now"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:861
+#: lib/class_wdfb_admin_form_renderer.php:990
 msgid "Publish to wall of this Facebook account:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_form_renderer.php:873
+#: lib/class_wdfb_admin_form_renderer.php:1001
 msgid "Please make sure that you granted extended permissions to your Facebook App"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:35
+#: lib/class_wdfb_admin_form_renderer.php:1007
+msgid "Do not publish this post to Facebook"
+msgstr ""
+
+#: lib/class_wdfb_admin_form_renderer.php:1008
+msgid "<p><small>If checked, the post will not be published on Facebook</small></p>"
+msgstr ""
+
+#: lib/class_wdfb_admin_help.php:35
 msgid "Ultimate Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:37
+#: lib/class_wdfb_admin_help.php:37
 msgid "Project page"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:38
+#: lib/class_wdfb_admin_help.php:38
 msgid "Installation and instructions page"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:39
+#: lib/class_wdfb_admin_help.php:39
 msgid "Support forum"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:41
+#: lib/class_wdfb_admin_help.php:41
 msgid "Useful links"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:43
+#: lib/class_wdfb_admin_help.php:43
 msgid "How to make a Facebook App"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:51
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:34
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:141
+#: lib/class_wdfb_admin_help.php:51 lib/class_wdfb_admin_pages.php:44
+#: lib/class_wdfb_admin_pages.php:341
 msgid "Facebook API"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:54
+#: lib/class_wdfb_admin_help.php:54
 msgid "This is the most important step in plugin configuration. Please, follow the instructions to create a Facebook App and connect your site with it. If you need more help, <a href=\"http://premium.wpmudev.org/forums/topic/how-to-make-a-facebook-app\" target=\"_blank\">there is a detailed tutorial explaining you how to do so</a>."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:57
+#: lib/class_wdfb_admin_help.php:57
 msgid "Once you are done, save your settings and check for the green checkmark, followed by a message with your app name. This is a sign everything went fine."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:65
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:43
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:149
+#: lib/class_wdfb_admin_help.php:65 lib/class_wdfb_admin_pages.php:71
+#: lib/class_wdfb_admin_pages.php:364
 msgid "Permissions &amp; Tokens"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:68
+#: lib/class_wdfb_admin_help.php:68
 msgid "Some parts of the plugin require extended permissions to work. You can use a link in this section to grant them anytime."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:71
+#: lib/class_wdfb_admin_help.php:71
 msgid "This is also the place where you can recofigure the plugin using a different Facebook indentity, or refresh your access token manually."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:79
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:49
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:157
+#: lib/class_wdfb_admin_help.php:79 lib/class_wdfb_admin_pages.php:83
+#: lib/class_wdfb_admin_pages.php:381
 msgid "Facebook Connect"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:82
+#: lib/class_wdfb_admin_help.php:82
 msgid "Options in this section will allow you to control how other Facebook users interact with your site."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:93
+#: lib/class_wdfb_admin_help.php:93
 msgid "Introduction"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:96
+#: lib/class_wdfb_admin_help.php:96
 msgid "This is where you configure your plugin."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:99
+#: lib/class_wdfb_admin_help.php:99
 msgid "First thing first, the most important section for setup is the Facebook API settings. You will need to <a href=\"http://premium.wpmudev.org/forums/topic/how-to-make-a-facebook-app\" target=\"_blank\">create a Facebook app</a> in order to continue and set up your plugin properly."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:107
+#: lib/class_wdfb_admin_help.php:107 lib/external/pointers_tutorial.php:134
 msgid "Tutorial"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:110
+#: lib/class_wdfb_admin_help.php:110
 msgid "Tutorial dialogs will guide you through the important bits."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:112
+#: lib/class_wdfb_admin_help.php:112
 msgid "Restart the tutorial"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:120
+#: lib/class_wdfb_admin_help.php:120
 msgid "Checking this will allow your users to register with and connect to your site using their Facebook account"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:124
+#: lib/class_wdfb_admin_help.php:124
 msgid "Check this to use Facebook registration form instead of the default one"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:128
+#: lib/class_wdfb_admin_help.php:128
 msgid "Enabling this option will make having Facebook account an absolute requirement for new users"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:132
+#: lib/class_wdfb_admin_help.php:132
 msgid "You will have to both select your site area, then enter the URL fragment relative to that area"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:136
+#: lib/class_wdfb_admin_help.php:136
 msgid "Allows your users to reset their WordPress-to-Facebook identity mapping."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:136
+#: lib/class_wdfb_admin_help.php:136
 msgid "Identity renewal options will be available in your Profile section."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:141
-#, php-format
+#: lib/class_wdfb_admin_help.php:141
 msgid "You can also use some of the supported macros: <br />%s"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_help.php:150
+#: lib/class_wdfb_admin_help.php:150
 msgid "This may clash with your theme, in case your theme adds a button on its own."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:28
+#: lib/class_wdfb_admin_pages.php:29
 msgid "Network options"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:29
+#: lib/class_wdfb_admin_pages.php:30
 msgid "Override individual blog settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:30
+#: lib/class_wdfb_admin_pages.php:34
 msgid "Preserve individual blog API settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:31
+#: lib/class_wdfb_admin_pages.php:38
 msgid "Do not allow per-blog settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:35
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:142
+#: lib/class_wdfb_admin_pages.php:45 lib/class_wdfb_admin_pages.php:342
 msgid "Before we begin"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:36
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:143
+#: lib/class_wdfb_admin_pages.php:49 lib/class_wdfb_admin_pages.php:346
 msgid "App ID / API key"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:37
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:144
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:106
+#: lib/class_wdfb_admin_pages.php:53 lib/class_wdfb_admin_pages.php:350
+#: lib/class_wdfb_tutorial.php:106
 msgid "Secret key"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:38
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:145
+#: lib/class_wdfb_admin_pages.php:57 lib/class_wdfb_admin_pages.php:354
 msgid "API Locale"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:39
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:146
+#: lib/class_wdfb_admin_pages.php:61 lib/class_wdfb_admin_pages.php:358
 msgid "Prevent access to my linked accounts"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:40
+#: lib/class_wdfb_admin_pages.php:65
 msgid "Allow sub-sites to use these credentials"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:44
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:150
+#: lib/class_wdfb_admin_pages.php:72 lib/class_wdfb_admin_pages.php:365
 msgid "Allowing permissions"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:45
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:152
+#: lib/class_wdfb_admin_pages.php:76 lib/class_wdfb_admin_pages.php:373
 msgid "Extra permissions"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:50
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:158
+#: lib/class_wdfb_admin_pages.php:84 lib/class_wdfb_admin_pages.php:382
 msgid "Allow users to register with Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:51
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:159
+#: lib/class_wdfb_admin_pages.php:88 lib/class_wdfb_admin_pages.php:386
 msgid "Force users to register with Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:52
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:160
+#: lib/class_wdfb_admin_pages.php:92 lib/class_wdfb_admin_pages.php:390
 msgid "Allow single-click registration"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:54
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:162
+#: lib/class_wdfb_admin_pages.php:97 lib/class_wdfb_admin_pages.php:395
 msgid "Update Activity feed"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:56
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:164
+#: lib/class_wdfb_admin_pages.php:102 lib/class_wdfb_admin_pages.php:400
 msgid "Do not use Facebook avatars as profile images"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:57
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:165
+#: lib/class_wdfb_admin_pages.php:106 lib/class_wdfb_admin_pages.php:404
 msgid "Redirect on login"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:58
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:166
+#: lib/class_wdfb_admin_pages.php:110 lib/class_wdfb_admin_pages.php:408
 msgid "Do not show CAPTCHA on registration pages"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:59
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:167
+#: lib/class_wdfb_admin_pages.php:114 lib/class_wdfb_admin_pages.php:412
 msgid "Auto-login after registration"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:61
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:169
+#: lib/class_wdfb_admin_pages.php:119 lib/class_wdfb_admin_pages.php:417
 msgid "Map BuddyPress profile to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:63
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:171
+#: lib/class_wdfb_admin_pages.php:124 lib/class_wdfb_admin_pages.php:422
 msgid "Map WordPress profile to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:65
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:173
+#: lib/class_wdfb_admin_pages.php:129 lib/class_wdfb_admin_pages.php:427
 msgid "Allow Facebook identity renewal"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:69
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:178
+#: lib/class_wdfb_admin_pages.php:136 lib/class_wdfb_admin_pages.php:435
 msgid "Facebook Like/Send Button"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:70
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:179
+#: lib/class_wdfb_admin_pages.php:137 lib/class_wdfb_admin_pages.php:436
 msgid "Allow Facebook Like Button"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:71
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:180
+#: lib/class_wdfb_admin_pages.php:141 lib/class_wdfb_admin_pages.php:440
 msgid "Show \"Send\" button too"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:72
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:181
+#: lib/class_wdfb_admin_pages.php:145 lib/class_wdfb_admin_pages.php:444
 msgid "Show on"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:73
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:182
+#: lib/class_wdfb_admin_pages.php:149 lib/class_wdfb_admin_pages.php:448
 msgid "Do <strong>NOT</strong> show button in these types"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:74
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:183
+#: lib/class_wdfb_admin_pages.php:153 lib/class_wdfb_admin_pages.php:452
 msgid "Button position"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:75
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:184
+#: lib/class_wdfb_admin_pages.php:157 lib/class_wdfb_admin_pages.php:456
 msgid "Button appearance"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:76
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:105
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:185
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:215
+#: lib/class_wdfb_admin_pages.php:161 lib/class_wdfb_admin_pages.php:240
+#: lib/class_wdfb_admin_pages.php:460 lib/class_wdfb_admin_pages.php:543
 msgid "Color scheme"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:80
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:189
+#: lib/class_wdfb_admin_pages.php:168 lib/class_wdfb_admin_pages.php:467
 msgid "Facebook OpenGraph"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:81
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:190
+#: lib/class_wdfb_admin_pages.php:169 lib/class_wdfb_admin_pages.php:468
 msgid "Use OpenGraph support"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:82
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:191
+#: lib/class_wdfb_admin_pages.php:173 lib/class_wdfb_admin_pages.php:472
 msgid "Always use this image"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:83
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:192
+#: lib/class_wdfb_admin_pages.php:177 lib/class_wdfb_admin_pages.php:476
 msgid "Fallback image"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:84
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:193
+#: lib/class_wdfb_admin_pages.php:181 lib/class_wdfb_admin_pages.php:480
 msgid "OpenGraph type"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:85
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:194
+#: lib/class_wdfb_admin_pages.php:185 lib/class_wdfb_admin_pages.php:484
 msgid "Additional OpenGraph headers"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:90
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:199
+#: lib/class_wdfb_admin_pages.php:193 lib/class_wdfb_admin_pages.php:492
 msgid "Facebook Groups"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:91
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:200
+#: lib/class_wdfb_admin_pages.php:194 lib/class_wdfb_admin_pages.php:493
 msgid "BuddyPress groups info sync"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:95
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:204
+#: lib/class_wdfb_admin_pages.php:201 lib/class_wdfb_admin_pages.php:500
 msgid "Facebook Comments"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:96
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:205
+#: lib/class_wdfb_admin_pages.php:202 lib/class_wdfb_admin_pages.php:501
 msgid "Import Facebook comments"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:97
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:206
+#: lib/class_wdfb_admin_pages.php:206 lib/class_wdfb_admin_pages.php:505
 msgid "Skip importing comments for these accounts"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:98
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:207
+#: lib/class_wdfb_admin_pages.php:210 lib/class_wdfb_admin_pages.php:509
 msgid "Limit"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:99
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:106
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:208
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:216
+#: lib/class_wdfb_admin_pages.php:214 lib/class_wdfb_admin_pages.php:244
+#: lib/class_wdfb_admin_pages.php:513 lib/class_wdfb_admin_pages.php:547
 msgid "Notify post authors"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:100
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:210
+#: lib/class_wdfb_admin_pages.php:218 lib/class_wdfb_admin_pages.php:521
 msgid "Use Facebook for comments"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:101
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:211
+#: lib/class_wdfb_admin_pages.php:223 lib/class_wdfb_admin_pages.php:526
 msgid "Override WordPress discussion settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:102
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:212
+#: lib/class_wdfb_admin_pages.php:228 lib/class_wdfb_admin_pages.php:531
 msgid "Facebook Comments box width"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:103
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:213
+#: lib/class_wdfb_admin_pages.php:232 lib/class_wdfb_admin_pages.php:535
 msgid "Show Facebook Comments in reverse order?"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:104
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:214
+#: lib/class_wdfb_admin_pages.php:236 lib/class_wdfb_admin_pages.php:539
 msgid "Show this many Facebook Comments"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:107
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:217
+#: lib/class_wdfb_admin_pages.php:248 lib/class_wdfb_admin_pages.php:551
 msgid "Use a custom hook <small>(advanced)</small>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:111
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:221
+#: lib/class_wdfb_admin_pages.php:255 lib/class_wdfb_admin_pages.php:558
 msgid "Autopost to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:112
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:222
+#: lib/class_wdfb_admin_pages.php:256 lib/class_wdfb_admin_pages.php:559
 msgid "Allow autoposting new posts to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:113
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:223
+#: lib/class_wdfb_admin_pages.php:260 lib/class_wdfb_admin_pages.php:563
+msgid "Allow users to skip autopost"
+msgstr ""
+
+#: lib/class_wdfb_admin_pages.php:264 lib/class_wdfb_admin_pages.php:571
 msgid "Allow frontend autoposting to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:114
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:224
+#: lib/class_wdfb_admin_pages.php:268 lib/class_wdfb_admin_pages.php:575
 msgid "Show post Facebook status column"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:115
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:225
+#: lib/class_wdfb_admin_pages.php:272 lib/class_wdfb_admin_pages.php:579
 msgid "Map WordPress types to Facebook locations"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:116
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:226
+#: lib/class_wdfb_admin_pages.php:276 lib/class_wdfb_admin_pages.php:583
 msgid "Do not allow individual posts to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:117
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:227
+#: lib/class_wdfb_admin_pages.php:280 lib/class_wdfb_admin_pages.php:567
+msgid "Image Size for Autopost"
+msgstr ""
+
+#: lib/class_wdfb_admin_pages.php:285 lib/class_wdfb_admin_pages.php:588
 msgid "Do not allow individual Activity updates to Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:121
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:230
+#: lib/class_wdfb_admin_pages.php:293 lib/class_wdfb_admin_pages.php:595
 msgid "Widget pack"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:122
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:231
+#: lib/class_wdfb_admin_pages.php:294 lib/class_wdfb_admin_pages.php:596
 msgid "Use Facebook Connect widget"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:123
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:232
+#: lib/class_wdfb_admin_pages.php:298 lib/class_wdfb_admin_pages.php:600
 msgid "Use Facebook Albums widget"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:124
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:233
+#: lib/class_wdfb_admin_pages.php:302 lib/class_wdfb_admin_pages.php:604
+msgid "Use Facebook Events widget"
+msgstr ""
+
+#: lib/class_wdfb_admin_pages.php:306 lib/class_wdfb_admin_pages.php:608
 msgid "Use Facebook Facepile widget"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:125
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:234
+#: lib/class_wdfb_admin_pages.php:310 lib/class_wdfb_admin_pages.php:612
 msgid "Use Facebook Like Box widget"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:126
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:235
+#: lib/class_wdfb_admin_pages.php:314 lib/class_wdfb_admin_pages.php:616
 msgid "Use Facebook Recommendations widget"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:127
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:236
+#: lib/class_wdfb_admin_pages.php:318 lib/class_wdfb_admin_pages.php:620
 msgid "Use Facebook Activity Feed widget"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:128
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:237
+#: lib/class_wdfb_admin_pages.php:322 lib/class_wdfb_admin_pages.php:624
 msgid "Use Facebook Recent Comments widget"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:129
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:238
+#: lib/class_wdfb_admin_pages.php:326 lib/class_wdfb_admin_pages.php:628
 msgid "Use Facebook Dashboard widgets"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:151
+#: lib/class_wdfb_admin_pages.php:369
 msgid "Cache"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:209
+#: lib/class_wdfb_admin_pages.php:517
 msgid "Import comments now"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:375
-#, php-format
+#: lib/class_wdfb_admin_pages.php:813
 msgid "<b>Ultimate Facebook</b> plugin needs to be configured. <a href=\"%s\">You can do so here.</a>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:430
+#: lib/class_wdfb_admin_pages.php:886 lib/class_wdfb_widget_albums.php:33
 msgid "Add FB Photo"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:431
+#: lib/class_wdfb_admin_pages.php:887 lib/class_wdfb_widget_albums.php:34
 msgid "Insert album"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:432
+#: lib/class_wdfb_admin_pages.php:888 lib/class_wdfb_widget_albums.php:35
 msgid "Insert album photos"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:433
+#: lib/class_wdfb_admin_pages.php:889 lib/class_wdfb_widget_albums.php:36
 msgid "Insert"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:434
+#: lib/class_wdfb_admin_pages.php:890 lib/class_wdfb_widget_albums.php:37
 msgid "Go back"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:435
+#: lib/class_wdfb_admin_pages.php:891 lib/class_wdfb_widget_albums.php:38
 msgid "Use this image"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:436
+#: lib/class_wdfb_admin_pages.php:892 lib/class_wdfb_widget_albums.php:39
 msgid "Please, wait..."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:564
-#, php-format
+#: lib/class_wdfb_admin_pages.php:1035
 msgid "Me (%s)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:617
+#: lib/class_wdfb_admin_pages.php:1107
 msgid "Facebook Publishing"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:703
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:752
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:524
-msgid "Share"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:749
+#: lib/class_wdfb_admin_pages.php:1259
 msgid "Activity Update"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:769
+#: lib/class_wdfb_admin_pages.php:1262 lib/class_wdfb_public_pages.php:654
+msgid "Share"
+msgstr ""
+
+#: lib/class_wdfb_admin_pages.php:1287
 msgid "Post published on Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:769
+#: lib/class_wdfb_admin_pages.php:1287
 msgid "Publishing on Facebook failed"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:774
+#: lib/class_wdfb_admin_pages.php:1328
 msgid "On Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:780
+#: lib/class_wdfb_admin_pages.php:1338
 msgid "Yes"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:780
+#: lib/class_wdfb_admin_pages.php:1338
 msgid "No"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:891
+#: lib/class_wdfb_admin_pages.php:1422
+msgid "User  registration is currently not allowed."
+msgstr ""
+
+#: lib/class_wdfb_admin_pages.php:1486
 msgid "Sync"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:892
+#: lib/class_wdfb_admin_pages.php:1487
 msgid "Cancel"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:1011
-#, php-format
+#: lib/class_wdfb_admin_pages.php:1632
 msgid "Your currently mapped Facebook identity is %s"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:1014
-#, php-format
+#: lib/class_wdfb_admin_pages.php:1635
 msgid "Renew my Facebook identity mapping to %s"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:1017
-#, php-format
+#: lib/class_wdfb_admin_pages.php:1638
 msgid "You need to be logged into Facebook to see and renew your mapped identity details. <a href=\"%s\">Click here to log in</a>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_admin_pages.php:1030
+#: lib/class_wdfb_admin_pages.php:1644 wpmu-dev-facebook.php:106
+msgid "Fill my %s profile with Facebook data"
+msgstr ""
+
+#: lib/class_wdfb_admin_pages.php:1651
 msgid "Settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_marker_replacer.php:35
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:327
+#: lib/class_wdfb_marker_replacer.php:44 lib/class_wdfb_public_pages.php:433
+#: lib/forms/registration_page.php:42
 msgid "Register with Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_marker_replacer.php:53
+#: lib/class_wdfb_marker_replacer.php:64
 msgid "Log in with Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_marker_replacer.php:88
+#: lib/class_wdfb_marker_replacer.php:103 lib/class_wdfb_widget_connect.php:133
 msgid "Log out"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_marker_replacer.php:128
+#: lib/class_wdfb_marker_replacer.php:146
+#: lib/class_wdfb_widget_recent_comments.php:105
 msgid "&nbsp;on&nbsp;"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:133
+#: lib/class_wdfb_metabox.php:133
 msgid "OpenGraph Settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:137
+#: lib/class_wdfb_metabox.php:137 lib/forms/error_log.php:20
+#: lib/forms/error_log.php:29
 msgid "Type"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:137
+#: lib/class_wdfb_metabox.php:137
 msgid "Common values include \"article\", \"book\", \"profile\", etc."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:138
+#: lib/class_wdfb_metabox.php:138
 msgid "Title"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:138
+#: lib/class_wdfb_metabox.php:138
 msgid "Leave empty to use post title"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:139
+#: lib/class_wdfb_metabox.php:139
 msgid "Description"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:139
+#: lib/class_wdfb_metabox.php:139
 msgid "Type in your OpenGraph description"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:140
+#: lib/class_wdfb_metabox.php:140
 msgid "Add a set of custom OpenGraph images which will be used in addition to default ones. Please, use the full image URL"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:141
+#: lib/class_wdfb_metabox.php:141
 msgid "Add a set of custom OpenGraph properties"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:186
+#: lib/class_wdfb_metabox.php:186
 msgid "Custom OpenGraph images"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:191
+#: lib/class_wdfb_metabox.php:191
 msgid "Image URL"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:195
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:217
+#: lib/class_wdfb_metabox.php:195 lib/class_wdfb_metabox.php:217
 msgid "Add another"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:206
+#: lib/class_wdfb_metabox.php:206
 msgid "Custom OpenGraph properties"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:212
+#: lib/class_wdfb_metabox.php:212
 msgid "Property name"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_metabox.php:213
+#: lib/class_wdfb_metabox.php:213
 msgid "Property value"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:52
+#: lib/class_wdfb_model.php:53
 msgid "Nothing"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:53
+#: lib/class_wdfb_model.php:54
 msgid "Name"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:54
+#: lib/class_wdfb_model.php:55
 msgid "First name"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:55
+#: lib/class_wdfb_model.php:56
 msgid "Middle name"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:56
+#: lib/class_wdfb_model.php:57
 msgid "Last name"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:57
+#: lib/class_wdfb_model.php:58
 msgid "Gender"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:58
+#: lib/class_wdfb_model.php:59
 msgid "Bio"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:59
+#: lib/class_wdfb_model.php:60
 msgid "Birthday"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:60
+#: lib/class_wdfb_model.php:61
 msgid "About"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:61
+#: lib/class_wdfb_model.php:62
 msgid "Hometown"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:62
+#: lib/class_wdfb_model.php:63
 msgid "Location"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:63
+#: lib/class_wdfb_model.php:64
 msgid "Facebook profile"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:64
+#: lib/class_wdfb_model.php:65
 msgid "Locale"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:65
+#: lib/class_wdfb_model.php:66
 msgid "Languages"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:66
+#: lib/class_wdfb_model.php:67
 msgid "Facebook username"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:67
+#: lib/class_wdfb_model.php:68
 msgid "Email"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:68
+#: lib/class_wdfb_model.php:69
 msgid "Gender interest"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:69
+#: lib/class_wdfb_model.php:70
 msgid "Relationship status"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:70
+#: lib/class_wdfb_model.php:71
 msgid "Significant other"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:71
+#: lib/class_wdfb_model.php:72
 msgid "Political view"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:72
+#: lib/class_wdfb_model.php:73
 msgid "Religion"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:73
+#: lib/class_wdfb_model.php:74
 msgid "Favorite athletes"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:74
+#: lib/class_wdfb_model.php:75
 msgid "Favorite teams"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:75
+#: lib/class_wdfb_model.php:76
 msgid "Favorite quotes"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:77
+#: lib/class_wdfb_model.php:78
 msgid "Education history (schools)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:78
+#: lib/class_wdfb_model.php:79
 msgid "Education history (with graduation years)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:79
+#: lib/class_wdfb_model.php:80
 msgid "Education history (subjects)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:81
+#: lib/class_wdfb_model.php:82
 msgid "Work history (employers)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:82
+#: lib/class_wdfb_model.php:83
 msgid "Work history (with positions)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:83
+#: lib/class_wdfb_model.php:84
 msgid "Work history (with dates)"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:87
+#: lib/class_wdfb_model.php:88
 msgid "Favorite books"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:88
+#: lib/class_wdfb_model.php:89
 msgid "Favorite games"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:89
+#: lib/class_wdfb_model.php:90
 msgid "Favorite movies"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:90
+#: lib/class_wdfb_model.php:91
 msgid "Favorite music"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:91
+#: lib/class_wdfb_model.php:92
 msgid "Favorite TV shows"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_model.php:92
+#: lib/class_wdfb_model.php:93
 msgid "Interests"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:189
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:200
+#: lib/class_wdfb_public_pages.php:210 lib/class_wdfb_public_pages.php:224
+#: lib/class_wdfb_public_pages.php:240 lib/class_wdfb_widget_connect.php:91
+#: lib/class_wdfb_widget_connect.php:110
 msgid "Login with Facebook"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:256
+#: lib/class_wdfb_public_pages.php:333
 msgid "Publish on your facebook wall"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:386
+#: lib/class_wdfb_public_pages.php:496
 msgid "My new blog"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:416
+#: lib/class_wdfb_public_pages.php:530
 msgid "Could not register such user"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_public_pages.php:544
+#: lib/class_wdfb_public_pages.php:678
 msgid "Sync this group info with a Facebook group"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:13
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:56
+#: lib/class_wdfb_tutorial.php:13 lib/class_wdfb_tutorial.php:56
+#: lib/forms/plugin_settings.php:34
 msgid "Ultimate Facebook settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:58
+#: lib/class_wdfb_tutorial.php:58
 msgid "This tutorial will help you in configuring Ultimate Facebook settings. You can re-take the tutorial anytime by using the restart link in contextual help."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:70
+#: lib/class_wdfb_tutorial.php:70
 msgid "Facebook API Settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:72
+#: lib/class_wdfb_tutorial.php:72
 msgid "This is the most important part of your plugin configuration. All other steps will not be available until you set this up."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:82
+#: lib/class_wdfb_tutorial.php:82
 msgid "Create a Facebook app"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:84
+#: lib/class_wdfb_tutorial.php:84
 msgid "Follow the steps to create your Facebook app."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:94
+#: lib/class_wdfb_tutorial.php:94
 msgid "App ID/API key"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:96
+#: lib/class_wdfb_tutorial.php:96
 msgid "Paste your App ID here. Be careful not to include spaces."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:108
+#: lib/class_wdfb_tutorial.php:108
 msgid "Paste your Secret key here. Be careful not to include spaces."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:118
+#: lib/class_wdfb_tutorial.php:118
 msgid "API locale"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:120
+#: lib/class_wdfb_tutorial.php:120
 msgid "Language used by Facebook on your site."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:130
+#: lib/class_wdfb_tutorial.php:130
 msgid "Save settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:132
+#: lib/class_wdfb_tutorial.php:132
 msgid "Once you are done configuring your API settings, click this button to apply your new configuration."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:142
+#: lib/class_wdfb_tutorial.php:142
 msgid "Sanity check"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_tutorial.php:144
+#: lib/class_wdfb_tutorial.php:144
 msgid "Once the settings are applied, this line will tell you if everything went fine with your app configuration."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:9
+#: lib/class_wdfb_widget_activityfeed.php:9
 msgid "Shows Facebook Activity Feed."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:30
+#: lib/class_wdfb_widget_activityfeed.php:30
+#: lib/class_wdfb_widget_albums.php:70 lib/class_wdfb_widget_connect.php:34
+#: lib/class_wdfb_widget_events.php:67 lib/class_wdfb_widget_facepile.php:24
+#: lib/class_wdfb_widget_likebox.php:28
+#: lib/class_wdfb_widget_recent_comments.php:29
+#: lib/class_wdfb_widget_recommendations.php:25
 msgid "Title:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:35
+#: lib/class_wdfb_widget_activityfeed.php:35
 msgid "Site:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:37
+#: lib/class_wdfb_widget_activityfeed.php:37
 msgid "Enter a comma separated list of domains to show activity for, or leave blank to use current domain."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:41
+#: lib/class_wdfb_widget_activityfeed.php:41
 msgid "Filter:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:43
+#: lib/class_wdfb_widget_activityfeed.php:43
 msgid "Only URLs which contain the filter string in the first two path parameters of the URL will be shown. Leave this field empty to prevent filtering."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:47
+#: lib/class_wdfb_widget_activityfeed.php:47
+#: lib/class_wdfb_widget_connect.php:39 lib/class_wdfb_widget_facepile.php:35
+#: lib/class_wdfb_widget_likebox.php:38
+#: lib/class_wdfb_widget_recommendations.php:30
 msgid "Width:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:52
+#: lib/class_wdfb_widget_activityfeed.php:52
+#: lib/class_wdfb_widget_likebox.php:43
+#: lib/class_wdfb_widget_recommendations.php:35
 msgid "Height:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:57
+#: lib/class_wdfb_widget_activityfeed.php:57
+#: lib/class_wdfb_widget_likebox.php:48
+#: lib/class_wdfb_widget_recommendations.php:40
 msgid "Show header:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:62
+#: lib/class_wdfb_widget_activityfeed.php:62
 msgid "Show recommendations:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:67
+#: lib/class_wdfb_widget_activityfeed.php:67
+#: lib/class_wdfb_widget_likebox.php:68
+#: lib/class_wdfb_widget_recommendations.php:45
 msgid "Color scheme:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:75
+#: lib/class_wdfb_widget_activityfeed.php:75
 msgid "Link target:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:84
+#: lib/class_wdfb_widget_activityfeed.php:84
 msgid "Do not use xfbml/html5 tag:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_activityfeed.php:86
+#: lib/class_wdfb_widget_activityfeed.php:86
 msgid "If you're experiencing issues with your Activity Feeds, try checking this option"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:12
+#: lib/class_wdfb_widget_albums.php:15
 msgid "Shows photos from a Facebook Album"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:34
+#: lib/class_wdfb_widget_albums.php:40
 msgid "Your app doesn't have enough permissions to access your albums"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:55
-#, php-format
+#: lib/class_wdfb_widget_albums.php:63 lib/class_wdfb_widget_events.php:58
 msgid "You should be logged into your Facebook account when adding this widget. <a href=\"%s\">Click here to do so now</a>, then refresh this page."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:67
+#: lib/class_wdfb_widget_albums.php:75
 msgid "Album ID:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:69
+#: lib/class_wdfb_widget_albums.php:77
 msgid "Select album"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:73
+#: lib/class_wdfb_widget_albums.php:81
 msgid "Display only this many photos:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:82
+#: lib/class_wdfb_widget_albums.php:90
 msgid "Photos per row:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:91
+#: lib/class_wdfb_widget_albums.php:100
 msgid "Image size:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:95
+#: lib/class_wdfb_widget_albums.php:104
 msgid "Format: width x height. <br />Omitting one of dimensions will show your images in scale."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:99
-msgid "Crop image height:"
+#: lib/class_wdfb_widget_albums.php:110
+msgid "Crop image height"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:101
+#: lib/class_wdfb_widget_albums.php:111
 msgid "Selecting this option will crop your oversized images vertically."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:105
-msgid "Link to image on Facebook:"
+#: lib/class_wdfb_widget_albums.php:117
+msgid "Display photo description"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_albums.php:107
+#: lib/class_wdfb_widget_albums.php:118
+msgid "Displays the description under a photo."
+msgstr ""
+
+#: lib/class_wdfb_widget_albums.php:124
+msgid "Link to image on Facebook"
+msgstr ""
+
+#: lib/class_wdfb_widget_albums.php:125
 msgid "By default, your images will be linked to their full size sources. Selecting this option will link your images to Facebook ones."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_connect.php:8
+#: lib/class_wdfb_widget_albums.php:131
+msgid "Open images in thickbox"
+msgstr ""
+
+#: lib/class_wdfb_widget_connect.php:8
 msgid "Shows Facebook Connect box."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_connect.php:41
+#: lib/class_wdfb_widget_connect.php:41
 msgid "<p><small>For registration, the recommended width is greater then 240px</small></p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_connect.php:45
-#: wpmu-dev-facebook/lib/class_wdfb_widget_recent_comments.php:43
+#: lib/class_wdfb_widget_connect.php:45
+#: lib/class_wdfb_widget_recent_comments.php:43
 msgid "Avatar size:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_connect.php:50
+#: lib/class_wdfb_widget_connect.php:50
 msgid "Show register:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_connect.php:101
+#: lib/class_wdfb_widget_connect.php:101
 msgid "Login"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_connect.php:102
+#: lib/class_wdfb_widget_connect.php:102
 msgid "Register"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_facepile.php:9
+#: lib/class_wdfb_widget_events.php:11
+msgid "Shows Facebook Events"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:36
+msgid "Your app doesn't have enough permissions to access your events"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:72
+msgid "Show events for:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:78
+msgid "Limit:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:88
+msgid "Show image:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:93
+msgid "Show location:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:98
+msgid "Show event start:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:103
+msgid "Show event end:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:108
+msgid "Show only future events:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:113
+msgid "Reverse order:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:118
+msgid "Show events starting from this date:"
+msgstr ""
+
+#: lib/class_wdfb_widget_events.php:202
+msgid "No upcoming events"
+msgstr ""
+
+#: lib/class_wdfb_widget_facepile.php:10
 msgid "Shows Facebook Facepile box"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_facepile.php:28
+#: lib/class_wdfb_widget_facepile.php:29
 msgid "URL <small>(optional)</small>:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_facepile.php:30
+#: lib/class_wdfb_widget_facepile.php:31
 msgid "By default, the widget will show the Facepile box for your page. You can override that by providing a custom URL here."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_facepile.php:39
+#: lib/class_wdfb_widget_facepile.php:40
 msgid "Rows:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_likebox.php:9
+#: lib/class_wdfb_widget_likebox.php:9
 msgid "Shows Facebook Like box."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_likebox.php:33
+#: lib/class_wdfb_widget_likebox.php:33
 msgid "Facebook page URL:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_likebox.php:53
+#: lib/class_wdfb_widget_likebox.php:53
 msgid "Show faces:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_likebox.php:58
+#: lib/class_wdfb_widget_likebox.php:58
 msgid "Show stream:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_likebox.php:63
+#: lib/class_wdfb_widget_likebox.php:63
 msgid "Hide widget if user is not logged into Facebook:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_recent_comments.php:8
+#: lib/class_wdfb_widget_recent_comments.php:8
 msgid "Shows your recently imported Facebook comments"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_recent_comments.php:23
+#: lib/class_wdfb_widget_recent_comments.php:23
 msgid "Your comments are currently not being imported from Facebook. This will make the widget show stale data, if any."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_recent_comments.php:34
+#: lib/class_wdfb_widget_recent_comments.php:34
 msgid "Display only this many comments:"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_recent_comments.php:52
+#: lib/class_wdfb_widget_recent_comments.php:52
 msgid "Do not show avatars"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_recent_comments.php:58
+#: lib/class_wdfb_widget_recent_comments.php:58
 msgid "Do not show comment text"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/class_wdfb_widget_recommendations.php:9
+#: lib/class_wdfb_widget_recommendations.php:9
 msgid "Shows Facebook Recommendations box."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:34
-msgid "Your blog title"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:43
-#, php-format
-msgid "Your blog address (%s)"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:500
-msgid "<p>An email with your login credentails has been sent to your email address.</p>"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:854
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:871
-msgid "N/A"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:876
-msgid "Present"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:967
-#, php-format
-msgid "[%1$s] Facebook Comment: \"%2$s\""
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:969
-#, php-format
-msgid "New Facebook comment on your post: \"%s\""
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:971
-#, php-format
-msgid "Comment excerpt: %s"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/wdfb_utilities.php:972
-#, php-format
-msgid "From: %s"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/external/class_wd_help_tooltips.php:296
+#: lib/external/class_wd_help_tooltips.php:296
 msgid "Help"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/external/pointers_tutorial.php:421
+#: lib/external/pointers_tutorial.php:421
 msgid "Next &raquo;"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/external/pointers_tutorial.php:436
-#: wpmu-dev-facebook/lib/external/pointers_tutorial.php:458
+#: lib/external/pointers_tutorial.php:436
+#: lib/external/pointers_tutorial.php:458
 msgid "Dismiss"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/external/pointers_tutorial.php:437
-#: wpmu-dev-facebook/lib/external/pointers_tutorial.php:459
-#, php-format
+#: lib/external/pointers_tutorial.php:437
+#: lib/external/pointers_tutorial.php:459
 msgid "Dismiss %s"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/external/pointers_tutorial.php:443
+#: lib/external/pointers_tutorial.php:443
 msgid "&laquo; Previous"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/external/pointers_tutorial.php:498
-#, php-format
+#: lib/external/pointers_tutorial.php:499
 msgid "%s: Step %d of %d"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/error_log.php:9
+#: lib/forms/error_log.php:9
 msgid "Error Log"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/error_log.php:17
-#: wpmu-dev-facebook/lib/forms/error_log.php:26
-#: wpmu-dev-facebook/lib/forms/error_log.php:58
-#: wpmu-dev-facebook/lib/forms/error_log.php:65
+#: lib/forms/error_log.php:17 lib/forms/error_log.php:26
+#: lib/forms/error_log.php:58 lib/forms/error_log.php:65
 msgid "Date"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/error_log.php:18
-#: wpmu-dev-facebook/lib/forms/error_log.php:27
-#: wpmu-dev-facebook/lib/forms/error_log.php:59
-#: wpmu-dev-facebook/lib/forms/error_log.php:66
+#: lib/forms/error_log.php:18 lib/forms/error_log.php:27
+#: lib/forms/error_log.php:59 lib/forms/error_log.php:66
 msgid "User"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/error_log.php:19
-#: wpmu-dev-facebook/lib/forms/error_log.php:28
+#: lib/forms/error_log.php:19 lib/forms/error_log.php:28
 msgid "Area"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/error_log.php:21
-#: wpmu-dev-facebook/lib/forms/error_log.php:30
+#: lib/forms/error_log.php:21 lib/forms/error_log.php:30
 msgid "Info"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/error_log.php:38
-#: wpmu-dev-facebook/lib/forms/error_log.php:75
+#: lib/forms/error_log.php:38 lib/forms/error_log.php:75
 msgid "Unknown"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/error_log.php:60
-#: wpmu-dev-facebook/lib/forms/error_log.php:67
+#: lib/forms/error_log.php:60 lib/forms/error_log.php:67
 msgid "Message"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:19
+#: lib/forms/event_item.php:13
+msgid "Starts at:"
+msgstr ""
+
+#: lib/forms/event_item.php:16
+msgid "Ends at:"
+msgstr ""
+
+#: lib/forms/plugin_settings.php:22
 msgid "Save changes to this section"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:75
+#: lib/forms/plugin_settings.php:82
 msgid "Please, enter correct Facebook API settings and make sure Facebook app is public"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:104
+#: lib/forms/plugin_settings.php:111
 msgid "You need to be logged into Facebook with at least basic permissions set granted to set up Autopost mappings."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:105
+#: lib/forms/plugin_settings.php:112
 msgid "Click here to do so now"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:106
+#: lib/forms/plugin_settings.php:113
 msgid "Once the mappings are set up, you do not need to be logged into Facebook for Autoposting to work."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:149
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:179
+#: lib/forms/plugin_settings.php:161 lib/forms/plugin_settings.php:195
 msgid "Successfully connected to "
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:152
-msgid "Everything seems to be fine with your API settings."
+#: lib/forms/plugin_settings.php:164
+msgid "Next step"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:153
-msgid "You can now move on to next step"
-msgstr ""
-
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:163
+#: lib/forms/plugin_settings.php:174
 msgid "No API info - some settings will be unavailable."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:174
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:184
+#: lib/forms/plugin_settings.php:190 lib/forms/plugin_settings.php:200
 msgid "Please, enter correct Facebook API settings"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/plugin_settings.php:229
+#: lib/forms/plugin_settings.php:245
 msgid "Done. Applying new settings, please hold on."
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/registration_page_success.php:12
-#, php-format
+#: lib/forms/registration_page_success.php:12
 msgid "<p>Thank you for registering. <a href=\"%s\">Proceed to main site.</a></p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/registration_page_success.php:16
-#, php-format
+#: lib/forms/registration_page_success.php:16
 msgid "<p>Your new blog &quot;%s&quot; is created.</p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/registration_page_success.php:17
-#, php-format
+#: lib/forms/registration_page_success.php:17
 msgid "<p><a href=\"%s\">Proceed to your blog.</a></p>"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/shortcodes_info.php:3
+#: lib/forms/shortcodes_info.php:3
 msgid "Ultimate Facebook Shortcodes"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/widget_pack_settings.php:2
+#: lib/forms/widget_pack_settings.php:2
 msgid "Ultimate Facebook Widget Pack"
 msgstr ""
 
-#: wpmu-dev-facebook/lib/forms/widget_pack_settings.php:4
+#: lib/forms/widget_pack_settings.php:4
 msgid "Turning a widget on here will make it available in your widget settings."
 msgstr ""
 
+#: lib/forms/widget_pack_settings.php:17
+msgid "Save Changes"
+msgstr ""
+
+#: lib/wdfb_utilities.php:32
+msgid "Your blog title"
+msgstr ""
+
+#: lib/wdfb_utilities.php:40
+msgid "Your blog address (%s)"
+msgstr ""
+
+#: lib/wdfb_utilities.php:569
+msgid "<p>An email with your login credentials has been sent to your email address.</p>"
+msgstr ""
+
+#: lib/wdfb_utilities.php:997 lib/wdfb_utilities.php:1022
+msgid "N/A"
+msgstr ""
+
+#: lib/wdfb_utilities.php:1027
+msgid "Present"
+msgstr ""
+
+#: lib/wdfb_utilities.php:1136
+msgid "[%1$s] Facebook Comment: \"%2$s\""
+msgstr ""
+
+#: lib/wdfb_utilities.php:1138
+msgid "New Facebook comment on your post: \"%s\""
+msgstr ""
+
+#: lib/wdfb_utilities.php:1140
+msgid "Comment excerpt: %s"
+msgstr ""
+
+#: lib/wdfb_utilities.php:1141
+msgid "From: %s"
+msgstr ""
+
+#: wpmu-dev-facebook.php:74
+msgid "There was an issue determining where Facebook plugin is installed. Please reinstall."
+msgstr ""
+#. Plugin Name of the plugin/theme
+msgid "Ultimate Facebook"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://premium.wpmudev.org/project/ultimate-facebook"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Easy Facebook integration: share your blog posts, autopost to your wall, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "WPMU DEV"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://premium.wpmudev.org"
+msgstr ""

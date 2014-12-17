@@ -12,7 +12,7 @@ Change Log:
 - New:      Allow users to display album pictures in widget using thickbox
 - New:      On uninstall : Delete API settings and default tokens list, remove comments import cron
 - Fixed:    Album not displayed if no limit is specified in shortcode
-- Fixed:    Userid and token issue ( Albums not showing up, due to invalid token )
+- Fixed:    User id and token issue ( Albums not showing up, due to invalid token )
 - Fixed:    Permissions logic
 - Updated:  Facebook registration plugin expiry notice
 

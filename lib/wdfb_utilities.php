@@ -566,7 +566,7 @@ function wdfb_add_email_message( $msg ) {
 	return
 		apply_filters(
 			'wdfb-registration_message-user',
-			__( '<p>An email with your login credentails has been sent to your email address.</p>', 'wdfb' )
+			__( '<p>An email with your login credentials has been sent to your email address.</p>', 'wdfb' )
 		) .
 		$msg;
 }
