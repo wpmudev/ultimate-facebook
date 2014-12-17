@@ -6,14 +6,15 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 2.7.9 - 2014-12-15 - Umesh Kumar
-- New:   Option to display photo description in facebook albums
-- New:   Validate Facebook APP Secret with APP ID
-- New:   Allow users to display album pictures in widget using thickbox
-- New:   On uninstall : Delete API settings and default tokens list, remove comments import cron
-- Fixed: Album not displayed if no limit is specified in shortcode
-- Fixed: Userid and token issue ( Albums not showing up, due to invalid token )
-- Fixed: Permissions logic
-- Updated: Facebook registration plugin expiry notice
+- Updated:  Album widget styling change ( check changes before updating on live )
+- New:      Option to display photo description in facebook albums
+- New:      Validate Facebook APP Secret with APP ID
+- New:      Allow users to display album pictures in widget using thickbox
+- New:      On uninstall : Delete API settings and default tokens list, remove comments import cron
+- Fixed:    Album not displayed if no limit is specified in shortcode
+- Fixed:    Userid and token issue ( Albums not showing up, due to invalid token )
+- Fixed:    Permissions logic
+- Updated:  Facebook registration plugin expiry notice
 
 2.7.8 - 2014-11-24 - Umesh Kumar
 - New: Skip autopost option for individual posts

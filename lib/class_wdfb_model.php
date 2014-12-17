@@ -492,7 +492,7 @@ class Wdfb_Model {
 			$this->log->error( __FUNCTION__, new Exception( $user_id->get_error_message() ) );
 
 			return false;
-		} else if ( $send_email ) {
+		} else if ( !empty( $user_id ) ) {
 			wp_new_user_notification( $user_id, $password );
 			do_action( 'wdfb-registration_email_sent' );
 		}

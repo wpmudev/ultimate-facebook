@@ -28,6 +28,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 	function js_load_editor() {
 		wp_enqueue_script( 'wdfb_widget_editor_album', WDFB_PLUGIN_URL . '/js/widget_editor_album.js' );
+		wp_enqueue_script('wdfb-masonry');
 		wp_localize_script( 'wdfb_widget_editor_album', 'l10nWdfbEditor', array(
 			'add_fb_photo'        => __( 'Add FB Photo', 'wdfb' ),
 			'insert_album'        => __( 'Insert album', 'wdfb' ),
@@ -174,7 +175,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		}
 
 		if ( is_array( $photos ) && ! empty( $photos ) ) {
-			echo '<div class="wdfb_album_photos">';
+			echo "<div class = 'wdfb_album_photos'>";
 			$count = $overall = 0;
 			foreach ( $photos as $photo ) {
 				if ( $overall >= $limit ) {
@@ -195,11 +196,11 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 				$class = ( ! $fb_open && $thickbox ) ? 'thickbox' : '';
 				$class = apply_filters( 'wdfb_photo_link_thickbox', $class );
-				$image = '<div class="wdfb-album-image-row">' .
+				$image = "<div class='wdfb-album-image-row' style='width:{$img_w}px;'>" .
 				         '<a href="' . $url . '" rel="' . $album_id . '-photo" ' . $style . ' class="' . $class . '"  title="' . $photo_text_full . '" >' .
 				            '<img src="' . $photo['images'][ count( $photo['images'] ) - 1 ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $img_crop ? "height='{$img_h}'" : '' ) . ' />';
 				$image .= '</a>';
-				$image .=  ( ! empty( $photo_text ) && $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_text . "</p>" : '';
+				$image .=  ( ! empty( $photo_text ) && $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_text . "</p>" : '<p></p>';
 				$image .= '</div>';
 				echo $image;
 				++ $count;

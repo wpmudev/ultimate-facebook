@@ -334,12 +334,13 @@ class Wdfb_MarkerReplacer {
 			'photo_height'     => false,
 			'crop'             => false,
 			'link_to'          => 'source',
-			'columns'          => false,
+			'columns'          => 3,
 		), $atts );
 
 		if ( ! $atts['id'] ) {
 			return '';
 		} // We don't know what album to show
+		wp_enqueue_script('wdfb-masonry');
 		$img_w = (int) $atts['photo_width'];
 		$img_h = (int) $atts['photo_height'];
 
@@ -354,12 +355,10 @@ class Wdfb_MarkerReplacer {
 		$ret = false;
 		$i   = 0;
 
-		$display_idx = ( $img_w >= 130 )
-			? ( ( $img_w >= 180 ) ? 0 : 1 )
-			: ( ( $img_w >= 75 ) ? 2 : 3 );
-
+		$display_idx = ( $img_w >= 130 ) ? ( ( $img_w >= 180 ) ? 0 : 1 ) : ( ( $img_w >= 75 ) ? 2 : 3 );
 		$columns = (int) $atts['columns'];
 		$current = 1;
+		$atts['album_class'] = !empty( $atts['album_class'] ) ? $atts['album_class'] . ' wdfb_album_photos' : 'wdfb_album_photos';
 		foreach ( $photos as $photo ) {
 			$photo_idx = isset( $photo['images'][ $display_idx ] ) ? $display_idx : count( $photo['images'] ) - 1;
 			$style     = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
@@ -374,16 +373,18 @@ class Wdfb_MarkerReplacer {
 			if ( $character_limit ) {
 				$photo_desc = ( strlen( $photo_desc_full ) > 20 ) ? mb_substr( $photo_desc_full, 0, $character_limit ) . '...' : $photo_desc_full;
 			}
-
-			$ret .= '<div class="wdfb-album-image-wrapper">
-					<a href="' . $url . '" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' title="' . $photo_desc_full . '">' .
-				        '<img src="' . $photo['images'][ $photo_idx ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $atts['crop'] ? "height='{$img_h}'" : '' ) . ' />';
-			$ret .= '</a>';
-			$ret .= ( ! empty( $photo_desc ) && $atts['show_description'] ) ? '<p class="wdfb-photo-desc">' . $photo_desc . "</p>" : '';
-			$ret .= "</div>";
-			if ( $columns && ( ++ $i % $columns ) == 0 ) {
-				$ret .= '<br ' . ( $style ? 'style="clear:left"' : '' ) . '/>';
+			if ( $columns && ( ( $i++ % $columns ) == 0 ) ) {
+				$div_style = "style='clear:left; width:{$img_w}px;'";
+			}else{
+				$div_style = "style='width:{$img_w}px;'";
 			}
+
+			$ret .= '<div class="wdfb-album-image-row" '. $div_style . '>
+					<a href="' . $url . '" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' title="' . $photo_desc_full . '">' .
+			        '<img src="' . $photo['images'][ $photo_idx ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $atts['crop'] ? "height='{$img_h}'" : '' ) . ' />';
+			$ret .= '</a>';
+			$ret .= ( ! empty( $photo_desc ) && $atts['show_description'] ) ? '<p class="wdfb-photo-desc">' . $photo_desc . "</p>" : '<p></p>';
+			$ret .= "</div>";
 			if ( (int) $atts['limit'] && $current >= (int) $atts['limit'] ) {
 				break;
 			}
