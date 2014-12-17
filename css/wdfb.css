@@ -30,3 +30,24 @@ a.wdfb_register_button span {
     padding: 2px 6px 3px 12px;
     text-shadow: none;
 }
+.wdfb-album-image-wrapper {
+    float: left;
+    margin: 0 4px;
+}
+.wdfb-album-image-wrapper a {
+    display: inline-block;
+}
+#TB_caption {
+    height: auto !important;
+}
+
+/*Widget styling*/
+.wdfb_album_photos {
+    display: block;
+    overflow: hidden;
+}
+.wdfb-album-image-row {
+    float: left;
+    margin: 0 4px;
+    position: relative;
+}

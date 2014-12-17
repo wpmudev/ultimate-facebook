@@ -80,22 +80,22 @@ class Wdfb_MarkerReplacer {
 				$redirect_to = site_url( $wp->request );
 			}
 		}
+		$html = '';
 		if ( ! class_exists( 'Wdfb_WidgetConnect' ) ) {
-			echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
+			$html = '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
 		}
 		$user = wp_get_current_user();
-		$html = '';
 		if ( ! $user->ID ) {
-			$html = '<p class="wdfb_login_button">' .
-			        wdfb_get_fb_plugin_markup( 'login-button', array(
-				        'scope'        => Wdfb_Permissions::get_permissions(),
-				        'redirect-url' => ( $redirect_to
-					        ? apply_filters( 'wdfb-login-redirect_url', $redirect_to )
-					        : wdfb_get_login_redirect()
-				        ),
-				        'content'      => $content,
-			        ) ) .
-			        '</p>';
+			$html .= '<p class="wdfb_login_button">' .
+			         wdfb_get_fb_plugin_markup( 'login-button', array(
+				         'scope'        => Wdfb_Permissions::get_permissions(),
+				         'redirect-url' => ( $redirect_to
+					         ? apply_filters( 'wdfb-login-redirect_url', $redirect_to )
+					         : wdfb_get_login_redirect()
+				         ),
+				         'content'      => $content,
+			         ) ) .
+			         '</p>';
 		} else {
 			$redirect_to = $redirect_to ? apply_filters( 'wdfb-login-redirect_url', $redirect_to ) : home_url();
 			$logout      = wp_logout_url( $redirect_to ); // Props jmoore2026
@@ -363,24 +363,24 @@ class Wdfb_MarkerReplacer {
 		foreach ( $photos as $photo ) {
 			$photo_idx = isset( $photo['images'][ $display_idx ] ) ? $display_idx : count( $photo['images'] ) - 1;
 			$style     = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
-			$url       = $fb_open
-				? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id']
-				: $photo['images'][0]['source'];
-			$name      = ! empty( $photo['name'] ) ? 'title="' . esc_attr( $photo['name'] ) . '"' : '';
+			$url       = $fb_open ? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id'] : $photo['images'][0]['source'];
 
 			//Check if photo description is allowed and photo does have a description
-			$photo_desc = ( $atts['show_description'] && ! empty( $photo['name'] ) ) ? $photo['name'] : '';
-			$photo_desc = apply_filters( 'wdfb_album_photo_desc', $photo_desc );
+			$photo_desc_full = ! empty( $photo['name'] ) ? esc_attr( $photo['name'] ) : '';
+			$photo_desc_full = apply_filters( 'wdfb_album_photo_desc', $photo_desc_full );
 
-			$ret .= '<a href="' . $url .
-			        '" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' ' . $name . '>' .
-			        '<img src="' . $photo['images'][ $photo_idx ]['source'] . '" ' .
-			        ( $img_w ? "width='{$img_w}'" : '' ) .
-			        ( $img_h && ! $atts['crop'] ? "height='{$img_h}'" : '' ) .
-			        ' />';
+			$character_limit = apply_filters( 'wdfb_album_photo_desc_length', 20 );
+
+			if ( $character_limit ) {
+				$photo_desc = ( strlen( $photo_desc_full ) > 20 ) ? mb_substr( $photo_desc_full, 0, $character_limit ) . '...' : $photo_desc_full;
+			}
+
+			$ret .= '<div class="wdfb-album-image-wrapper">
+					<a href="' . $url . '" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' title="' . $photo_desc_full . '">' .
+				        '<img src="' . $photo['images'][ $photo_idx ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $atts['crop'] ? "height='{$img_h}'" : '' ) . ' />';
 			$ret .= '</a>';
-			$ret .= ! empty( $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_desc . "</p>" : '';
-
+			$ret .= ( ! empty( $photo_desc ) && $atts['show_description'] ) ? '<p class="wdfb-photo-desc">' . $photo_desc . "</p>" : '';
+			$ret .= "</div>";
 			if ( $columns && ( ++ $i % $columns ) == 0 ) {
 				$ret .= '<br ' . ( $style ? 'style="clear:left"' : '' ) . '/>';
 			}
