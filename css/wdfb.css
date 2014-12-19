@@ -43,7 +43,15 @@ a.wdfb_register_button span {
     overflow: hidden;
 }
 .wdfb-album-image-row {
-    float: left;
-    margin: 0 4px;
-    position: relative;
+    display: inline-block;
+    background: #fff;
+    padding: 0.2em;
+    margin: 0 0.7em 0.7em;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    vertical-align: top;
+}
+.Wdfb_WidgetAlbums .wdfb-album-image-row {
+    margin: 0 0.5em 0.5em;
 }
