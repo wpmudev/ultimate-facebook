@@ -117,7 +117,7 @@ class Wdfb_AdminHelp {
 		);
 		foreach (array('_site_tips', '_network_tips') as $tip) {
 			$this->$tip->bind_tip(
-				__('Checking this will allow your users to register with and connect to your site using their Facebook account', 'wdfb'), 
+				__('Checking this will allow your users to register with ( only if, user registrations are enabled in settings ) and login to your site using their Facebook account', 'wdfb'),
 				"#wdfb-section-wdfb_connect td:first"
 			);
 			$this->$tip->bind_tip(

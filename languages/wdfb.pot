@@ -544,7 +544,7 @@ msgid "Restart the tutorial"
 msgstr ""
 
 #: lib/class_wdfb_admin_help.php:120
-msgid "Checking this will allow your users to register with and connect to your site using their Facebook account"
+msgid "Checking this will allow your users to register with ( only if, user registrations are enabled in settings ) and connect to your site using their Facebook account"
 msgstr ""
 
 #: lib/class_wdfb_admin_help.php:124
@@ -625,7 +625,7 @@ msgid "Extra permissions"
 msgstr ""
 
 #: lib/class_wdfb_admin_pages.php:84 lib/class_wdfb_admin_pages.php:382
-msgid "Allow users to register with Facebook"
+msgid "Allow users to connect using Facebook"
 msgstr ""
 
 #: lib/class_wdfb_admin_pages.php:88 lib/class_wdfb_admin_pages.php:386

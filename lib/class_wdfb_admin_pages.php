@@ -81,7 +81,7 @@ class Wdfb_AdminPages {
 
 		register_setting( 'wdfb', 'wdfb_connect' );
 		add_settings_section( 'wdfb_connect', __( 'Facebook Connect', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
-		add_settings_field( 'wdfb_allow_facebook_registration', __( 'Allow users to register with Facebook', 'wdfb' ), array(
+		add_settings_field( 'wdfb_allow_facebook_registration', __( 'Allow users to connect using Facebook', 'wdfb' ), array(
 			$form,
 			'create_allow_facebook_registration_box'
 		), 'wdfb_options_page', 'wdfb_connect' );
