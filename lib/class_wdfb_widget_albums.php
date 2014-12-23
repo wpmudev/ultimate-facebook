@@ -176,7 +176,8 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 		if ( is_array( $photos ) && ! empty( $photos ) ) {
 			echo "<div class = 'wdfb_album_photos'>";
-			$count = $overall = 0;
+			$count = 1;
+			$overall = 0;
 			foreach ( $photos as $photo ) {
 				if ( $overall >= $limit ) {
 					break;
@@ -202,8 +203,10 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 				$image .= '</a>';
 				$image .=  ( ! empty( $photo_text ) && $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_text . "</p>" : '<p></p>';
 				$image .= '</div>';
+				if ( $per_row && ( ( $count ++ % $per_row ) == 0 ) ) {
+					$image .= "<br />";
+				}
 				echo $image;
-				++ $count;
 				++ $overall;
 			}
 			echo '</div>';
