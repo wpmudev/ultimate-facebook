@@ -28,7 +28,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 	function js_load_editor() {
 		wp_enqueue_script( 'wdfb_widget_editor_album', WDFB_PLUGIN_URL . '/js/widget_editor_album.js' );
-		wp_enqueue_script('wdfb-masonry');
+		wp_enqueue_script( 'wdfb-masonry' );
 		wp_localize_script( 'wdfb_widget_editor_album', 'l10nWdfbEditor', array(
 			'add_fb_photo'        => __( 'Add FB Photo', 'wdfb' ),
 			'insert_album'        => __( 'Insert album', 'wdfb' ),
@@ -162,8 +162,8 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		$img_h      = (int) $instance['img_h'];
 		$img_crop   = (int) $instance['img_crop'];
 		$fb_open    = (int) $instance['fb_open'];
-		$thickbox   = (int) $instance['thickbox'];
-		$photo_desc = (int) $instance['photo_desc'];
+		$thickbox   = ! empty( $instance['thickbox'] ) ? (int) $instance['thickbox'] : '';
+		$photo_desc = ! empty( $instance['photo_desc'] ) ? (int) $instance['photo_desc'] : '';
 		$album_id   = $instance['album_id'];
 
 		$api    = new Wdfb_AlbumPhotosBuffer;
@@ -176,7 +176,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 		if ( is_array( $photos ) && ! empty( $photos ) ) {
 			echo "<div class = 'wdfb_album_photos'>";
-			$count = 1;
+			$count   = 1;
 			$overall = 0;
 			foreach ( $photos as $photo ) {
 				if ( $overall >= $limit ) {
@@ -186,7 +186,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 				$url   = $fb_open ? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id'] : $photo['images'][0]['source'];
 
 				//Check if photo description is allowed and photo does have a description
-				$photo_text = ! empty( $photo['name'] ) ? $photo['name'] : '';
+				$photo_text      = ! empty( $photo['name'] ) ? $photo['name'] : '';
 				$photo_text_full = apply_filters( 'wdfb_album_photo_desc', $photo_text );
 
 				$character_limit = apply_filters( 'wdfb_album_photo_desc_length', 20 );
@@ -199,9 +199,9 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 				$class = apply_filters( 'wdfb_photo_link_thickbox', $class );
 				$image = "<div class='wdfb-album-image-row' style='width:{$img_w}px;'>" .
 				         '<a href="' . $url . '" rel="' . $album_id . '-photo" ' . $style . ' class="' . $class . '"  title="' . $photo_text_full . '" >' .
-				            '<img src="' . $photo['images'][ count( $photo['images'] ) - 1 ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $img_crop ? "height='{$img_h}'" : '' ) . ' />';
+				         '<img src="' . $photo['images'][ count( $photo['images'] ) - 1 ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $img_crop ? "height='{$img_h}'" : '' ) . ' />';
 				$image .= '</a>';
-				$image .=  ( ! empty( $photo_text ) && $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_text . "</p>" : '<p></p>';
+				$image .= ( ! empty( $photo_text ) && $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_text . "</p>" : '<p></p>';
 				$image .= '</div>';
 				if ( $per_row && ( ( $count ++ % $per_row ) == 0 ) ) {
 					$image .= "<br />";

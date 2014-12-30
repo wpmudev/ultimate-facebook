@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.7.9
+Version: 2.7.9.1
 Text Domain: wdfb
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
@@ -216,8 +216,12 @@ function _wdfb_initialize() {
 	Wdfb_UniversalWorker::serve();
 }
 
-add_filter( 'comment_text', 'decode_utf_8', 1000, 2 );
+add_filter( 'get_comment_text', 'decode_utf_8', 1000, 2 );
 function decode_utf_8( $content, $comment ) {
+
+	if( empty( $comment )) {
+		return $content;
+	}
 	$comment_meta = get_comment_meta( $comment->comment_ID, 'wdfb_comment', true );
 	if ( empty( $comment_meta ) ) {
 		//Do not decode wordpress comments
