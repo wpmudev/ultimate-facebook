@@ -5,8 +5,8 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
-2.7.9.1 - 2014-12-15 - Umesh Kumar
-- Fixed:    Notices and warnings
+2.7.9.1 - 2014-12-30 - Umesh Kumar
+- Fixed:    comment_text filter arguments warning
 
 2.7.9 - 2014-12-15 - Umesh Kumar
 - Updated:  Album widget styling change ( check changes before updating on live )
