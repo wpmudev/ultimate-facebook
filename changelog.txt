@@ -5,7 +5,7 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
-2.7.9.1 - 2014-12-30 - Umesh Kumar
+2.7.9.1 - 2015-01-08 - Umesh Kumar
 - Fixed:    replaced comment_text filter with get_comment_text to fix notice and warnings
 - Fixed:    Fixed recent comment widget avatar checkbox in backend
 - Fixed:    Comments order in recent comment widget
