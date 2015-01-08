@@ -340,7 +340,6 @@ class Wdfb_MarkerReplacer {
 		if ( ! $atts['id'] ) {
 			return '';
 		} // We don't know what album to show
-		wp_enqueue_script( 'wdfb-masonry' );
 		$img_w = (int) $atts['photo_width'];
 		$img_h = (int) $atts['photo_height'];
 

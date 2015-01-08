@@ -28,7 +28,6 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 
 	function js_load_editor() {
 		wp_enqueue_script( 'wdfb_widget_editor_album', WDFB_PLUGIN_URL . '/js/widget_editor_album.js' );
-		wp_enqueue_script( 'wdfb-masonry' );
 		wp_localize_script( 'wdfb_widget_editor_album', 'l10nWdfbEditor', array(
 			'add_fb_photo'        => __( 'Add FB Photo', 'wdfb' ),
 			'insert_album'        => __( 'Insert album', 'wdfb' ),
