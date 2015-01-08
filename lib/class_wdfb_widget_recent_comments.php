@@ -18,7 +18,7 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 		$title       = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
 		$limit       = ! empty( $instance['limit'] ) ? esc_attr( $instance['limit'] ) : 5;
 		$avatar_size = ! empty( $instance['avatar_size'] ) ? esc_attr( $instance['avatar_size'] ) : '';
-		$avatar_show = ! empty( $instance['avatar_show'] ) ? (int) @$instance['avatar_show'] : '';
+		$avatar_show = ! empty( $instance['avatar_show'] ) ? esc_attr( $instance['avatar_show'] ) : '';
 		$hide_text   = ! empty( $instance['hide_text'] ) ? esc_attr( $instance['hide_text'] ) : '';
 
 		// Sanity check
@@ -82,8 +82,8 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 		$title       = apply_filters( 'widget_title', $instance['title'] );
 		$limit       = ! empty( $instance['limit'] ) ? (int) @$instance['limit'] : 5;
 		$size        = ! empty( $instance['avatar_size'] ) ? (int) @$instance['avatar_size'] : '';
-		$avatar_show = ! empty( $instance['avatar_show'] ) ? $instance['avatar_show'] : '';
-		$hide_text   = ! empty( $instance['hide_text'] ) ? $instance['hide_text'] : '';
+		$avatar_show = ! empty( $instance['avatar_show'] ) ? (int) @$instance['avatar_show'] : '';
+		$hide_text   = ! empty( $instance['hide_text'] ) ? (int) @$instance['hide_text'] : '';
 
 		echo $before_widget;
 		if ( $title ) {
