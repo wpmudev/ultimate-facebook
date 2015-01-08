@@ -18,6 +18,7 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 		$title       = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
 		$limit       = ! empty( $instance['limit'] ) ? esc_attr( $instance['limit'] ) : 5;
 		$avatar_size = ! empty( $instance['avatar_size'] ) ? esc_attr( $instance['avatar_size'] ) : '';
+		$avatar_show = ! empty( $instance['avatar_show'] ) ? (int) @$instance['avatar_show'] : '';
 		$hide_text   = ! empty( $instance['hide_text'] ) ? esc_attr( $instance['hide_text'] ) : '';
 
 		// Sanity check
@@ -51,8 +52,8 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 		}
 		$html .= '</select>px';
 		$html .= '<br />';
-		$checked = ( ! $avatar_size ) ? 'checked="checked"' : '';
-		$html .= '<input type="checkbox" ' . $checked . ' name="' . $this->get_field_name( 'avatar_size' ) . '" id="' . $this->get_field_id( 'avatar_show' ) . '" value="0" /> ';
+		$checked = ( ! $avatar_show ) ? 'checked="checked"' : '';
+		$html .= '<input type="checkbox" ' . $checked . ' name="' . $this->get_field_name( 'avatar_show' ) . '" id="' . $this->get_field_id( 'avatar_show' ) . '" value="0" /> ';
 		$html .= '<label for="' . $this->get_field_id( 'avatar_show' ) . '">' . __( 'Do not show avatars', 'wdfb' ) . '</label>';
 		$html .= '</p>';
 
@@ -70,17 +71,19 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 		$instance['title']       = strip_tags( $new_instance['title'] );
 		$instance['limit']       = strip_tags( $new_instance['limit'] );
 		$instance['avatar_size'] = strip_tags( $new_instance['avatar_size'] );
-		$instance['hide_text']   = strip_tags( $new_instance['hide_text'] );
+		$instance['avatar_show'] = ! empty( $new_instance['avatar_show'] ) ? strip_tags( $new_instance['avatar_show'] ) : 1;
+		$instance['hide_text']   = ! empty( $new_instance['hide_text'] ) ? strip_tags( $new_instance['hide_text'] ) : 0;
 
 		return $instance;
 	}
 
 	function widget( $args, $instance ) {
 		extract( $args );
-		$title     = apply_filters( 'widget_title', $instance['title'] );
-		$limit     = ! empty( $instance['limit'] ) ? (int) @$instance['limit'] : 5;
-		$size      = ! empty( $instance['avatar_size'] ) ? (int) @$instance['avatar_size'] : '';
-		$hide_text = ! empty( $instance['hide_text'] ) ? (int) @$instance['hide_text'] : '';
+		$title       = apply_filters( 'widget_title', $instance['title'] );
+		$limit       = ! empty( $instance['limit'] ) ? (int) @$instance['limit'] : 5;
+		$size        = ! empty( $instance['avatar_size'] ) ? (int) @$instance['avatar_size'] : '';
+		$avatar_show = ! empty( $instance['avatar_show'] ) ? $instance['avatar_show'] : '';
+		$hide_text   = ! empty( $instance['hide_text'] ) ? $instance['hide_text'] : '';
 
 		echo $before_widget;
 		if ( $title ) {
@@ -94,13 +97,15 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 			$meta            = unserialize( $comment->meta_value );
 			echo '<li>';
 
-			echo '<div class="wdfb-comment_author vcard">';
-			if ( $size ) {
-				echo '<img src="' . WDFB_PROTOCOL . 'graph.facebook.com/' . esc_attr( $meta['fb_author_id'] ) . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
-			}
-			echo '<cite class="fn"><a href="' . WDFB_PROTOCOL . 'www.facebook.com/profile.php?id=' . esc_attr( $meta['fb_author_id'] ) . '">' . esc_html( $comment->comment_author ) . '</a></cite>';
-			echo '</div>';
+			if ( $avatar_show ) {
+				echo '<div class="wdfb-comment_author vcard">';
+				if ( $size ) {
+					echo '<img src="' . WDFB_PROTOCOL . 'graph.facebook.com/' . esc_attr( $meta['fb_author_id'] ) . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" /> ';
+				}
+				echo '<cite class="fn"><a href="' . WDFB_PROTOCOL . 'www.facebook.com/profile.php?id=' . esc_attr( $meta['fb_author_id'] ) . '">' . esc_html( $comment->comment_author ) . '</a></cite>';
+				echo '</div>';
 
+			}
 			if ( ! $hide_text ) {
 				echo '<div class="wdfb-comment_body">';
 				echo esc_html( $comment_content );
