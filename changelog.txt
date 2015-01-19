@@ -5,6 +5,9 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+2.7.9.2 - 2015-01-19 - Umesh Kumar
+- Fixed:    Comment author facebook URL fixed
+
 2.7.9.1 - 2015-01-08 - Umesh Kumar
 - Fixed:    replaced comment_text filter with get_comment_text to fix notice and warnings
 - Fixed:    Fixed recent comment widget avatar checkbox in backend
