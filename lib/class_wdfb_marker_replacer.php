@@ -132,7 +132,7 @@ class Wdfb_MarkerReplacer {
 			if ( $size ) {
 				$out .= '<img src="' . WDFB_PROTOCOL . 'graph.facebook.com/' . esc_attr( $meta['fb_author_id'] ) . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" />';
 			}
-			$out .= '<cite class="fn"><a href="' . WDFB_PROTOCOL . 'www.facebook.com/profile.php?id=' . esc_attr( $meta['fb_author_id'] ) . '">' . esc_html( $comment->comment_author ) . '</a></cite>';
+			$out .= '<cite class="fn"><a href="' . WDFB_PROTOCOL . 'www.facebook.com/' . esc_attr( $meta['fb_author_id'] ) . '">' . esc_html( $comment->comment_author ) . '</a></cite>';
 			$out .= '</div>';
 
 			if ( ! $hide_text ) {

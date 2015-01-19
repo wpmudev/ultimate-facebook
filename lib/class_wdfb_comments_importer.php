@@ -34,7 +34,7 @@ class Wdfb_CommentsImporter {
 				'comment_post_ID'      => $post_id,
 				'comment_date_gmt'     => date( 'Y-m-d H:i:s', strtotime( $comment['created_time'] ) ),
 				'comment_author'       => $comment['from']['name'],
-				'comment_author_url'   => 'http://www.facebook.com/profile.php?id=' . $comment['from']['id'],
+				'comment_author_url'   => 'http://www.facebook.com/' . $comment['from']['id'],
 				'comment_content'      => utf8_encode( $comment['message'] ),
 				'comment_author_email' => '',
 				'comment_author_IP'    => ''

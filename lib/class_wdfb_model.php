@@ -350,7 +350,12 @@ class Wdfb_Model {
 		$wdfb_api = get_option( 'wdfb_api' );
 		$token    = isset( $wdfb_api['auth_tokens'] ) ? $wdfb_api['auth_tokens'] : array();
 		if ( ! $token || empty( $fb_uid ) ) {
-			$this->log->error( 'WDFBModel::get_user_api_token', 'Token not found or no Facebook user id was provided' );
+			if( !$token ) {
+				$message = 'Token not found';
+			}else {
+				$message = 'Missing Facebook user id';
+			}
+			$this->log->error( 'WDFBModel::get_user_api_token', $message );
 
 			return false;
 		}

@@ -102,7 +102,7 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 				if ( $size ) {
 					echo '<img src="' . WDFB_PROTOCOL . 'graph.facebook.com/' . esc_attr( $meta['fb_author_id'] ) . '/picture" class="avatar avatar-' . $size . ' photo" height="' . $size . '" width="' . $size . '" /> ';
 				}
-				echo '<cite class="fn"><a href="' . WDFB_PROTOCOL . 'www.facebook.com/profile.php?id=' . esc_attr( $meta['fb_author_id'] ) . '">' . esc_html( $comment->comment_author ) . '</a></cite>';
+				echo '<cite class="fn"><a href="' . WDFB_PROTOCOL . 'www.facebook.com/' . esc_attr( $meta['fb_author_id'] ) . '">' . esc_html( $comment->comment_author ) . '</a></cite>';
 				echo '</div>';
 
 			}
