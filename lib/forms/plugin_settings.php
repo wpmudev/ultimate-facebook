@@ -255,8 +255,7 @@ function wdfb_do_settings_sections( $page ) {
 		$(".wdfb-save_settings").click(function () {
 			var $me = $(this),
 				section_id = $me.attr("data-wdfb_section_id"),
-				$section = $("#wdfb-section-" + section_id)
-				;
+				$section = $("#wdfb-section-" + section_id);
 			if (!$section.length) return false;
 
 			$me.after(
@@ -282,8 +281,7 @@ function wdfb_do_settings_sections( $page ) {
 			 */
 
 			var data = $section.parents("form:first").serialize(),
-				request = wdfb_send_save_request(section_id, data)
-				;
+				request = wdfb_send_save_request(section_id, data);
 
 			return false;
 		});

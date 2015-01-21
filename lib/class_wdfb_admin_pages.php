@@ -1419,7 +1419,7 @@ class Wdfb_AdminPages {
 			}
 			$this->handle_fb_session_state();
 			if ( empty( $user_id ) ) {
-				$message = apply_filters('wdfb_warn_disabled_registration', __( "User  registration is currently not allowed.", 'wdfb' ) );
+				$message = apply_filters( 'wdfb_warn_disabled_registration', __( "User  registration is currently not allowed.", 'wdfb' ) );
 				wp_send_json_error( $message );
 			} else {
 				wp_send_json_success( "Logging in" );
@@ -1584,8 +1584,8 @@ class Wdfb_AdminPages {
 		if ( 'wdfb_network' == $key ) {
 			$keys = Wdfb_Installer::get_keys();
 			unset( $keys['widget_pack'] );
-			$override     = (int) @$data['_override_all'];
-			$preserve_api = (int) @$data['_preserve_api'];
+			$override     = (int) @$data['wdfb_network']['_override_all'];
+			$preserve_api = (int) @$data['wdfb_network']['_preserve_api'];
 		}
 
 		$new_data = array_merge( $old_data, $data[ $key ] );
@@ -1603,6 +1603,10 @@ class Wdfb_AdminPages {
 					continue;
 				} // Preserve API
 				$site_opt = get_site_option( "wdfb_{$key}" );
+
+				//Update all the details for primary blog too
+				update_blog_option( 1, "wdfb_{$key}", $site_opt );
+
 				foreach ( $blogs as $blog ) {
 					update_blog_option( $blog['blog_id'], "wdfb_{$key}", $site_opt );
 				}

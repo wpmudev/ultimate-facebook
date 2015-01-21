@@ -867,12 +867,14 @@ class Wdfb_AdminFormRenderer {
 	}
 
 	function create_override_all_box() {
-		echo '<input id="_override_all" type="checkbox" name="_override_all" value="1" />';
+		$opt = get_site_option( 'wdfb_network', array() );
+		echo $this->_create_checkbox( 'network', '_override_all', @$opt['_override_all'] );
 		echo '<div><small>' . __( 'If you check this box, all your users individual Facebook settings will be deleted and replaced with what you set here.', 'wdfb' ) . '</small></div>';
 	}
 
 	function create_preserve_api_box() {
-		echo '<input type="checkbox" name="_preserve_api" value="1" checked="checked" />';
+		$opt = get_site_option( 'wdfb_network', array() );
+		echo $this->_create_checkbox( 'network', '_preserve_api', @$opt['_preserve_api'] );
 		echo '<div><small>' . __( 'If you check this box, your users individual Facebook API settings will be <em>preserved</em> when replacing their options.', 'wdfb' ) . '</small></div>';
 	}
 
