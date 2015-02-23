@@ -5,6 +5,10 @@ Contributor: Umesh Kumar
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
+
+2.7.9.3 - 2015-02-25 - Umesh Kumar
+- Fixed: Use post content for description instead of blog description
+
 2.7.9.2 - 2015-01-19 - Umesh Kumar
 - Fixed:    Comment author facebook URL fixed
 - Fixed:    Network Settings - Override all blog settings and Preserve individual blog api settings

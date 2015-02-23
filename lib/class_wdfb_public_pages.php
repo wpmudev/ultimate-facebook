@@ -644,12 +644,13 @@ EOBpFormInjection;
 				$permalink     = $use_shortlink ? wp_get_shortlink( $post_id ) : get_permalink( $post_id );
 				$permalink     = $permalink ? $permalink : get_permalink( $post_id );
 				$picture       = wdfb_get_og_image( $post_id );
+				$description   = apply_filters( 'wdfb_fb_post_description', $post->post_content );
 				$send          = array(
 					'caption'     => substr( $post_content, 0, 999 ),
 					'message'     => $post_title,
 					'link'        => $permalink,
 					'name'        => $post->post_title,
-					'description' => get_option( 'blogdescription' ),
+					'description' => $description,
 					'actions'     => array(
 						'name' => __( 'Share', 'wdfb' ),
 						'link' => 'http://www.facebook.com/sharer.php?u=' . rawurlencode( $permalink ),
