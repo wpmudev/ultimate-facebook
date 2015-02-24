@@ -1197,10 +1197,15 @@ class Wdfb_AdminPages {
 				$permalink     = $use_shortlink ? wp_get_shortlink( $post_id ) : get_permalink( $post_id );
 				$permalink     = $permalink ? $permalink : get_permalink( $post_id );
 				$picture       = wdfb_get_og_image( $post_id );
-				$description   = apply_filters( 'wdfb_fb_post_description', $post->post_content );
+				$description   = $post->post_excerpt ? $post->post_excerpt : strip_shortcodes( $post->post_content );
+				$description   = htmlspecialchars( wp_strip_all_tags( $description ), ENT_QUOTES );
+				$description   = apply_filters( 'wdfb_fb_post_description', $description );
+				$url           = home_url( '/' );
+				$find          = array( 'http://', 'https://' );
+				$replace       = '';
+				$url           = str_ireplace( $find, $replace, $url );
 				$send          = array(
-					'caption'     => preg_replace( '/(.{0,950}).*/um', '$1', preg_replace( '/\r|\n/', ' ', $post_content ) ),
-					//substr($post_content, 0, 999),
+					'caption'     => $url,
 					'message'     => $post_title,
 					'link'        => $permalink,
 					'name'        => $post->post_title,

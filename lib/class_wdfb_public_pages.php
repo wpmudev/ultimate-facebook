@@ -644,9 +644,11 @@ EOBpFormInjection;
 				$permalink     = $use_shortlink ? wp_get_shortlink( $post_id ) : get_permalink( $post_id );
 				$permalink     = $permalink ? $permalink : get_permalink( $post_id );
 				$picture       = wdfb_get_og_image( $post_id );
-				$description   = apply_filters( 'wdfb_fb_post_description', $post->post_content );
+				$description   = $post->post_excerpt ? $post->post_excerpt : strip_shortcodes( $post->post_content );
+				$description   = htmlspecialchars( wp_strip_all_tags( $description ), ENT_QUOTES );
+				$description   = apply_filters( 'wdfb_fb_post_description', $description );
 				$send          = array(
-					'caption'     => substr( $post_content, 0, 999 ),
+					'caption'     => home_url( '/' ),
 					'message'     => $post_title,
 					'link'        => $permalink,
 					'name'        => $post->post_title,
