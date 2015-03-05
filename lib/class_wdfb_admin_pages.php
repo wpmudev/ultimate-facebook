@@ -25,6 +25,9 @@ class Wdfb_AdminPages {
 	function register_site_settings() {
 		$form = new Wdfb_AdminFormRenderer;
 
+		/**
+		 * Network Options
+		 */
 		register_setting( 'wdfb', 'wdfb_network' );
 		add_settings_section( 'wdfb_network', __( 'Network options', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_override_all', __( 'Override individual blog settings', 'wdfb' ), array(
@@ -40,6 +43,9 @@ class Wdfb_AdminPages {
 			'create_prevent_blog_settings_box'
 		), 'wdfb_options_page', 'wdfb_network' );
 
+		/**
+		 * Facebook API
+		 */
 		register_setting( 'wdfb', 'wdfb_api' );
 		add_settings_section( 'wdfb_api', __( 'Facebook API', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_api_info', __( 'Before we begin', 'wdfb' ), array(
@@ -68,6 +74,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_api' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_api' );
 
+		/**
+		 * Permissions and Tokens
+		 */
 		add_settings_section( 'wdfb_grant', __( 'Permissions &amp; Tokens', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_api_permissions', __( 'Allowing permissions', 'wdfb' ), array(
 			$form,
@@ -79,6 +88,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_grant' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_grant' );
 
+		/**
+		 * Facebook Connect
+		 */
 		register_setting( 'wdfb', 'wdfb_connect' );
 		add_settings_section( 'wdfb_connect', __( 'Facebook Connect', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_allow_facebook_registration', __( 'Allow users to connect using Facebook', 'wdfb' ), array(
@@ -132,6 +144,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_connect' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_connect' );
 
+		/**
+		 * Facebook Like and Send Button
+		 */
 		register_setting( 'wdfb', 'wdfb_button' );
 		add_settings_section( 'wdfb_button', __( 'Facebook Like/Send Button', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_show_button', __( 'Allow Facebook Like Button', 'wdfb' ), array(
@@ -164,6 +179,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_button' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_button' );
 
+		/**
+		 * Facebook Open Graph
+		 */
 		register_setting( 'wdfb', 'wdfb_opengraph' );
 		add_settings_section( 'wdfb_opengraph', __( 'Facebook OpenGraph', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_use_opengraph', __( 'Use OpenGraph support', 'wdfb' ), array(
@@ -197,6 +215,9 @@ class Wdfb_AdminPages {
 			), 'wdfb_options_page', 'wdfb_groups' );
 		}
 
+		/**
+		 * Facebook Comments
+		 */
 		register_setting( 'wdfb', 'wdfb_comments' );
 		add_settings_section( 'wdfb_comments', __( 'Facebook Comments', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_import_fb_comments', __( 'Import Facebook comments', 'wdfb' ), array(
@@ -251,6 +272,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_comments' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_comments' );
 
+		/**
+		 * Facebook Autopost
+		 */
 		register_setting( 'wdfb', 'wdfb_autopost' );
 		add_settings_section( 'wdfb_autopost', __( 'Autopost to Facebook', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_show_button', __( 'Allow autoposting new posts to Facebook', 'wdfb' ), array(
@@ -289,6 +313,9 @@ class Wdfb_AdminPages {
 		}
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_autopost' );
 
+		/**
+		 * Submenu: Widget Pack
+		 */
 		register_setting( 'wdfb', 'wdfb_widget_pack' );
 		add_settings_section( 'wdfb_widget_pack', __( 'Widget pack', 'wdfb' ), create_function( '', '' ), 'wdfb_widget_options_page' );
 		add_settings_field( 'wdfb_widget_connect', __( 'Use Facebook Connect widget', 'wdfb' ), array(
@@ -337,6 +364,9 @@ class Wdfb_AdminPages {
 	function register_blog_settings() {
 		$form = new Wdfb_AdminFormRenderer;
 
+		/**
+		 * Facebook API
+		 */
 		register_setting( 'wdfb', 'wdfb_api' );
 		add_settings_section( 'wdfb_api', __( 'Facebook API', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_api_info', __( 'Before we begin', 'wdfb' ), array(
@@ -361,6 +391,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_api' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_api' );
 
+		/**
+		 * Permission and Tokens
+		 */
 		add_settings_section( 'wdfb_grant', __( 'Permissions &amp; Tokens', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_api_permissions', __( 'Allowing permissions', 'wdfb' ), array(
 			$form,
@@ -376,6 +409,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_grant' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_grant' );
 
+		/**
+		 * Check for Single site, Facebook Connect option
+		 */
 		if ( ! is_multisite() || current_user_can( 'manage_network_options' ) ) {
 			register_setting( 'wdfb', 'wdfb_connect' );
 			add_settings_section( 'wdfb_connect', __( 'Facebook Connect', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
@@ -431,6 +467,9 @@ class Wdfb_AdminPages {
 			add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_connect' );
 		}
 
+		/**
+		 * Facebook Like/Send Button
+		 */
 		register_setting( 'wdfb', 'wdfb_button' );
 		add_settings_section( 'wdfb_button', __( 'Facebook Like/Send Button', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_show_button', __( 'Allow Facebook Like Button', 'wdfb' ), array(
@@ -463,6 +502,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_button' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_button' );
 
+		/**
+		 * Facebook Open graph
+		 */
 		register_setting( 'wdfb', 'wdfb_opengraph' );
 		add_settings_section( 'wdfb_opengraph', __( 'Facebook OpenGraph', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_use_opengraph', __( 'Use OpenGraph support', 'wdfb' ), array(
@@ -496,6 +538,9 @@ class Wdfb_AdminPages {
 			), 'wdfb_options_page', 'wdfb_groups' );
 		}
 
+		/**
+		 * Facebook Comments
+		 */
 		register_setting( 'wdfb', 'wdfb_comments' );
 		add_settings_section( 'wdfb_comments', __( 'Facebook Comments', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_import_fb_comments', __( 'Import Facebook comments', 'wdfb' ), array(
@@ -554,6 +599,9 @@ class Wdfb_AdminPages {
 		), 'wdfb_options_page', 'wdfb_comments' );
 		add_settings_field( '', '', array( $form, 'next_step' ), 'wdfb_options_page', 'wdfb_comments' );
 
+		/**
+		 * Facebook Autopost
+		 */
 		register_setting( 'wdfb', 'wdfb_autopost' );
 		add_settings_section( 'wdfb_autopost', __( 'Autopost to Facebook', 'wdfb' ), create_function( '', '' ), 'wdfb_options_page' );
 		add_settings_field( 'wdfb_allow_autopost', __( 'Allow autoposting new posts to Facebook', 'wdfb' ), array(
@@ -591,6 +639,9 @@ class Wdfb_AdminPages {
 			), 'wdfb_options_page', 'wdfb_autopost' );
 		}
 
+		/**
+		 * Widget Pack
+		 */
 		register_setting( 'wdfb', 'wdfb_widget_pack' );
 		add_settings_section( 'wdfb_widget_pack', __( 'Widget pack', 'wdfb' ), create_function( '', '' ), 'wdfb_widget_options_page' );
 		add_settings_field( 'wdfb_widget_connect', __( 'Use Facebook Connect widget', 'wdfb' ), array(

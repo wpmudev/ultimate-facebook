@@ -704,14 +704,6 @@ EOBpFormInjection;
 		add_action( $footer_hook, array( $this, 'inject_fb_root_div' ), 99 );
 		add_action( $footer_hook, array( $this, 'inject_fb_init_js' ), 99 );
 
-		/*
-				// Automatic Facebook button
-				if ('manual' != $this->data->get_option('wdfb_button', 'button_position')) {
-					add_filter('the_content', array($this, 'inject_facebook_button'), 10);
-					if (defined('BP_VERSION')) add_filter('bp_get_activity_content_body', array($this, 'inject_facebook_button_bp'));
-				}
-		*/
-
 		// OpenGraph
 		if ( $this->data->get_option( 'wdfb_opengraph', 'use_opengraph' ) ) {
 			add_action( 'wp_head', array( $this, 'inject_opengraph_info' ) );
