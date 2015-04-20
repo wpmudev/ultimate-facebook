@@ -1691,7 +1691,7 @@ class Wdfb_AdminPages {
 				echo '<p><i>' . sprintf( __( "Your currently mapped Facebook identity is %s", 'wdfb' ), '<b>' . $mapped['name'] . '</b>' ) . '</i></p>';
 			}
 			if ( $data && isset( $data['id'] ) && isset( $data['name'] ) && @$mapped['id'] != @$data['id'] ) {
-				echo '<p><a href="' . add_query_arg( 'wdfb_reset', 1 ) . '">' . sprintf( __( 'Renew my Facebook identity mapping to %s', 'wdfb' ), @$data['name'] ) . '</a></p>';
+				echo '<p><a href="' . esc_url( add_query_arg( 'wdfb_reset', 1 ) ) . '">' . sprintf( __( 'Renew my Facebook identity mapping to %s', 'wdfb' ), @$data['name'] ) . '</a></p>';
 			}
 		} else {
 			echo '<p><em>' . sprintf( __( 'You need to be logged into Facebook to see and renew your mapped identity details. <a href="%s">Click here to log in</a>' ), $this->model->fb->getLoginUrl() ) . '</em></p>';

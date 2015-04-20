@@ -429,7 +429,7 @@ EOBpFormInjection;
 		if ( ! $this->model->registration_allowed() ) {
 			return;
 		}
-		$url = add_query_arg( 'fb_registration_page', 1 );
+		$url = esc_url( add_query_arg( 'fb_registration_page', 1 ) );
 		echo '<p><a class="wdfb_register_button" href="' . $url . '"><span>' . __( 'Register with Facebook', 'wdfb' ) . '</span></a></p>';
 	}
 

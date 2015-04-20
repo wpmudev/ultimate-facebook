@@ -378,6 +378,9 @@ class Wdfb_Model {
 		return $this->db->get_var( $sql );
 	}
 
+	/**
+	 * @return User ID or False
+	 */
 	function get_wp_user_from_fb() {
 		$fb_user_id = $this->fb->getUser();
 
@@ -387,7 +390,7 @@ class Wdfb_Model {
 			return $res[0]['user_id'];
 		}
 
-		// User not yet linked. Try finding her by email.
+		// User not yet linked. Try finding by email.
 		$me = false;
 		try {
 			$me = $this->fb->api( '/me' );

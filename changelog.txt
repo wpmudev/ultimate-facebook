@@ -8,6 +8,7 @@ Change Log:
 
 2.7.9.3 - 2015-02-25 - Umesh Kumar
 - Fixed: Use post content for description instead of blog description
+- Fixed (Important - Security): Fix query argument escaping to avoid XSS vulnerability
 
 2.7.9.2 - 2015-01-19 - Umesh Kumar
 - Fixed:    Comment author facebook URL fixed
