@@ -6,7 +6,8 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-2.7.9.3 - 2015-02-25 - Umesh Kumar
+2.7.9.3 - 2015-04-21 - Umesh Kumar, Jose Jaureguiberry
+- Fixed: Fix event timezone field not being retrieved
 - Fixed: Use post content for description instead of blog description
 - Fixed (Important - Security): Fix query argument escaping to avoid XSS vulnerability
 
