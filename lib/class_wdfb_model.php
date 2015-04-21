@@ -799,7 +799,7 @@ class Wdfb_Model {
 			for ( $i = 0; $i < $limit; $i += $page_size ) {
 				$batch[] = json_encode( array(
 					'method'       => 'GET',
-					'relative_url' => "/{$for}/events/?limit={$page_size}&offset={$i}&fields=id,name,description,start_time,end_time,location,venue,picture,ticket_uri,owner,privacy"
+					'relative_url' => "/{$for}/events/?limit={$page_size}&offset={$i}&fields=id,name,description,start_time,end_time,location,venue,picture,ticket_uri,owner,privacy,timezone"
 				) );
 			}
 			try {
