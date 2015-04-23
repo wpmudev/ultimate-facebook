@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Ultimate Facebook package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ultimate Facebook 2.7.9.3\n"
+"Project-Id-Version: Ultimate Facebook 2.7.9.4\n"
 "Report-Msgid-Bugs-To: https://premium.wpmudev.org/project/ultimate-facebook\n"
 "POT-Creation-Date: 2015-04-21 17:31:05+00:00\n"
 "MIME-Version: 1.0\n"
