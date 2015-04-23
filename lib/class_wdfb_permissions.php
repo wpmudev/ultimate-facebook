@@ -7,10 +7,10 @@ class Wdfb_Permissions {
 	const PUBLISHER = '';
 	const EXTRAS = 'user_education_history,user_hometown,user_relationships,user_religion_politics'; // Deprecated
 
-	const EXTRA_READ = 'read_stream';
+	const EXTRA_READ = 'read_stream,user_posts';
 
 	const EXTRA_PUBLISH_PAGES = 'manage_pages';
-	const EXTRA_PUBLISH_ACTION = 'publish_actions';
+	const EXTRA_PUBLISH_ACTION = 'publish_actions,publish_pages';
 
 	const EXTRA_USER_PHOTOS = 'user_photos';
 

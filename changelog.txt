@@ -6,8 +6,17 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.7.9.4 - 2015-04-21 - Umesh Kumar
+
+Important - Following plugins will be removed soon, as it is deprecated and will be removed by facebook on June 23rd 2015:
+    * Recommendations
+    * Facepile
+    * Activity Feed
+
+- Fixed: Updated permissions required for Auto Posting
+
 2.7.9.3 - 2015-04-21 - Umesh Kumar, Jose Jaureguiberry
-- Fixed: Fix event timezone field not being retrieved
+- Fixed: Event timezone field not being retrieved
 - Fixed: Use post content for description instead of blog description
 - Fixed (Important - Security): Fix query argument escaping to avoid XSS vulnerability
 
