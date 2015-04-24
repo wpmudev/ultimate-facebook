@@ -157,7 +157,10 @@ class Wdfb_MarkerReplacer {
 	function process_like_button_code( $atts, $content = '' ) {
 		global $wp_current_filter;
 
-		// Check allowed
+		//Archive page, blog page and latest posts as home page
+		$archive_page = ( ( is_home() || is_archive() ) && !is_front_page() ) ? true : false;
+
+		// Check if facebook button is allowed
 		$allow = $this->data->get_option( 'wdfb_button', 'allow_facebook_button' );
 		if ( ! apply_filters( 'wdfb-show_facebook_button', $allow ) ) {
 			return '';
@@ -177,8 +180,21 @@ class Wdfb_MarkerReplacer {
 		$in_types  = $this->data->get_option( 'wdfb_button', 'not_in_post_types' );
 		$in_types  = is_array( $in_types ) ? $in_types : array();
 		$post_type = get_post_type();
-		if ( ( $post_type && in_array( get_post_type(), $in_types ) ) && ! $forced ) {
+		if ( ( ( $post_type && in_array( get_post_type(), $in_types ) ) && ! $forced )
+		) {
 			return '';
+		}
+		//If we are on front page, and show on front page is not checked, do not print like and send button
+		if ( is_front_page() ) {
+			if ( ! $this->data->get_option( 'wdfb_button', 'show_on_front_page' ) ) {
+				return '';
+			}
+		}
+		//If we are on Blog or Archive page, and show on archive page is not checked, do not print like and send button
+		if( $archive_page ) {
+			if ( ! $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) ) {
+				return '';
+			}
 		}
 
 		$is_activity = defined( 'BP_VERSION' ) && isset( $filters['bp_get_activity_content_body'] );
@@ -202,9 +218,9 @@ class Wdfb_MarkerReplacer {
 		$scheme = $scheme ? $scheme : 'light';
 
 		if (
-			( is_home() && $this->data->get_option( 'wdfb_button', 'show_on_front_page' ) )
+			( is_front_page() && $this->data->get_option( 'wdfb_button', 'show_on_front_page' ) )
 			||
-			( is_archive() && $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) )
+			( $archive_page && $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) )
 			||
 			( defined( 'BP_VERSION' ) && $is_activity && ! wdfb_is_single_bp_activity() )
 		) {
@@ -219,9 +235,9 @@ class Wdfb_MarkerReplacer {
 			if (
 				( defined( 'BP_VERSION' ) && $is_activity && ! wdfb_is_single_bp_activity() && $this->data->get_option( 'wdfb_button', 'bp_activity_xfbml' ) )
 				||
-				( is_home() && $this->data->get_option( 'wdfb_button', 'show_on_front_page' ) && $this->data->get_option( 'wdfb_button', 'shared_pages_use_xfbml' ) )
+				( is_front_page() && $this->data->get_option( 'wdfb_button', 'show_on_front_page' ) && $this->data->get_option( 'wdfb_button', 'shared_pages_use_xfbml' ) )
 				||
-				( is_archive() && $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) && $this->data->get_option( 'wdfb_button', 'shared_pages_use_xfbml' ) )
+				(  $archive_page && $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) && $this->data->get_option( 'wdfb_button', 'shared_pages_use_xfbml' ) )
 			) {
 				$use_xfbml = true;
 			}
@@ -236,7 +252,7 @@ class Wdfb_MarkerReplacer {
 					'width',
 					'scheme'
 				) ) ) . '</div>'
-				: "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href=" . rawurlencode( $href ) . "&amp;send=false&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme={$scheme}&amp;font&amp;height={$height}&amp;width={$width}&amp;locale={$locale}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>";
+				: "<div class='wdfb_like_button'><iframe src='http://www.facebook.com/plugins/like.php?&amp;href=" . rawurlencode( $href ) . "&amp;send={$send}&amp;layout={$layout}&amp;show_faces=false&amp;action=like&amp;colorscheme={$scheme}&amp;font&amp;height={$height}&amp;width={$width}&amp;locale={$locale}' scrolling='no' frameborder='0' style='border:none; overflow:hidden; height:{$height}px; width:{$width}px;' allowTransparency='true'></iframe></div>";
 		}
 
 		$href = apply_filters( 'wdfb-like_button-href_attribute', WDFB_PROTOCOL . preg_replace( '/^https?:\/\//', '', $url ) );
