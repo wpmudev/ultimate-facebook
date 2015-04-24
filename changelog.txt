@@ -6,6 +6,9 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.7.9.5 - 2015-04-24 - Umesh Kumar
+- Fixed: Settings for like and send button on home page and archive pages
+
 2.7.9.4 - 2015-04-23 - Umesh Kumar
 - Fixed: Updated permissions required for Auto Posting
 
