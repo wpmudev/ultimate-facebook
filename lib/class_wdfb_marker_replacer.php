@@ -13,7 +13,6 @@ class Wdfb_MarkerReplacer {
 		'album'           => 'wdfb_album',
 		'connect'         => 'wdfb_connect',
 		'recent_comments' => 'wdfb_recent_comments',
-		'register_button' => 'wdfb_register_button',
 	);
 
 	function __construct() {
@@ -31,26 +30,6 @@ class Wdfb_MarkerReplacer {
 		}
 
 		return '[' . $this->buttons[ $b ] . ']';
-	}
-
-	function process_register_button_code( $atts, $content = '' ) {
-		if ( is_user_logged_in() ) {
-			return '';
-		}
-		if ( ! $this->data->get_option( 'wdfb_connect', 'allow_facebook_registration' ) ) {
-			return '';
-		}
-
-		$content = ! empty( $content ) ? $content : __( 'Register with Facebook', 'wdfb' );
-
-		$base_url = defined( 'BP_VERSION' )
-			? bp_get_signup_page()
-			: apply_filters( 'wdfb-registration-registration_page', site_url( '/wp-signup.php', 'login' ) );
-		$url      = add_query_arg( array(
-			'fb_registration_page' => 1
-		), $base_url );
-
-		return '<p><a class="wdfb_register_button" href="' . $url . '"><span>' . $content . '</span></a></p>';
 	}
 
 	function process_connect_code( $atts, $content = '' ) {

@@ -97,10 +97,6 @@ class Wdfb_AdminPages {
 			$form,
 			'create_allow_facebook_registration_box'
 		), 'wdfb_options_page', 'wdfb_connect' );
-		add_settings_field( 'wdfb_force_facebook_registration', __( 'Force users to register with Facebook', 'wdfb' ), array(
-			$form,
-			'create_force_facebook_registration_box'
-		), 'wdfb_options_page', 'wdfb_connect' );
 		add_settings_field( 'wdfb_easy_facebook_registration', __( 'Allow single-click registration', 'wdfb' ), array(
 			$form,
 			'create_easy_facebook_registration_box'
@@ -406,10 +402,6 @@ class Wdfb_AdminPages {
 			add_settings_field( 'wdfb_allow_facebook_registration', __( 'Allow users to register with Facebook', 'wdfb' ), array(
 				$form,
 				'create_allow_facebook_registration_box'
-			), 'wdfb_options_page', 'wdfb_connect' );
-			add_settings_field( 'wdfb_force_facebook_registration', __( 'Force users to register with Facebook', 'wdfb' ), array(
-				$form,
-				'create_force_facebook_registration_box'
 			), 'wdfb_options_page', 'wdfb_connect' );
 			add_settings_field( 'wdfb_easy_facebook_registration', __( 'Allow single-click registration', 'wdfb' ), array(
 				$form,

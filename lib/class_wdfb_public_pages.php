@@ -423,16 +423,6 @@ EOBpFormInjection;
 
 		return "<img class='avatar' src='" . WDFB_PROTOCOL . "graph.facebook.com/{$fb_uid}/picture{$fb_size_map}' {$img_size} />";
 	}
-
-	function inject_optional_facebook_registration_button() {
-		//if registrations are disabled
-		if ( ! $this->model->registration_allowed() ) {
-			return;
-		}
-		$url = esc_url( add_query_arg( 'fb_registration_page', 1 ) );
-		echo '<p><a class="wdfb_register_button" href="' . $url . '"><span>' . __( 'Register with Facebook', 'wdfb' ) . '</span></a></p>';
-	}
-
 	function process_facebook_registration() {
 		// Should we even be here?
 		if ( $this->data->get_option( 'wdfb_connect', 'force_facebook_registration' ) ) {
@@ -740,38 +730,14 @@ EOBpFormInjection;
 				remove_action( 'bp_init', 'bp_core_wpsignup_redirect' ); // Die already, will you? Pl0x?
 			}
 
-			// New login/register
-			// First, do optionals
-			if ( is_multisite() ) {
-				add_action( 'before_signup_form', array( $this, 'inject_optional_facebook_registration_button' ) );
-			}
 			// Cole's changeset
 			if ( WDFB_MEMBERSHIP_INSTALLED ) {
-				add_action( 'signup_hidden_fields', array( $this, 'inject_optional_facebook_registration_button' ) );
-				add_action( 'bp_before_account_details_fields', array(
-					$this,
-					'inject_optional_facebook_registration_button'
-				) );
-				add_action( 'membership_popover_extend_registration_form', array(
-					$this,
-					'inject_optional_facebook_registration_button'
-				) );
 				add_action( 'signup_extra_fields', array( $this, 'inject_fb_login' ) );
 				add_action( 'membership_popover_extend_login_form', array( $this, 'inject_fb_login' ) );
-			} else {
-				// BuddyPress
-				add_filter( 'bp_before_register_page', array(
-					$this,
-					'inject_optional_facebook_registration_button'
-				) ); // BuddyPress
 			}
 
 			if ( ! is_multisite() && isset( $_GET['action'] ) && 'register' == $_GET['action'] ) {
 				add_action( 'login_head', create_function( '', 'echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"' . WDFB_PLUGIN_URL . '/css/wdfb.css\" />";' ) );
-				// Better registration button placement for single site
-				// Fix by riyaku
-				// Thank you so much!
-				add_action( 'register_form', array( $this, 'inject_optional_facebook_registration_button' ) );
 			}
 
 			// Jack the signup

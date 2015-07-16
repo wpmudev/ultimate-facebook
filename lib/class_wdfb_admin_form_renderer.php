@@ -226,18 +226,6 @@ class Wdfb_AdminFormRenderer {
 		echo $this->_create_checkbox( 'connect', 'allow_facebook_registration', @$opt['allow_facebook_registration'] );
 	}
 
-	function create_force_facebook_registration_box() {
-		$opt = $this->_get_option( 'wdfb_connect' );
-		echo $this->_create_checkbox( 'connect', 'force_facebook_registration', @$opt['force_facebook_registration'] );
-		echo '<span id="wdfb-force_facebook_registration-help"></span>';
-		echo '<br />';
-		echo $this->_create_checkbox( 'connect', 'require_facebook_account', @$opt['require_facebook_account'] );
-		echo ' <label for="require_facebook_account">' . __( 'Require Facebook account', 'wdfb' ) . '</label>';
-		echo '<div><small>' . __( 'By default, Facebook registration form will allow your users to register with their Facebook account, or with their chosen usernames and emails.', 'wdfb' ) . '</small></div>';
-		echo '<div><small>' . __( 'Check this if users will need to have a Facebook account already.', 'wdfb' ) . '</small></div>';
-		echo '<div style="color: #FF8F00; font-size: 13px; font-weight: 600;">' . __( 'As of the latest Facebook API V2.0, Facebook registration plugin will be discontinued after July 30, 2015. For registration you should use "Allow single-click registration"', 'wdfb' ) . '</small></div>';
-	}
-
 	function create_no_main_site_registration_box() {
 		$opt = $this->_get_option( 'wdfb_connect' );
 		echo $this->_create_checkbox( 'connect', 'no_main_site_registration', @$opt['no_main_site_registration'] );
