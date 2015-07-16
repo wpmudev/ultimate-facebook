@@ -145,25 +145,13 @@ if ( $data->get_option( 'wdfb_widget_pack', 'events_allowed' ) ) {
 	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_events.php' );
 	add_action( 'widgets_init', create_function( '', "register_widget('Wdfb_WidgetEvents');" ) );
 }
-if ( $data->get_option( 'wdfb_widget_pack', 'facepile_allowed' ) ) {
-	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_facepile.php' );
-	add_action( 'widgets_init', create_function( '', "register_widget('Wdfb_WidgetFacepile');" ) );
-}
 if ( $data->get_option( 'wdfb_widget_pack', 'likebox_allowed' ) ) {
 	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_likebox.php' );
 	add_action( 'widgets_init', create_function( '', "register_widget('Wdfb_WidgetLikebox');" ) );
 }
-if ( $data->get_option( 'wdfb_widget_pack', 'recommendations_allowed' ) ) {
-	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_recommendations.php' );
-	add_action( 'widgets_init', create_function( '', "register_widget('Wdfb_WidgetRecommendations');" ) );
-}
 if ( $data->get_option( 'wdfb_widget_pack', 'connect_allowed' ) ) {
 	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_connect.php' );
 	add_action( 'widgets_init', create_function( '', "register_widget('Wdfb_WidgetConnect');" ) );
-}
-if ( $data->get_option( 'wdfb_widget_pack', 'activityfeed_allowed' ) ) {
-	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_activityfeed.php' );
-	add_action( 'widgets_init', create_function( '', "register_widget('Wdfb_WidgetActivityFeed');" ) );
 }
 if ( $data->get_option( 'wdfb_widget_pack', 'recent_comments_allowed' ) ) {
 	require_once( WDFB_PLUGIN_BASE_DIR . '/lib/class_wdfb_widget_recent_comments.php' );

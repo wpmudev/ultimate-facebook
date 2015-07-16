@@ -12,7 +12,7 @@
 		function init() {
 			if (typeof FB != 'object') return false; // Don't even bother
 			perms = new Array();
-			perms.push('read_stream');
+			perms.push('user_events');
 
 			FB.api('me/permissions', function (resp) {
 				var all_good = true;
@@ -46,7 +46,7 @@
 						FB.login(function () {
 							window.location.reload(true);
 						}, {
-							"scope": 'read_stream'
+							"scope": 'user_events'
 						});
 						return false;
 					});

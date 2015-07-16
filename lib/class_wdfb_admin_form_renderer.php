@@ -900,24 +900,9 @@ class Wdfb_AdminFormRenderer {
 		$this->_create_widget_box( 'events', $description );
 	}
 
-	function create_widget_facepile_box() {
-		$description = sprintf( __( 'Easily display Facebook Facepile. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/facepile_allowed.png" /></td><td valign="top"><img src="%s/img/facepile_allowed_result.jpg" /></td></tr> </table>', 'wdfb' ), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL );
-		$this->_create_widget_box( 'facepile', $description );
-	}
-
 	function create_widget_likebox_box() {
 		$description = sprintf( __( 'Easily display Facebook Like Box. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/likebox_allowed.png" /></td><td valign="top"><img src="%s/img/likebox_allowed_result.jpg" /></td></tr> </table>', 'wdfb' ), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL );
 		$this->_create_widget_box( 'likebox', $description );
-	}
-
-	function create_widget_recommendations_box() {
-		$description = sprintf( __( 'Easily display Facebook Recommendations. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/recommendations_allowed.png" /></td><td valign="top"><img src="%s/img/recommendations_allowed_result.jpg" /></td></tr> </table>', 'wdfb' ), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL );
-		$this->_create_widget_box( 'recommendations', $description );
-	}
-
-	function create_widget_activityfeed_box() {
-		$description = sprintf( __( 'Easily display Facebook Activity Feed. <table> <tr><th>Widget settings preview</th><th>Widget preview<th></tr> <tr><td valign="top"><img src="%s/img/activityfeed_allowed.png" /></td><td valign="top"><img src="%s/img/activityfeed_allowed_result.jpg" /></td></tr> </table>', 'wdfb' ), WDFB_PLUGIN_URL, WDFB_PLUGIN_URL );
-		$this->_create_widget_box( 'activityfeed', $description );
 	}
 
 	function create_widget_recent_comments_box() {

@@ -330,21 +330,9 @@ class Wdfb_AdminPages {
 			$form,
 			'create_widget_events_box'
 		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
-		add_settings_field( 'wdfb_widget_facepile', __( 'Use Facebook Facepile widget', 'wdfb' ), array(
-			$form,
-			'create_widget_facepile_box'
-		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
 		add_settings_field( 'wdfb_widget_likebox', __( 'Use Facebook Like Box widget', 'wdfb' ), array(
 			$form,
 			'create_widget_likebox_box'
-		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
-		add_settings_field( 'wdfb_widget_recommendations', __( 'Use Facebook Recommendations widget', 'wdfb' ), array(
-			$form,
-			'create_widget_recommendations_box'
-		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
-		add_settings_field( 'wdfb_widget_activityfeed', __( 'Use Facebook Activity Feed widget', 'wdfb' ), array(
-			$form,
-			'create_widget_activityfeed_box'
 		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
 		add_settings_field( 'wdfb_widget_recent_comments', __( 'Use Facebook Recent Comments widget', 'wdfb' ), array(
 			$form,
@@ -656,21 +644,9 @@ class Wdfb_AdminPages {
 			$form,
 			'create_widget_events_box'
 		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
-		add_settings_field( 'wdfb_widget_facepile', __( 'Use Facebook Facepile widget', 'wdfb' ), array(
-			$form,
-			'create_widget_facepile_box'
-		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
 		add_settings_field( 'wdfb_widget_likebox', __( 'Use Facebook Like Box widget', 'wdfb' ), array(
 			$form,
 			'create_widget_likebox_box'
-		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
-		add_settings_field( 'wdfb_widget_recommendations', __( 'Use Facebook Recommendations widget', 'wdfb' ), array(
-			$form,
-			'create_widget_recommendations_box'
-		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
-		add_settings_field( 'wdfb_widget_activityfeed', __( 'Use Facebook Activity Feed widget', 'wdfb' ), array(
-			$form,
-			'create_widget_activityfeed_box'
 		), 'wdfb_widget_options_page', 'wdfb_widget_pack' );
 		add_settings_field( 'wdfb_widget_recent_comments', __( 'Use Facebook Recent Comments widget', 'wdfb' ), array(
 			$form,

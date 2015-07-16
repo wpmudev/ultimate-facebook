@@ -6,6 +6,10 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.7.9.6 - 2015-04-24 - Umesh Kumar
+- Fixed: Permissions issue for new APP
+- Removed: Facebook Recommendation, FacePile, Activity Feed (Discontinued by Facebook)
+
 2.7.9.5 - 2015-04-24 - Umesh Kumar
 - Fixed: Settings for like and send button on home page and archive pages
 
