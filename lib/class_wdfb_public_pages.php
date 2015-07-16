@@ -42,7 +42,7 @@ class Wdfb_PublicPages {
 	}
 
 	function js_inject_fb_login_script() {
-		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
+		echo '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js?version='. WDFB_PLUGIN_VERSION . '"></script>';
 	}
 
 	function js_setup_ajaxurl() {
@@ -216,7 +216,7 @@ class Wdfb_PublicPages {
 		if ( ! apply_filters( 'wdfb-login-show_wordpress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
 			return false;
 		}
-		$content .= '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
+		$content .= '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js?version='. WDFB_PLUGIN_VERSION . '"></script>';
 		$content .= '<p class="wdfb_login_button">' .
 		            wdfb_get_fb_plugin_markup( 'login-button', array(
 			            'scope'        => Wdfb_Permissions::get_permissions(),

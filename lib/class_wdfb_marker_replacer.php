@@ -32,6 +32,26 @@ class Wdfb_MarkerReplacer {
 		return '[' . $this->buttons[ $b ] . ']';
 	}
 
+	function process_register_button_code( $atts, $content = '' ) {
+		if ( is_user_logged_in() ) {
+			return '';
+		}
+		if ( ! $this->data->get_option( 'wdfb_connect', 'allow_facebook_registration' ) ) {
+			return '';
+		}
+
+		$content = ! empty( $content ) ? $content : __( 'Register with Facebook', 'wdfb' );
+
+		$base_url = defined( 'BP_VERSION' )
+			? bp_get_signup_page()
+			: apply_filters( 'wdfb-registration-registration_page', site_url( '/wp-signup.php', 'login' ) );
+		$url      = add_query_arg( array(
+			'fb_registration_page' => 1
+		), $base_url );
+
+		return '<p><a class="wdfb_register_button" href="' . $url . '"><span>' . $content . '</span></a></p>';
+	}
+
 	function process_connect_code( $atts, $content = '' ) {
 		if ( ! $this->data->get_option( 'wdfb_connect', 'allow_facebook_registration' ) ) {
 			return $content;
@@ -61,7 +81,7 @@ class Wdfb_MarkerReplacer {
 		}
 		$html = '';
 		if ( ! class_exists( 'Wdfb_WidgetConnect' ) ) {
-			$html = '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js"></script>';
+			$html = '<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js?version=' . WDFB_PLUGIN_VERSION . '"></script>';
 		}
 		$user = wp_get_current_user();
 		if ( ! $user->ID ) {
@@ -137,7 +157,7 @@ class Wdfb_MarkerReplacer {
 		global $wp_current_filter;
 
 		//Archive page, blog page and latest posts as home page
-		$archive_page = ( ( is_home() || is_archive() ) && !is_front_page() ) ? true : false;
+		$archive_page = ( ( is_home() || is_archive() ) && ! is_front_page() ) ? true : false;
 
 		// Check if facebook button is allowed
 		$allow = $this->data->get_option( 'wdfb_button', 'allow_facebook_button' );
@@ -170,7 +190,7 @@ class Wdfb_MarkerReplacer {
 			}
 		}
 		//If we are on Blog or Archive page, and show on archive page is not checked, do not print like and send button
-		if( $archive_page ) {
+		if ( $archive_page ) {
 			if ( ! $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) ) {
 				return '';
 			}
@@ -216,7 +236,7 @@ class Wdfb_MarkerReplacer {
 				||
 				( is_front_page() && $this->data->get_option( 'wdfb_button', 'show_on_front_page' ) && $this->data->get_option( 'wdfb_button', 'shared_pages_use_xfbml' ) )
 				||
-				(  $archive_page && $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) && $this->data->get_option( 'wdfb_button', 'shared_pages_use_xfbml' ) )
+				( $archive_page && $this->data->get_option( 'wdfb_button', 'show_on_archive_page' ) && $this->data->get_option( 'wdfb_button', 'shared_pages_use_xfbml' ) )
 			) {
 				$use_xfbml = true;
 			}
@@ -355,7 +375,7 @@ class Wdfb_MarkerReplacer {
 		$atts['album_class'] = ! empty( $atts['album_class'] ) ? $atts['album_class'] . ' wdfb_album_photos' : 'wdfb_album_photos';
 		foreach ( $photos as $photo ) {
 			$photo_idx = isset( $photo['images'][ $display_idx ] ) ? $display_idx : count( $photo['images'] ) - 1;
-			$style     = $atts['crop'] ? "style='display:block;float:left;height:{$img_h}px;overflow:hidden'" : '';
+			$style     = $atts['crop'] ? "style='display:block;float:left;width: {$img_w}px;height:{$img_h}px;overflow:hidden'" : '';
 			$url       = $fb_open ? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id'] : $photo['images'][0]['source'];
 
 			//Check if photo description is allowed and photo does have a description
@@ -371,7 +391,7 @@ class Wdfb_MarkerReplacer {
 
 			$ret .= '<div class="wdfb-album-image-row" ' . $div_style . '>
 					<a href="' . $url . '" class="' . $atts['photo_class'] . '" rel="' . $atts['id'] . '-photo" ' . $style . ' title="' . $photo_desc_full . '">' .
-			        '<img src="' . $photo['images'][ $photo_idx ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $atts['crop'] ? "height='{$img_h}'" : '' ) . ' />';
+			        '<img src="' . $photo['images'][ $photo_idx ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $atts['crop'] ? "height='{$img_h}'" : '' ) . $style . ' />';
 			$ret .= '</a>';
 			$ret .= ( ! empty( $photo_desc ) && $atts['show_description'] ) ? '<p class="wdfb-photo-desc">' . $photo_desc . "</p>" : '<p></p>';
 			$ret .= "</div>";

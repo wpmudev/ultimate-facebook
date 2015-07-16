@@ -23,7 +23,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 	}
 
 	function css_load_styles() {
-		wp_enqueue_style( 'wdfb_album_editor', WDFB_PLUGIN_URL . '/css/wdfb_album_editor.css' );
+		wp_enqueue_style( 'wdfb_album_editor', WDFB_PLUGIN_URL . '/css/wdfb_album_editor.css', '', WDFB_PLUGIN_VERSION );
 	}
 
 	function js_load_editor() {
@@ -181,7 +181,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 				if ( $overall >= $limit ) {
 					break;
 				}
-				$style = $img_crop ? 'style="display:block;float:left;height:{$img_h}px;overflow:hidden"' : '';
+				$style = $img_crop ? "style='display: block;float: left;height: {$img_h}px; width: {$img_w}px;overflow: hidden;'" : '';
 				$url   = $fb_open ? WDFB_PROTOCOL . 'www.facebook.com/photo.php?fbid=' . $photo['id'] : $photo['images'][0]['source'];
 
 				//Check if photo description is allowed and photo does have a description
@@ -198,7 +198,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 				$class = apply_filters( 'wdfb_photo_link_thickbox', $class );
 				$image = "<div class='wdfb-album-image-row' style='width:{$img_w}px;'>" .
 				         '<a href="' . $url . '" rel="' . $album_id . '-photo" ' . $style . ' class="' . $class . '"  title="' . $photo_text_full . '" >' .
-				         '<img src="' . $photo['images'][ count( $photo['images'] ) - 1 ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && ! $img_crop ? "height='{$img_h}'" : '' ) . ' />';
+				         '<img src="' . $photo['images'][ count( $photo['images'] ) - 1 ]['source'] . '" ' . ( $img_w ? "width='{$img_w}'" : '' ) . ( $img_h && $img_crop ? "height='{$img_h}'" : '' ) . $style . ' />';
 				$image .= '</a>';
 				$image .= ( ! empty( $photo_text ) && $photo_desc ) ? '<p class="wdfb-photo-desc">' . $photo_text . "</p>" : '<p></p>';
 				$image .= '</div>';

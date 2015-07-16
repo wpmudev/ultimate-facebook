@@ -913,7 +913,7 @@ class Wdfb_AdminPages {
 	}
 
 	function css_load_styles() {
-		wp_enqueue_style( 'wdfb_album_editor', WDFB_PLUGIN_URL . '/css/wdfb_album_editor.css' );
+		wp_enqueue_style( 'wdfb_album_editor', WDFB_PLUGIN_URL . '/css/wdfb_album_editor.css', '', WDFB_PLUGIN_VERSION );
 	}
 
 	/**
@@ -1364,11 +1364,23 @@ class Wdfb_AdminPages {
 	function json_list_fb_albums() {
 		$privacy = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : '';
 		$albums  = $this->model->get_current_albums( $privacy );
-		$status  = $albums ? 1 : 0;
+		//Get Album Details
+		$albums        = ! empty( $albums['data'] ) ? $albums['data'] : '';
+		$album_details = array();
+		if ( ! empty( $albums ) ) {
+			foreach ( $albums as $album ) {
+				//Get album data
+				$album_data = $this->model->get_album_details( $album['id'] );
+				if ( $album_data ) {
+					$album_details[ $album['id'] ] = $album_data;
+				}
+			}
+		}
+		$status = $albums ? 1 : 0;
 		header( 'Content-type: application/json' );
 		echo json_encode( array(
 			'status' => $status,
-			'albums' => $albums,
+			'albums' => $album_details,
 		) );
 		exit();
 	}

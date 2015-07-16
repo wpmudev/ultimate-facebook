@@ -8,6 +8,8 @@ Change Log:
 
 2.7.9.6 - 2015-04-24 - Umesh Kumar
 - Fixed: Permissions issue for new APP
+- Fixed: Album selector not working
+- Fixed: Crop Image, if enabled in album widget/shortcode
 - Removed: Facebook Recommendation, FacePile, Activity Feed (Discontinued by Facebook)
 
 2.7.9.5 - 2015-04-24 - Umesh Kumar

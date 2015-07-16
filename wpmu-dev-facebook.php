@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.7.9.5
+Version: 2.7.9.6
 Text Domain: wdfb
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
@@ -12,8 +12,6 @@ WDP ID: 228
 Copyright 2009-2011 Incsub (http://incsub.com)
 Author - Ve Bailovity (Incsub)
 Contributor - Umesh Kumar
-Thanks:
-KFUK-KFUM for registration page templating function
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
@@ -33,6 +31,7 @@ define ( 'WDFB_PLUGIN_SELF_DIRNAME', basename( dirname( __FILE__ ) ), true );
 define ( 'WDFB_PROTOCOL', ( is_ssl() ? 'https://' : 'http://' ), true );
 define ( 'WDFB_PLUGIN_CORE_URL', plugins_url(), true );
 define ( 'WDFB_PLUGIN_CORE_BASENAME', plugin_basename( __FILE__ ), true );
+define ( 'WDFB_PLUGIN_VERSION', '2.0.9.6' );
 if ( ! defined( 'WDFB_MEMBERSHIP_INSTALLED' ) ) {
 	define ( 'WDFB_MEMBERSHIP_INSTALLED', ( defined( 'MEMBERSHIP_MASTER_ADMIN' ) && defined( 'MEMBERSHIP_SETACTIVATORAS_ADMIN' ) ), true );
 }

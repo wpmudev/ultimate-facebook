@@ -14,11 +14,11 @@ class Wdfb_WidgetConnect extends WP_Widget {
 	}
 
 	function css_load_styles () {
-		if (!is_admin()) wp_enqueue_style('wdfb_connect_widget_style', WDFB_PLUGIN_URL . '/css/wdfb_connect_widget.css');
+		if (!is_admin()) wp_enqueue_style('wdfb_connect_widget_style', WDFB_PLUGIN_URL . '/css/wdfb_connect_widget.css', '', WDFB_PLUGIN_VERSION);
 	}
 	function js_load_scripts () {
-		if (!is_admin()) wp_enqueue_script('wdfb_connect_widget', WDFB_PLUGIN_URL . '/js/wdfb_connect_widget.js');
-		if (!is_admin()) wp_enqueue_script('wdfb_facebook_login', WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js');
+		if (!is_admin()) wp_enqueue_script('wdfb_connect_widget', WDFB_PLUGIN_URL . '/js/wdfb_connect_widget.js', '', WDFB_PLUGIN_VERSION);
+		if (!is_admin()) wp_enqueue_script('wdfb_facebook_login', WDFB_PLUGIN_URL . '/js/wdfb_facebook_login.js', '', WDFB_PLUGIN_VERSION );
 	}
 
 	function form($instance) {

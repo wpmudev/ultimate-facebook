@@ -878,6 +878,42 @@ class Wdfb_Model {
 	}
 
 	/**
+	 * Fetches a public album details for the provided album id
+	 * @param $albm_id Album id
+	 *
+	 * @return bool|mixed|null Album Content
+	 */
+	function get_album_details( $albm_id, $cover = true ) {
+		if ( empty( $albm_id ) ) {
+			return null;
+		}
+		$fid   = $this->get_current_user_fb_id();
+		$token = $this->get_user_api_token( $fid );
+		try {
+			$res = $this->fb->api( '/' . $albm_id, array(
+				'access_token' => $token
+			) );
+		} catch ( Exception $e ) {
+			$this->log->error( __FUNCTION__, $e );
+
+			return false;
+		}
+		if( !empty( $res['cover_photo'] ) && $cover ) {
+			//Get cover
+			try {
+				$cover_url = $this->fb->api( '/' . $res['cover_photo'] , array(
+					'access_token' => $token
+				) );
+			} catch ( Exception $e ) {
+				$this->log->error( __FUNCTION__, $e );
+
+				return false;
+			}
+		}
+		$res['cover'] = $cover_url;
+		return $res;
+	}
+	/**
 	 * Fetch photos for a provided album ID
 	 *
 	 * @param $aid , Album ID
