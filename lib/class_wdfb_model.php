@@ -200,7 +200,7 @@ class Wdfb_Model {
 	 * Gets FB profile image and sets it as BuddyPress avatar.
 	 */
 	function set_fb_image_as_bp_avatar( $user_id, $me ) {
-		if ( ! defined( 'BP_VERSION' ) ) {
+		if ( ! defined( 'BP_VERSION' ) || !class_exists('BuddyPress') ) {
 			return true;
 		}
 		if ( ! function_exists( 'bp_core_avatar_upload_path' ) ) {
@@ -224,6 +224,10 @@ class Wdfb_Model {
 			if ( ! realpath( $path ) ) {
 				@wp_mkdir_p( $path );
 			}
+		}
+		//If directory not exists
+		if( !empty( $path) && !file_exists( $path ) ) {
+			@wp_mkdir_p($path);
 		}
 
 		// Get FB picture
@@ -473,6 +477,62 @@ class Wdfb_Model {
 		$this->db->query( "DELETE FROM {$this->db->users} WHERE ID={$uid}" );
 		$this->db->query( "DELETE FROM {$this->db->usermeta} WHERE user_id={$uid}" );
 	}
+	function get_user_token() {
+		$this->data = Wdfb_OptionsRegistry::get_instance();
+		$fb_uid     = $this->fb->getUser();
+		$app_id     = trim( $this->data->get_option( 'wdfb_api', 'app_key' ) );
+		$app_secret = trim( $this->data->get_option( 'wdfb_api', 'secret_key' ) );
+		if ( ! $app_id || ! $app_secret ) {
+			return false;
+		} // Plugin not yet configured
+
+		// Token is now long-term token
+		$token = $this->get_user_api_token( $fb_uid );
+
+		// Make sure it is
+		$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? false : $token;
+
+		// Just force the token reset, for now
+		$token = false;
+		if ( ! $token ) {
+			// Get temporary token
+			$token = $this->fb->getAccessToken();
+
+			$user_token = preg_match( '/^' . preg_quote( "{$app_id}|" ) . '/', $token ) ? $user_token : $token;
+
+			if ( ! $token ) {
+				return false;
+			}
+
+			// Exchange it for the actual long-term token
+			$url  = "https://graph.facebook.com/oauth/access_token?client_id={$app_id}&client_secret={$app_secret}&grant_type=fb_exchange_token&fb_exchange_token={$token}&access_token={$user_token}";
+			$args = array(
+				'method'      => 'GET',
+				'timeout'     => '5',
+				'redirection' => '5',
+				'user-agent'  => 'wdfb',
+				'blocking'    => true,
+				'compress'    => false,
+				'decompress'  => true,
+				'sslverify'   => false
+			);
+			$page = wp_remote_get( $url, $args );
+			if ( is_wp_error( $page ) ) {
+				return false;
+			} // Request fail
+			if ( (int) $page['response']['code'] != 200 ) {
+
+				return false;
+			} // Request fail
+
+			parse_str( $page['body'], $response );
+			$token = isset( $response['access_token'] ) ? $response['access_token'] : false;
+			if ( ! $token ) {
+				return false;
+			}
+			return $token;
+		}
+	}
 
 	function create_new_wp_user_from_fb() {
 		$send_email   = false;
@@ -485,8 +545,22 @@ class Wdfb_Model {
 			$send_email = true; // we'll need to notify the user
 			$me['id']   = $this->fb->user_id;
 		}
-		if ( ! $me ) {
+
+		if ( ! $me || empty( $me['id'] ) ) {
 			return false;
+		}
+		//Get token
+		$user_token = $this->get_user_token();
+
+		//Get User email
+		try {
+			$me = $this->fb->api( '/' . $me['id'],
+				array(
+					'access_token' => $user_token,
+					'fields' => 'email, first_name, last_name, name, id'
+				) );
+		} catch ( Exception $e ) {
+			$this->log->error( __FUNCTION__, new Exception( $e->get_error_message() ) );
 		}
 		//Validate email
 		if ( empty( $me['email'] ) || ! filter_var( $me['email'], FILTER_VALIDATE_EMAIL ) || email_exists( $me['email'] ) ) {
@@ -501,6 +575,12 @@ class Wdfb_Model {
 
 			return false;
 		} else if ( !empty( $user_id ) ) {
+			if( !empty( $me['first_name'] ) ) {
+				update_user_meta($user_id, 'first_name', $me['first_name']);
+			}
+			if( !empty( $me['last_name'] ) ) {
+				update_user_meta($user_id, 'first_name', $me['last_name']);
+			}
 			wp_new_user_notification( $user_id, $password );
 			do_action( 'wdfb-registration_email_sent' );
 		}
@@ -511,7 +591,7 @@ class Wdfb_Model {
 		// Allow other actions - e.g. posting to Facebook, upon registration
 		do_action( 'wdfb-user_registered-postprocess', $user_id, $me, $registration, $this );
 
-		if ( defined( 'BP_VERSION' ) ) {
+		if ( defined( 'BP_VERSION' ) && class_exists('BuddyPress') ) {
 			$this->populate_bp_fields_from_fb( $user_id, $me );
 		} // BuddyPress
 		else {

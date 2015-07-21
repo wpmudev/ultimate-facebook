@@ -74,7 +74,6 @@ class Wdfb_WidgetConnect extends WP_Widget {
 		$avatar_size = $avatar_size ? $avatar_size : 32;
 
 		$opts = Wdfb_OptionsRegistry::get_instance();
-		$register = ($register && get_option('users_can_register')) ? $register : false;
 
 		if ($opts->get_option('wdfb_connect', 'allow_facebook_registration')) {
 			echo $before_widget;
@@ -82,55 +81,19 @@ class Wdfb_WidgetConnect extends WP_Widget {
 
 			$user = wp_get_current_user();
 
-			if (!$user->ID) {
-				if (!$register) { // Do the simple thing first
-					echo '<p class="wdfb_login_button">' .
-						wdfb_get_fb_plugin_markup('login-button', array(
-							'scope' => Wdfb_Permissions::get_permissions(),
-							'redirect-url' => wdfb_get_login_redirect(),
-							'content' => __("Login with Facebook", 'wdfb'),
-						)) .
-					'</p>';
-				} else {
-					$fields = wdfb_get_registration_fields();
-					$force = ($opts->get_option('wdfb_connect', 'force_facebook_registration') && $opts->get_option('wdfb_connect', 'require_facebook_account'))
-						? 'fb_only=true&' : ''
-					;
-					echo '<div class="wdfb_connect_widget_container">';
-					echo '	<div class="wdfb_connect_widget_tabs"><ul class="wdfb_connect_widget_action_links">';
-					echo '		<li><a href="#wdfb_connect_widget_login"><span>' . __("Login", 'wdfb') . '</span></a></li>';
-					echo '		<li><a href="#wdfb_connect_widget_register"><span>' . __("Register", 'wdfb') . '</span></a></li>';
-					echo '	</ul></div>';
-					echo '	<div style="clear:both"></div>';
-					echo '	<div class="wdfb_connect_target" id="wdfb_connect_widget_login">';
-					echo '		<p class="wdfb_login_button">' .
-						wdfb_get_fb_plugin_markup('login-button', array(
-							'scope' => Wdfb_Permissions::get_permissions(),
-							'redirect-url' => wdfb_get_login_redirect(),
-							'content' => __("Login with Facebook", 'wdfb'),
-						)) .
-					'</p>';
-					echo '	</div>';
-					echo '	<div class="wdfb_connect_target" id="wdfb_connect_widget_register">';
-					echo '	<iframe src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/registration.php?' . $force .
-						        'client_id=' . trim($opts->get_option('wdfb_api', 'app_key')) . '&' .
-						        'redirect_uri=' . urlencode(site_url('/wp-signup.php?action=register&fb_register=1')) . '&' .
-						        'fields=' . $fields . '&width=' . $width . '&locale=' . wdfb_get_locale() . '"
-						        scrolling="auto"
-						        frameborder="no"
-						        style="border:none; overflow:hidden; width:' . $width . 'px;"
-						        allowTransparency="true"
-						        width="' . $width . '"
-						        height="650">
-							</iframe>';
-					echo '	</div>';
-					echo '</div>';
-				}
+			if ( ! $user->ID ) {
+				echo '<p class="wdfb_login_button">' .
+				     wdfb_get_fb_plugin_markup( 'login-button', array(
+					     'scope'        => Wdfb_Permissions::get_permissions(),
+					     'redirect-url' => wdfb_get_login_redirect(),
+					     'content'      => __( "Login with Facebook", 'wdfb' ),
+				     ) ) .
+				     '</p>';
 			} else {
 				//$logout = site_url('wp-login.php?action=logout&redirect_to=' . rawurlencode(home_url()));
-				$logout = wp_logout_url(home_url()); // Props jmoore2026
-				echo get_avatar($user->ID, $avatar_size);
-				echo "<p><a href='{$logout}'>" . __('Log out', 'wdfb') . "</a></p>";
+				$logout = wp_logout_url( home_url() ); // Props jmoore2026
+				echo get_avatar( $user->ID, $avatar_size );
+				echo "<p><a href='{$logout}'>" . __( 'Log out', 'wdfb' ) . "</a></p>";
 			}
 
 			echo $after_widget;

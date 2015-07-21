@@ -348,12 +348,7 @@ function wdfb_get_fb_plugin_markup_html5( $type, $args ) {
 			break;
 
 		case "login-button":
-			$markup = '<div class="fb-login-button" data-scope="' .
-			          $args['scope'] .
-			          '" data-redirect-url="' .
-			          $args['redirect-url'] . '"  data-onlogin="_wdfb_notifyAndRedirect();">' .
-			          $args['content'] .
-			          '</div>';
+			$markup = '<div class="fb-login-button" data-scope="' . $args['scope'] . '" data-redirect-url="' . $args['redirect-url'] . '"  data-onlogin="_wdfb_notifyAndRedirect();">' . $args['content'] . '</div>';
 			break;
 
 		case "comments":
@@ -405,9 +400,7 @@ function wdfb_get_fb_plugin_markup( $type, $args, $forced_format = false ) {
 		$is_html5 = defined( 'WDFB_USE_HTML5_TAGS' ) && WDFB_USE_HTML5_TAGS;
 	}
 
-	return apply_filters( 'wdfb-tags-use_html5', $is_html5 )
-		? wdfb_get_fb_plugin_markup_html5( $type, $args )
-		: wdfb_get_fb_plugin_markup_xfbml( $type, $args );
+	return apply_filters( 'wdfb-tags-use_html5', $is_html5 ) ? wdfb_get_fb_plugin_markup_html5( $type, $args ) : wdfb_get_fb_plugin_markup_xfbml( $type, $args );
 }
 
 /**

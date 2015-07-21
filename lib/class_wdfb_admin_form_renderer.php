@@ -276,11 +276,6 @@ class Wdfb_AdminFormRenderer {
 		echo '<div><small>' . sprintf( __( 'This is what will happen upon login: my users will be redirected to %s.', 'wdfb' ), $url ) . '</small></div>';
 	}
 
-	function create_captcha_box() {
-		$opt = $this->_get_option( 'wdfb_connect' );
-		echo $this->_create_checkbox( 'connect', 'no_captcha', @$opt['no_captcha'] );
-	}
-
 	function create_autologin_box() {
 		$opt = $this->_get_option( 'wdfb_connect' );
 		echo $this->_create_checkbox( 'connect', 'autologin_after_registration', @$opt['autologin_after_registration'] );
@@ -375,7 +370,7 @@ class Wdfb_AdminFormRenderer {
 			echo '<label>' . ucfirst( $type->labels->name ) . '</label><br />';
 		}
 		echo '<div id="wdfb-like_button-special_cases">';
-		if ( defined( 'BP_VERSION' ) ) {
+		if ( defined( 'BP_VERSION' ) && class_exists('BuddyPress') ) {
 			echo '<div id="wdfb-like_button-bp_activity-anchor">';
 			echo '<label for="not_in_post_types-_buddypress_activity">' . __( 'Allow &quot;Like&quot; button for BuddyPress Activities', 'wdfb' ) . '</label>: ';
 			echo $this->_create_subcheckbox( 'button', 'not_in_post_types', '_buddypress_activity', @in_array( '_buddypress_activity', $opt['not_in_post_types'] ) );
@@ -809,7 +804,7 @@ class Wdfb_AdminFormRenderer {
 		}
 
 		// BP Activities mappings
-		if ( defined( 'BP_VERSION' ) ) {
+		if ( defined( 'BP_VERSION' ) && class_exists('BuddyPress') ) {
 			$pname     = 'bp_activity';
 			$pval      = __( 'BuddyPress Activity update', 'wdfb' );
 			$fb_action = @$opts["type_{$pname}_fb_type"];

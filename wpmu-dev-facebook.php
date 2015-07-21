@@ -31,7 +31,7 @@ define ( 'WDFB_PLUGIN_SELF_DIRNAME', basename( dirname( __FILE__ ) ), true );
 define ( 'WDFB_PROTOCOL', ( is_ssl() ? 'https://' : 'http://' ), true );
 define ( 'WDFB_PLUGIN_CORE_URL', plugins_url(), true );
 define ( 'WDFB_PLUGIN_CORE_BASENAME', plugin_basename( __FILE__ ), true );
-define ( 'WDFB_PLUGIN_VERSION', '2.0.9.6' );
+define ( 'WDFB_PLUGIN_VERSION', '2.7.9.6' );
 if ( ! defined( 'WDFB_MEMBERSHIP_INSTALLED' ) ) {
 	define ( 'WDFB_MEMBERSHIP_INSTALLED', ( defined( 'MEMBERSHIP_MASTER_ADMIN' ) && defined( 'MEMBERSHIP_SETACTIVATORAS_ADMIN' ) ), true );
 }

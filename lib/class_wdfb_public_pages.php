@@ -203,13 +203,15 @@ class Wdfb_PublicPages {
 		if ( ! apply_filters( 'wdfb-login-show_wordpress_login_button', apply_filters( 'wdfb-login-show_login_button', true ) ) ) {
 			return false;
 		}
-		echo '<p class="wdfb_login_button">' .
-		     wdfb_get_fb_plugin_markup( 'login-button', array(
-			     'scope'        => Wdfb_Permissions::get_permissions(),
-			     'redirect-url' => wdfb_get_login_redirect( true ),
-			     'content'      => __( "Login with Facebook", 'wdfb' ),
-		     ) ) .
-		     '</p>';
+		if( is_user_logged_in() ) {
+			return;
+		}
+		$args = array(
+			'scope'        => Wdfb_Permissions::get_permissions(),
+			'redirect-url' => wdfb_get_login_redirect( true ),
+			'content'      => __( "Login with Facebook", 'wdfb' ),
+		);
+		echo '<p class="wdfb_login_button">' . wdfb_get_fb_plugin_markup( 'login-button', $args ) . '</p>';
 	}
 
 	function inject_fb_login_return( $content ) {
@@ -730,14 +732,18 @@ EOBpFormInjection;
 				remove_action( 'bp_init', 'bp_core_wpsignup_redirect' ); // Die already, will you? Pl0x?
 			}
 
+			if ( is_multisite() ) {
+				add_action( 'signup_hidden_fields', array( $this, 'inject_fb_login' ) );
+			}else{
+				add_action('register_form', array( $this, 'inject_fb_login' ) );
+			}
 			// Cole's changeset
 			if ( WDFB_MEMBERSHIP_INSTALLED ) {
 				add_action( 'signup_extra_fields', array( $this, 'inject_fb_login' ) );
 				add_action( 'membership_popover_extend_login_form', array( $this, 'inject_fb_login' ) );
-			}
-
-			if ( ! is_multisite() && isset( $_GET['action'] ) && 'register' == $_GET['action'] ) {
-				add_action( 'login_head', create_function( '', 'echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"' . WDFB_PLUGIN_URL . '/css/wdfb.css\" />";' ) );
+			}else {
+				// BuddyPress
+				add_action( 'bp_before_account_details_fields', array( $this, 'inject_fb_login' ) ); // BuddyPress
 			}
 
 			// Jack the signup

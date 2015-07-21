@@ -1,35 +1,3 @@
-a.wdfb_register_button, a.wdfb_register_button:hover, a.wdfb_register_button:active, a.wdfb_register_button:visited {
-	text-decoration: none;
-	color: #FFF;
-
-	background: url("//static.ak.fbcdn.net/rsrc.php/v2/yx/r/j_i0CTUUUEe.png") no-repeat scroll 0 0 #29447E;
-    cursor: pointer;
-    display: inline-block;
-    outline: medium none;
-    padding: 0 0 0 1px;
-    margin-left: 1em;
-}
-
-a.wdfb_register_button span {
-	display: block;
-	height: 31px;
-	line-height: 31px !important;
-	font-size: 14px;
-	font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
-	font-weight: bold;
-	text-align: center;
-
-	background: #5F78AB;
-    border-bottom: 1px solid #1A356E;
-    border-top: 1px solid #879AC0;
-    color: #FFFFFF;
-    display: block;
-    font-family: "lucida grande",tahoma,verdana,arial,sans-serif;
-    font-weight: bold;
-    margin: 1px 1px 0 38px;
-    padding: 2px 6px 3px 12px;
-    text-shadow: none;
-}
 .wdfb-album-image-row a {
     display: inline-block;
 }
