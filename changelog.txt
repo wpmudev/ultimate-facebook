@@ -6,6 +6,9 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.7.9.7 - 2015-07-22 - Umesh Kumar
+- New: Number of User accounts fetched from Facebook, Added filter `wdfb_user_accounts_limit` to specify a custom limit
+
 2.7.9.6 - 2015-07-22 - Umesh Kumar
 - Fixed: Permissions issue for new APP
 - Fixed: Album selector not working

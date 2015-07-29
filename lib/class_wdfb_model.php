@@ -776,36 +776,34 @@ class Wdfb_Model {
 		}
 
 		$token = $token ? $token : $this->get_user_api_token( $fid );
-		/*
-		$token = $token ? "?access_token={$token}" : '';
+		$limit = apply_filters( 'wdfb_user_accounts_limit', 200);
 		try {
 			//$ret = $this->fb->api('/' . $fid . '/accounts/');
-			$ret = $this->fb->api('/' . $fid . '/accounts/' . $token);
+			$ret = $this->fb->api( '/' . $fid . '/accounts/', array( 'access_token' => $token, 'limit' => $limit ) );
 		} catch (Exception $e) {
-			return false;
+			$url  = "https://graph.facebook.com/{$fid}/accounts?access_token={$token}&limit={$limit}";
+			$page = wp_remote_get( $url, array(
+				'method'      => 'GET',
+				'timeout'     => '5',
+				'redirection' => '5',
+				'user-agent'  => 'wdfb',
+				'blocking'    => true,
+				'compress'    => false,
+				'decompress'  => true,
+				'sslverify'   => false
+			) );
+
+			if ( is_wp_error( $page ) ) {
+				return false;
+			} // Request fail
+			if ( (int) $page['response']['code'] != 200 ) {
+				return false;
+			} // Request fail
+
+			return (array) @json_decode( $page['body'] );
 		}
+		//In the end, if nothing
 		return $ret;
-		*/
-		$url  = "https://graph.facebook.com/{$fid}/accounts?access_token={$token}";
-		$page = wp_remote_get( $url, array(
-			'method'      => 'GET',
-			'timeout'     => '5',
-			'redirection' => '5',
-			'user-agent'  => 'wdfb',
-			'blocking'    => true,
-			'compress'    => false,
-			'decompress'  => true,
-			'sslverify'   => false
-		) );
-
-		if ( is_wp_error( $page ) ) {
-			return false;
-		} // Request fail
-		if ( (int) $page['response']['code'] != 200 ) {
-			return false;
-		} // Request fail
-
-		return (array) @json_decode( $page['body'] );
 	}
 
 	function post_on_facebook( $type, $fid, $post, $as_page = false ) {
