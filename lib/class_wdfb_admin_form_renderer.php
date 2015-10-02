@@ -955,7 +955,9 @@ class Wdfb_AdminFormRenderer {
 			$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
 			*/
 
-			if ( $fb_accounts && current_user_can('manage_options') ) {
+			$current_user_can_edit = ( $post->post_type === 'page' ) ? current_user_can('edit_pages') : current_user_can('edit_posts');
+
+			if ( $fb_accounts && $current_user_can_edit ) {
 				echo '<div>';
 				echo '	<label for="wdfb_metabox_publishing_account">' . __( 'Publish to wall of this Facebook account:', 'wdfb' ) . '</label>';
 				echo '	<select name="wdfb_metabox_publishing_account" id="wdfb_metabox_publishing_account">';

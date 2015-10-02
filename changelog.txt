@@ -6,6 +6,10 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.7.9.7 - 2015-10-02 - Julien Zerbib
+- Added: User that can edit a post / page can chose the FB account they are publishing in if `Allow autoposting new posts to Facebook` is set to false
+- Added: Publishing Title, Account and Publish are saved when the post has a draft status
+
 2.7.9.6 - 2015-07-22 - Umesh Kumar
 - Fixed: Permissions issue for new APP
 - Fixed: Album selector not working
