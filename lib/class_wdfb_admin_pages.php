@@ -1159,7 +1159,7 @@ class Wdfb_AdminPages {
 
 		$post = get_post( $post_id );
 		if ( 'publish' != $post->post_status ) {
-			if ( 'future' == $post->post_status &&
+			if ( ( 'future' == $post->post_status || 'draft' == $post->post_status ) &&
 			     ( ! empty( $_POST['wdfb_metabox_publishing_publish'] ) || ! empty( $_POST['wdfb_metabox_publishing_title'] ) || ! empty( $_POST['wdfb_metabox_publishing_account'] ) )
 			) {
 				update_post_meta( $post_id, 'wdfb_scheduled_publish', array(
