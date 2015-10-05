@@ -6,7 +6,7 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-2.8 - 2015-10-02 - Julien Zerbib
+2.8.1 - 2015-10-02 - Julien Zerbib
 - Added: Editor can chose the FB account he is publishing in
 - Added: Publishing Title, Account and Publish are saved when the post has a draft status
 
