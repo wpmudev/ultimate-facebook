@@ -6,7 +6,7 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-2.7.10 - 2015-10-02 - Julien Zerbib
+2.8 - 2015-10-02 - Julien Zerbib
 - Added: User that can edit a post / page can chose the FB account he is publishing in if `Allow autoposting new posts to Facebook` is set to false
 - Added: Publishing Title, Account and Publish are saved when the post has a draft status
 
