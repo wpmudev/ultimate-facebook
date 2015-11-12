@@ -64,6 +64,8 @@ var _wdfb_notifyAndRedirect;
 						});
 					}
 				} else {
+					console.log('no cookie match the patern "fbsr_"');
+					console.log(document.cookie.split(';'));
 					setTimeout(do_redirect_when_cookie_is_set, 200);
 				}
 			}
