@@ -611,7 +611,7 @@ EOBpFormInjection;
 		} // Already posted and no manual override, nothing to do
 
 		$post_type    = $post->post_type;
-		$post_title   = wp_strip_all_tags( html_entity_decode( $post->post_title );
+		$post_title   = wp_strip_all_tags( html_entity_decode( $post->post_title ) );
 		$post_content = wp_strip_all_tags( strip_shortcodes( $post->post_content ) );
 
 		$post_as = $this->data->get_option( 'wdfb_autopost', "type_{$post_type}_fb_type" );
