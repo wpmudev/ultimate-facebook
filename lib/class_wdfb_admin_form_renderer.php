@@ -65,6 +65,9 @@ class Wdfb_AdminFormRenderer {
 		printf( __(
 			'<p>Some parts of the plugin will require you to grant them extended permissions on Facebook. If you haven\'t done so already, it is highly recommended you do so now:</p>',
 			'wdfb' ) );
+		$current_user = wp_get_current_user();
+		$opts         = $this->_get_option( 'wdfb_grant' );
+		$primary_user = ! empty( $opts['primary_user'] ) ? (int) $opts['primary_user'] : (int) $current_user->ID;
 		$model        = new Wdfb_Model;
 		$remap_string = __( 'Use a new Facebook user for setup', 'wdfb' );
 		echo '<div class="wdfb_perms_root" style="display:none">' .
@@ -75,6 +78,7 @@ class Wdfb_AdminFormRenderer {
 		     '<a href="#" class="wdfb_grant_perms" data-wdfb_locale="' . wdfb_get_locale() . '" data-wdfb_perms="' . esc_attr( Wdfb_Permissions::get_permissions() ) . '">' . __( 'Grant extended permissions', 'wdfb' ) . '</a>' .
 		     '</p>' .
 		     '<p>' .
+		     '<input type="hidden" name="wdfb_grant[primary_user]" value="' . $primary_user . '" />' .
 		     '<input type="button" class="button" id="wdfb-refresh_access_token" data-wdfb_perms="' . esc_attr( Wdfb_Permissions::get_permissions() ) . '" value="' . esc_attr( __( 'Reset auth tokens', 'wdfb' ) ) . '" />' .
 		     '&nbsp;' .
 		     '<input type="button" class="button" id="wdfb-remap_user" data-wdfb_perms="' . esc_attr( Wdfb_Permissions::get_permissions() ) . '" value="' . esc_attr( $remap_string ) . '" />' .
@@ -948,12 +952,19 @@ class Wdfb_AdminFormRenderer {
 			     '</div>' .
 			     '</div>';
 
-			$user        = wp_get_current_user();
-			$fb_accounts = $this->_get_api_accounts( $user->ID );
-			/*
-			$fb_accounts = get_user_meta($user->ID, 'wdfb_api_accounts', true);
-			$fb_accounts = isset($fb_accounts['auth_accounts']) ? $fb_accounts['auth_accounts'] : array();
-			*/
+			// Try to find primary user that set up the permissions
+			// /!\ By default the primary user will be the first administrator of the blog if `wdfb_grant['primary_user']` has not been set up yet 
+			$users = get_users( array(
+				'role'         => 'administrator',
+				'meta_key'     => 'wdfb_api_accounts',
+				'meta_value'   => '',
+				'meta_compare' => '!=',
+				'orderby'      => 'ID',
+				'order'        => 'ASC',
+			) );
+			$opts         = $this->_get_option( 'wdfb_grant' );
+			$primary_user = ! empty( $opts['primary_user'] ) ? (int) $opts['primary_user'] : (int) $users[0]->ID;
+			$fb_accounts  = $this->_get_api_accounts( $primary_user );
 
 			$current_user_can_edit = ( $post->post_type === 'page' ) ? current_user_can('edit_pages') : current_user_can('edit_posts');
 
