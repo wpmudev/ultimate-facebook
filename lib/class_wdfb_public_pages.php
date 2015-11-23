@@ -711,7 +711,7 @@ EOBpFormInjection;
 			add_action( 'login_head', array( $this, 'js_inject_fb_login_script' ) );
 			add_action( 'login_head', array( $this, 'js_setup_ajaxurl' ) );
 			add_action( 'login_form', array( $this, 'inject_fb_login' ) );
-			add_filter( 'login_form_bottom', array( $this, 'inject_fb_login_return' ) );
+			// add_filter( 'login_form_bottom', array( $this, 'inject_fb_login_return' ) );
 			add_action( 'login_footer', array( $this, 'inject_fb_root_div' ) );
 
 			add_action( 'login_footer', array(
