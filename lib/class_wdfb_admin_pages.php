@@ -1186,7 +1186,7 @@ class Wdfb_AdminPages {
 		} // Previously published, we don't want to override
 
 		$post_type  = $post->post_type;
-		$post_title = @$_POST['wdfb_metabox_publishing_title'] ? stripslashes( $_POST['wdfb_metabox_publishing_title'] ) : $post->post_title;
+		$post_title = @$_POST['wdfb_metabox_publishing_title'] ? stripslashes( $_POST['wdfb_metabox_publishing_title'] ) : wp_strip_all_tags( html_entity_decode( $post->post_title ) );
 
 		// If publishing semi-auto, always use wall
 		$post_as = @$_POST['wdfb_metabox_publishing_publish'] ? 'feed' : $this->data->get_option( 'wdfb_autopost', "type_{$post_type}_fb_type" );
@@ -1223,7 +1223,7 @@ class Wdfb_AdminPages {
 					'caption'     => $url,
 					'message'     => $post_title,
 					'link'        => $permalink,
-					'name'        => $post->post_title,
+					'name'        => wp_strip_all_tags( html_entity_decode( $post->post_title ) ),
 					'description' => $description
 				);
 				if ( $picture ) {
