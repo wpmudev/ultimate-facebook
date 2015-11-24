@@ -6,6 +6,11 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.8.1.1 - 2015-11-24 - Julien Zerbib
+- Fixed: The auto posted post title contained HTML tags
+- Added: Primary User so FB auto post accounts come from him only
+- Removed: 'login_form_bottom' filter that was causing a duplicate FB login button
+
 2.8.1 - 2015-10-02 - Julien Zerbib
 - Added: Editor can chose the FB account he is publishing in
 - Added: Publishing Title, Account and Publish are saved when the post has a draft status
