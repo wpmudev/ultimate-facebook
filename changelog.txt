@@ -6,6 +6,9 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.8.1.2 - 2015-12-17 - Julien Zerbib
+- Fixed: Import comments for new FB Graph API
+
 2.8.1.1 - 2015-11-24 - Julien Zerbib
 - Fixed: The auto posted post title contained HTML tags
 - Added: Primary User so FB auto post accounts come from him only
