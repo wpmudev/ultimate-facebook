@@ -97,7 +97,7 @@ class Wdfb_CommentsImporter {
 					continue;
 				}
 			}
-			$feed = $this->model->get_feed_for( $fb_uid, $limit );
+			$feed = $this->model->get_feed_for( $fb_uid, $limit, 'link,comments' );
 			//if (!isset($feed['data'])) return false; // Nothing to import
 			if ( ! isset( $feed['data'] ) ) {
 				continue;
