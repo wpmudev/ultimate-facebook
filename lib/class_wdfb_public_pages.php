@@ -718,12 +718,13 @@ EOBpFormInjection;
 				$this,
 				'inject_fb_init_js'
 			), 999 ); // Bind very late, so footer script can execute.
+			
+			add_action( 'wp_head', array( $this, 'js_inject_fb_login_script' ) );
 
 			// BuddyPress
 			if ( defined( 'BP_VERSION' ) ) {
 				add_action( 'bp_before_profile_edit_content', 'wdfb_dashboard_profile_widget' );
 				add_action( 'bp_before_sidebar_login_form', array( $this, 'inject_fb_login_for_bp' ) );
-				add_action( 'wp_head', array( $this, 'js_inject_fb_login_script' ) );
 
 				// Have to kill BuddyPress redirection, or our registration doesn't work
 				remove_action( 'wp', 'bp_core_wpsignup_redirect' );
