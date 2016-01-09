@@ -11,15 +11,18 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 	}
 
 	function form($instance) {
-		$title              = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
-		$url                = ! empty( $instance['url'] ) ? esc_attr( $instance['url'] ) : '';
-		$width              = ! empty( $instance['width'] ) ? esc_attr( $instance['width'] ) : '';
-		$height             = ! empty( $instance['height'] ) ? esc_attr( $instance['height'] ) : '';
-		$show_header        = ! empty( $instance['show_header'] ) ? esc_attr( $instance['show_header'] ) : '';
-		$show_faces         = ! empty( $instance['show_faces'] ) ? esc_attr( $instance['show_faces'] ) : '';
-		$show_stream        = ! empty( $instance['show_stream'] ) ? esc_attr( $instance['show_stream'] ) : '';
-		$color_scheme       = ! empty( $instance['color_scheme'] ) ? esc_attr( $instance['color_scheme'] ) : '';
-		$hide_if_logged_out = !empty( $instance['hide_if_logged_out'] ) ? esc_attr($instance['hide_if_logged_out']) : '';
+		$title                 = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+		$url                   = ! empty( $instance['url'] ) ? esc_attr( $instance['url'] ) : '';
+		$width                 = ! empty( $instance['width'] ) ? esc_attr( $instance['width'] ) : '';
+		$height                = ! empty( $instance['height'] ) ? esc_attr( $instance['height'] ) : '';
+		$show_timeline         = ! empty( $instance['show_timeline'] ) ? esc_attr( $instance['show_timeline'] ) : '';
+		$show_events           = ! empty( $instance['show_events'] ) ? esc_attr( $instance['show_events'] ) : '';
+		$show_messages         = ! empty( $instance['show_messages'] ) ? esc_attr( $instance['show_messages'] ) : '';
+		$hide_cover            = ! empty( $instance['hide_cover'] ) ? esc_attr( $instance['hide_cover'] ) : '';
+		$show_faces            = ! empty( $instance['show_faces'] ) ? esc_attr( $instance['show_faces'] ) : '';
+		$small_header          = ! empty( $instance['small_header'] ) ? esc_attr( $instance['small_header'] ) : '';
+		$adapt_container_width = ! empty( $instance['adapt_container_width'] ) ? esc_attr( $instance['adapt_container_width'] ) : '';
+		$hide_if_logged_out    = ! empty( $instance['hide_if_logged_out'] ) ? esc_attr($instance['hide_if_logged_out']) : '';
 
 		// Set defaults
 		// ...
@@ -45,8 +48,23 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$html .= '</p>';
 
 		$html .= '<p>';
-		$html .= '<label for="' . $this->get_field_id('show_header') . '">' . __('Show header:', 'wdfb') . '</label> ';
-		$html .= '<input type="checkbox" name="' . $this->get_field_name('show_header') . '" id="' . $this->get_field_id('show_header') . '" value="1" ' . ($show_header ? 'checked="checked"' : '') . ' />';
+		$html .= '<label for="' . $this->get_field_id('show_timeline') . '">' . __('Show Timeline tab:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('show_timeline') . '" id="' . $this->get_field_id('show_timeline') . '" value="1" ' . ($show_timeline ? 'checked="checked"' : '') . ' />';
+		$html .= '</p>';
+
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('show_events') . '">' . __('Show Events tab:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('show_events') . '" id="' . $this->get_field_id('show_events') . '" value="1" ' . ($show_events ? 'checked="checked"' : '') . ' />';
+		$html .= '</p>';
+
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('show_messages') . '">' . __('Show Messages tab:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('show_messages') . '" id="' . $this->get_field_id('show_messages') . '" value="1" ' . ($show_messages ? 'checked="checked"' : '') . ' />';
+		$html .= '</p>';
+
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('hide_cover') . '">' . __('Hide Cover:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('hide_cover') . '" id="' . $this->get_field_id('hide_cover') . '" value="1" ' . ($hide_cover ? 'checked="checked"' : '') . ' />';
 		$html .= '</p>';
 
 		$html .= '<p>';
@@ -55,8 +73,13 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$html .= '</p>';
 
 		$html .= '<p>';
-		$html .= '<label for="' . $this->get_field_id('show_stream') . '">' . __('Show stream:', 'wdfb') . '</label> ';
-		$html .= '<input type="checkbox" name="' . $this->get_field_name('show_stream') . '" id="' . $this->get_field_id('show_stream') . '" value="1" ' . ($show_stream ? 'checked="checked"' : '') . ' />';
+		$html .= '<label for="' . $this->get_field_id('small_header') . '">' . __('Small Header:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('small_header') . '" id="' . $this->get_field_id('small_header') . '" value="1" ' . ($small_header ? 'checked="checked"' : '') . ' />';
+		$html .= '</p>';
+
+		$html .= '<p>';
+		$html .= '<label for="' . $this->get_field_id('adapt_container_width') . '">' . __('Adapt container width:', 'wdfb') . '</label> ';
+		$html .= '<input type="checkbox" name="' . $this->get_field_name('adapt_container_width') . '" id="' . $this->get_field_id('adapt_container_width') . '" value="1" ' . ($adapt_container_width ? 'checked="checked"' : '') . ' />';
 		$html .= '</p>';
 	
 		$html .= '<p>';
@@ -64,50 +87,59 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		$html .= '<input type="checkbox" name="' . $this->get_field_name('hide_if_logged_out') . '" id="' . $this->get_field_id('hide_if_logged_out') . '" value="1" ' . ($hide_if_logged_out ? 'checked="checked"' : '') . ' />';
 		$html .= '</p>';
 
-		$html .= '<p>';
-		$html .= '<label for="' . $this->get_field_id('color_scheme') . '">' . __('Color scheme:', 'wdfb') . '</label> ';
-		$html .= '<select name="' . $this->get_field_name('color_scheme') . '" id="' . $this->get_field_id('color_scheme') . '">';
-		$html .= '<option value="light" ' . (('light' == $color_scheme) ? 'selected="selected"' : '') . '>Light</option>';
-		$html .= '<option value="dark" ' . (('dark' == $color_scheme) ? 'selected="selected"' : '') . '>Dark</option>';
-		$html .= '</select>';
-		$html .= '</p>';
-
 		echo $html;
 	}
 
 	function update($new_instance, $old_instance) {
 		$instance = $old_instance;
-		$instance['title'] = strip_tags($new_instance['title']);
-		$instance['width'] = strip_tags($new_instance['width']);
-		$instance['height'] = strip_tags($new_instance['height']);
-		$instance['url'] = strip_tags($new_instance['url']);
-		$instance['show_header'] = strip_tags($new_instance['show_header']);
-		$instance['show_faces'] = strip_tags($new_instance['show_faces']);
-		$instance['show_stream'] = strip_tags($new_instance['show_stream']);
-		$instance['color_scheme'] = strip_tags($new_instance['color_scheme']);
-		$instance['hide_if_logged_out'] = strip_tags($new_instance['hide_if_logged_out']);
+		$instance['title']                 = strip_tags($new_instance['title']);
+		$instance['width']                 = strip_tags($new_instance['width']);
+		$instance['height']                = strip_tags($new_instance['height']);
+		$instance['url']                   = strip_tags($new_instance['url']);
+		$instance['show_timeline']         = strip_tags($new_instance['show_timeline']);
+		$instance['show_events']           = strip_tags($new_instance['show_events']);
+		$instance['show_messages']         = strip_tags($new_instance['show_messages']);
+		$instance['hide_cover']            = strip_tags($new_instance['hide_cover']);
+		$instance['show_faces']            = strip_tags($new_instance['show_faces']);
+		$instance['small_header']          = strip_tags($new_instance['small_header']);
+		$instance['adapt_container_width'] = strip_tags($new_instance['adapt_container_width']);
+		$instance['hide_if_logged_out']    = strip_tags($new_instance['hide_if_logged_out']);
 
 		return $instance;
 	}
 
 	function widget($args, $instance) {
 		extract($args);
-		$title = apply_filters('widget_title', $instance['title']);
-		$width = $instance['width'];
-		$width = $width ? $width : 250;
-		$height = $instance['height'];
-		$url = rawurlencode($instance['url']);
-		$show_header = (int)@$instance['show_header'];
-		$show_header = $show_header ? 'true' : 'false';
-		$show_faces = (int)@$instance['show_faces'];
-		$show_faces = $show_faces ? 'true' : 'false';
-		$show_stream = (int)@$instance['show_stream'];
-		$show_stream = $show_stream ? 'true' : 'false';
-		$hide_if_logged_out = (int)@$instance['hide_if_logged_out'];
-		$color_scheme = $instance['color_scheme'];
-		$color_scheme = $color_scheme ? $color_scheme : 'light';
+		$title                 = apply_filters('widget_title', $instance['title']);
+		$width                 = $instance['width'];
+		$width                 = $width ? $width : 340;
+		$height                = $instance['height'];
+		$height                = $height ? $height : 500;
+		// $url                   = rawurlencode($instance['url']);
+		$url                   = $instance['url'];
+		$show_timeline         = (int)@$instance['show_timeline'];
+		$show_timeline         = $show_timeline ? 'timeline' : '';
+		$show_events           = (int)@$instance['show_events'];
+		$show_events           = $show_events ? 'events' : '';
+		$show_messages         = (int)@$instance['show_messages'];
+		$show_messages         = $show_messages ? 'messages' : '';
+		$hide_cover            = (int)@$instance['hide_cover'];
+		$hide_cover            = $hide_cover ? 'true' : 'false';
+		$show_facepile         = (int)@$instance['show_faces'];
+		$show_facepile         = $show_facepile ? 'true' : 'false';
+		$small_header          = (int)@$instance['small_header'];
+		$small_header          = $small_header ? 'true' : 'false';
+		$adapt_container_width = (int)@$instance['adapt_container_width'];
+		$adapt_container_width = $adapt_container_width ? 'true' : 'false';
+		$hide_if_logged_out    = (int)@$instance['hide_if_logged_out'];
 
-		$height = $height ? $height : (('true' == $show_stream || 'true' == $show_faces) ? 427 : 62);
+		$tabs = array(
+			$show_timeline,
+			$show_events,
+			$show_messages,
+		);
+
+		$tabs = implode(',', $tabs);
 		
 		$locale = wdfb_get_locale();
 		$id = "wdfb-likebox-" . md5(microtime());
@@ -115,12 +147,17 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 		echo $before_widget;
 		if ($title) echo $before_title . $title . $after_title;
 
-		echo '<iframe id="' . $id . '" src="' . WDFB_PROTOCOL . 'www.facebook.com/plugins/likebox.php?href=' . 
-			$url . '&amp;width=' . $width . '&amp;locale=' . $locale . '&amp;colorscheme=' . 
-			$color_scheme . '&amp;show_faces=' . $show_faces . '&amp;stream=' . 
-			$show_stream . '&amp;header=' . $show_header . '&amp;height='. 
-			$height . '" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . 
-			$width .'px; height:' . $height . 'px;" allowTransparency="true"></iframe>'
+		echo '<div class="fb-page" ' . 
+				'id="' . $id . '" ' . 
+				'data-href="' . $url . '" ' . 
+				'data-width="' . $width . '" ' . 
+				'data-height="' . $height . '" ' . 
+				'data-tabs="' . $tabs . '" ' . 
+				'data-hide-cover="' . $hide_cover . '" ' . 
+				'data-show-facepile="' . $show_facepile . '" ' . 
+				'data-small-header="' . $small_header . '" ' . 
+				'data-adapt-container-width="' . $adapt_container_width . '" ' . 
+			'></div>'
 		;
 
 		if ($hide_if_logged_out) {
