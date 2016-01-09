@@ -232,7 +232,7 @@ class Wdfb_AdminPages {
 			$form,
 			'create_use_fb_comments_box'
 		), 'wdfb_options_page', 'wdfb_comments' );
-		if ( ! defined( 'BP_VERSION' ) && class_exists('BuddyPress') ) {
+		if ( ! defined( 'BP_VERSION' ) /*&& class_exists('BuddyPress')*/ ) {
 			add_settings_field( 'wdfb_override_wp_comments_settings', __( 'Override WordPress discussion settings', 'wdfb' ), array(
 				$form,
 				'create_override_wp_comments_settings_box'
