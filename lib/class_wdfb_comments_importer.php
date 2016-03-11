@@ -146,10 +146,6 @@ class Wdfb_CommentsImporter {
 		);
 		$data       = wp_filter_comment( $data );
 		$comment_id = wp_insert_comment( $data );
-		echo "<pre> Comment and meta";
-		print_r( $data );
-		print_r( $meta );
-		echo "</pre>";
 		add_comment_meta( $comment_id, 'wdfb_comment', $meta );
 
 		if ( $this->model->data->get_option( 'wdfb_comments', 'notify_authors' ) ) {
