@@ -10,7 +10,7 @@ class Wdfb_WidgetConnect extends WP_Widget {
 		add_action('wp_print_styles', array($this, 'css_load_styles'));
 		add_action('wp_print_scripts', array($this, 'js_load_scripts'));
 
-		parent::WP_Widget(__CLASS__, 'Facebook Connect', $widget_ops);
+		parent::__construct(__CLASS__, 'Facebook Connect', $widget_ops);
 	}
 
 	function css_load_styles () {

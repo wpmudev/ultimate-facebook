@@ -372,14 +372,20 @@ class Wdfb_Model {
 		return $token[ $fb_uid ];
 	}
 
+	/**
+	 * Check Comments meta table if facebook comment is already imported, using Facebook Comment id
+	 * @param $fb_cid
+	 *
+	 * @return bool|null|string
+	 */
 	function comment_already_imported( $fb_cid ) {
 		if ( ! $fb_cid ) {
 			return false;
 		}
 		$key = '%s:13:"fb_comment_id";s:' . strlen( $fb_cid ) . ':"' . $fb_cid . '";%';
-		$sql = "SELECT meta_id FROM " . $this->db->prefix . "commentmeta WHERE meta_value LIKE '{$key}'";
+		$sql = "SELECT meta_id, comment_id FROM " . $this->db->prefix . "commentmeta WHERE meta_value LIKE '{$key}'";
 
-		return $this->db->get_var( $sql );
+		return $this->db->get_row( $sql );
 	}
 
 	/**

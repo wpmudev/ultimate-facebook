@@ -19,7 +19,7 @@ class Wdfb_WidgetAlbums extends WP_Widget {
 		add_action( 'admin_print_scripts-widgets.php', array( $this, 'js_load_editor' ) );
 		add_action( 'init', create_function( '', 'add_thickbox();' ) );
 
-		parent::WP_Widget( __CLASS__, 'Facebook Albums', $widget_ops );
+		parent::__construct( __CLASS__, 'Facebook Albums', $widget_ops );
 	}
 
 	function css_load_styles() {
