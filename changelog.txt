@@ -1,13 +1,26 @@
 Plugin Name: Ultimate Facebook
 Author: Ve Bailovity (Incsub)
-Contributor: Umesh Kumar
+Contributors: Umesh Kumar, Julien Zerbib
 
 Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
-2.7.9.7 - 2015-07-22 - Umesh Kumar
+2.8.2 - 2016-03-13 - Umesh Kumar
+- New: Import nested replies from Facebook
 - New: Number of User accounts fetched from Facebook, Added filter `wdfb_user_accounts_limit` to specify a custom limit
+
+2.8.1.2 - 2015-12-17 - Julien Zerbib
+- Fixed: Import comments for new FB Graph API
+
+2.8.1.1 - 2015-11-24 - Julien Zerbib
+- Fixed: The auto posted post title contained HTML tags
+- Added: Primary User so FB auto post accounts come from him only
+- Removed: 'login_form_bottom' filter that was causing a duplicate FB login button
+
+2.8.1 - 2015-10-02 - Julien Zerbib
+- Added: Editor can chose the FB account he is publishing in
+- Added: Publishing Title, Account and Publish are saved when the post has a draft status
 
 2.7.9.6 - 2015-07-22 - Umesh Kumar
 - Fixed: Permissions issue for new APP

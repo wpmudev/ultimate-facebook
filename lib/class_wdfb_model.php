@@ -1065,11 +1065,12 @@ class Wdfb_Model {
 		}
 	}
 
-	function get_feed_for( $uid, $limit = false ) {
+	function get_feed_for( $uid, $limit = false, $fields = '' ) {
 		if ( ! $uid ) {
 			return false;
 		}
 		$limit = $limit ? '?limit=' . $limit : '';
+		$fields = $fields ? ( $limit ? '&fields=' : '?fields=' ) . $fields : ''; 
 
 		$tokens = $this->data->get_option( 'wdfb_api', 'auth_tokens' );
 		$token  = ! empty( $tokens[ $uid ] ) ? $tokens[ $uid ] : reset( $tokens ); // Use any token, if there's no token we need
@@ -1077,7 +1078,7 @@ class Wdfb_Model {
 //		$old_token = $this->fb->getAccessToken();
 //		$this->fb->setAccessToken( $token );
 		try {
-			$res = $this->fb->api( "/{$uid}/feed/{$limit}" );
+			$res = $this->fb->api( "/{$uid}/feed/{$limit}{$fields}" );
 		} catch ( Exception $e ) {
 			$this->log->error( __FUNCTION__, $e );
 
