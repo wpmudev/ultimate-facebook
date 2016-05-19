@@ -372,14 +372,20 @@ class Wdfb_Model {
 		return $token[ $fb_uid ];
 	}
 
+	/**
+	 * Check Comments meta table if facebook comment is already imported, using Facebook Comment id
+	 * @param $fb_cid
+	 *
+	 * @return bool|null|string
+	 */
 	function comment_already_imported( $fb_cid ) {
 		if ( ! $fb_cid ) {
 			return false;
 		}
 		$key = '%s:13:"fb_comment_id";s:' . strlen( $fb_cid ) . ':"' . $fb_cid . '";%';
-		$sql = "SELECT meta_id FROM " . $this->db->prefix . "commentmeta WHERE meta_value LIKE '{$key}'";
+		$sql = "SELECT meta_id, comment_id FROM " . $this->db->prefix . "commentmeta WHERE meta_value LIKE '{$key}'";
 
-		return $this->db->get_var( $sql );
+		return $this->db->get_row( $sql );
 	}
 
 	/**
@@ -776,36 +782,34 @@ class Wdfb_Model {
 		}
 
 		$token = $token ? $token : $this->get_user_api_token( $fid );
-		/*
-		$token = $token ? "?access_token={$token}" : '';
+		$limit = apply_filters( 'wdfb_user_accounts_limit', 200);
 		try {
 			//$ret = $this->fb->api('/' . $fid . '/accounts/');
-			$ret = $this->fb->api('/' . $fid . '/accounts/' . $token);
+			$ret = $this->fb->api( '/' . $fid . '/accounts/', array( 'access_token' => $token, 'limit' => $limit ) );
 		} catch (Exception $e) {
-			return false;
+			$url  = "https://graph.facebook.com/{$fid}/accounts?access_token={$token}&limit={$limit}";
+			$page = wp_remote_get( $url, array(
+				'method'      => 'GET',
+				'timeout'     => '5',
+				'redirection' => '5',
+				'user-agent'  => 'wdfb',
+				'blocking'    => true,
+				'compress'    => false,
+				'decompress'  => true,
+				'sslverify'   => false
+			) );
+
+			if ( is_wp_error( $page ) ) {
+				return false;
+			} // Request fail
+			if ( (int) $page['response']['code'] != 200 ) {
+				return false;
+			} // Request fail
+
+			return (array) @json_decode( $page['body'] );
 		}
+		//In the end, if nothing
 		return $ret;
-		*/
-		$url  = "https://graph.facebook.com/{$fid}/accounts?access_token={$token}";
-		$page = wp_remote_get( $url, array(
-			'method'      => 'GET',
-			'timeout'     => '5',
-			'redirection' => '5',
-			'user-agent'  => 'wdfb',
-			'blocking'    => true,
-			'compress'    => false,
-			'decompress'  => true,
-			'sslverify'   => false
-		) );
-
-		if ( is_wp_error( $page ) ) {
-			return false;
-		} // Request fail
-		if ( (int) $page['response']['code'] != 200 ) {
-			return false;
-		} // Request fail
-
-		return (array) @json_decode( $page['body'] );
 	}
 
 	function post_on_facebook( $type, $fid, $post, $as_page = false ) {

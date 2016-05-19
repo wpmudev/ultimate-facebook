@@ -6,6 +6,10 @@ Change Log:
 ----------------------------------------------------------------------
 ----------------------------------------------------------------------
 
+2.8.2 - 2016-03-13 - Umesh Kumar
+- New: Import nested replies from Facebook
+- New: Number of User accounts fetched from Facebook, Added filter `wdfb_user_accounts_limit` to specify a custom limit
+
 2.8.1.2 - 2015-12-17 - Julien Zerbib
 - Fixed: Import comments for new FB Graph API
 
