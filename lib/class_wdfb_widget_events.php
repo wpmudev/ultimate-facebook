@@ -179,16 +179,25 @@ class Wdfb_WidgetEvents extends WP_Widget {
 
 		if ( is_array( $events ) && ! empty( $events ) ) {
 			$current_tz = function_exists( 'date_default_timezone_get' ) ? @date_default_timezone_get() : 'UTC';
+			$tzstring = get_option('timezone_string');
 			echo '<ul class="wdfb_widget_events">';
 			foreach ( $events as $idx => $event ) {
-				if ( function_exists( 'date_default_timezone_set' ) && ! empty( $event['timezone'] ) ) {
+				if ( function_exists( 'date_default_timezone_set' ) ) {
 					$start_time = isset ( $event['start_time'] ) ? strtotime( $event['start_time'] ) : '';
 					$end_time   = isset ( $event['end_time'] ) ? strtotime( $event['end_time'] ) : '';
-					date_default_timezone_set( $event['timezone'] );
-					$event['start_time'] = $start_time ? date( 'Y-m-d H:i:s', $start_time ) : '';
-					$event['end_time']   = $end_time ? date( 'Y-m-d H:i:s', $end_time ) : '';
-					date_default_timezone_set( $current_tz );
+					if( ! empty( $event['timezone'] ) ){
+						date_default_timezone_set( $event['timezone'] );
+						$event['start_time'] = $start_time ? date( 'Y-m-d H:i:s', $start_time ) : '';
+						$event['end_time']   = $end_time ? date( 'Y-m-d H:i:s', $end_time ) : '';
+						date_default_timezone_set( $current_tz );
+					} elseif( !empty($tzstring) && $tzstring != $current_tz ){
+						date_default_timezone_set( $tzstring );
+						$event['start_time'] = $start_time ? date( 'Y-m-d H:i:s', $start_time ) : '';
+						$event['end_time']   = $end_time ? date( 'Y-m-d H:i:s', $end_time ) : '';
+						date_default_timezone_set( $current_tz );
+					}
 				}
+
 				if ( $date_threshold > strtotime( $event['start_time'] ) ) {
 					continue;
 				}
