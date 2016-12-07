@@ -90,7 +90,7 @@ function wdfb_dashboard_permissions_widget() {
 			<a href="#" class="wdfb_grant_perms" data-wdfb_locale="<?php echo wdfb_get_locale(); ?>" data-wdfb_perms="<?php echo Wdfb_Permissions::get_permissions(); ?>"><?php echo __( 'Grant extended permissions', 'wdfb' ); ?></a>
 		</p>
 	</div>
-	<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script><?php
+	<script type="text/javascript" src="<?php echo WDFB_PLUGIN_URL; ?> '/js/check_permissions.js"></script><?php
 }
 
 function wdfb_add_dashboard_permissions_widget() {

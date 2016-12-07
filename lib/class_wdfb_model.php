@@ -408,6 +408,32 @@ class Wdfb_Model {
 			return false;
 		}
 		if ( ! $me || ! isset( $me['email'] ) ) {
+
+			//Try to fetch the email using Facebook ID
+			if( empty( $me['email'] ) ) {
+
+				if ( empty( $me['id'] ) ) {
+					return false;
+				}
+
+				//Get token
+				$user_token = $this->get_user_token();
+
+				//Get User email
+				try {
+					$me = $this->fb->api( '/' . $me['id'],
+						array(
+							'access_token' => $user_token,
+							'fields' => 'email, first_name, last_name, name, id'
+						) );
+				} catch ( Exception $e ) {
+					$this->log->error( __FUNCTION__, new Exception( $e->get_error_message() ) );
+					return false;
+				}
+			}
+		}
+		//If we don't have email even now
+		if( empty( $me['email'] ) ) {
 			return false;
 		}
 
