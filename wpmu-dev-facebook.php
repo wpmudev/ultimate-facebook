@@ -220,25 +220,3 @@ function decode_utf_8( $content, $comment ) {
 }
 
 add_action( 'plugins_loaded', '_wdfb_initialize' );
-
-if ( is_admin() && file_exists( WDFB_PLUGIN_BASE_DIR . '/lib/dash-notice/wpmudev-dash-notification.php' ) ) {
-	// Dashboard notification
-	global $wpmudev_notices;
-	if ( ! is_array( $wpmudev_notices ) ) {
-		$wpmudev_notices = array();
-	}
-	$wpmudev_notices[] = array(
-		'id'      => 228,
-		'name'    => 'Ultimate Facebook',
-		'screens' => array(
-			'toplevel_page_wdfb',
-			'toplevel_page_wdfb-network',
-			'facebook_page_wdfb_widgets',
-			'facebook_page_wdfb_widgets-network',
-			'facebook_page_wdfb_shortcodes',
-			'facebook_page_wdfb_shortcodes-network',
-			'facebook_page_wdfb_error_log',
-		),
-	);
-	require_once WDFB_PLUGIN_BASE_DIR . '/lib/dash-notice/wpmudev-dash-notification.php';
-}
