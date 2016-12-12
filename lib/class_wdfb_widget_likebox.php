@@ -7,7 +7,7 @@ class Wdfb_WidgetLikebox extends WP_Widget {
 
 	function Wdfb_WidgetLikebox () {
 		$widget_ops = array('classname' => __CLASS__, 'description' => __('Shows Facebook Like box.', 'wdfb'));
-		parent::WP_Widget(__CLASS__, 'Facebook Like Box', $widget_ops);
+		parent::__construct(__CLASS__, 'Facebook Like Box', $widget_ops);
 	}
 
 	function form($instance) {

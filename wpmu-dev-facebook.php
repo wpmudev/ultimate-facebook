@@ -3,7 +3,7 @@
 Plugin Name: Ultimate Facebook
 Plugin URI: http://premium.wpmudev.org/project/ultimate-facebook
 Description: Easy Facebook integration: share your blog posts, autopost to your wall, login and registration integration, BuddyPress profiles support and more. Please, configure the plugin first.
-Version: 2.8.1.2
+Version: 2.8.2
 Text Domain: wdfb
 Author: WPMU DEV
 Author URI: http://premium.wpmudev.org
@@ -31,7 +31,7 @@ define ( 'WDFB_PLUGIN_SELF_DIRNAME', basename( dirname( __FILE__ ) ), true );
 define ( 'WDFB_PROTOCOL', ( is_ssl() ? 'https://' : 'http://' ), true );
 define ( 'WDFB_PLUGIN_CORE_URL', plugins_url(), true );
 define ( 'WDFB_PLUGIN_CORE_BASENAME', plugin_basename( __FILE__ ), true );
-define ( 'WDFB_PLUGIN_VERSION', '2.8.1.1' );
+define ( 'WDFB_PLUGIN_VERSION', '2.8.2' );
 if ( ! defined( 'WDFB_MEMBERSHIP_INSTALLED' ) ) {
 	define ( 'WDFB_MEMBERSHIP_INSTALLED', ( defined( 'MEMBERSHIP_MASTER_ADMIN' ) && defined( 'MEMBERSHIP_SETACTIVATORAS_ADMIN' ) ), true );
 }
@@ -90,7 +90,7 @@ function wdfb_dashboard_permissions_widget() {
 			<a href="#" class="wdfb_grant_perms" data-wdfb_locale="<?php echo wdfb_get_locale(); ?>" data-wdfb_perms="<?php echo Wdfb_Permissions::get_permissions(); ?>"><?php echo __( 'Grant extended permissions', 'wdfb' ); ?></a>
 		</p>
 	</div>
-	<script type="text/javascript" src="' . WDFB_PLUGIN_URL . '/js/check_permissions.js"></script><?php
+	<script type="text/javascript" src="<?php echo WDFB_PLUGIN_URL; ?> '/js/check_permissions.js"></script><?php
 }
 
 function wdfb_add_dashboard_permissions_widget() {

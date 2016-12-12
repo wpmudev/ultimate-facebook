@@ -10,7 +10,7 @@ class Wdfb_WidgetRecentComments extends WP_Widget {
 			'classname'   => __CLASS__,
 			'description' => __( 'Shows your recently imported Facebook comments', 'wdfb' )
 		);
-		parent::WP_Widget( __CLASS__, 'Facebook recent comments', $widget_ops );
+		parent::__construct( __CLASS__, 'Facebook recent comments', $widget_ops );
 	}
 
 	function form( $instance ) {

@@ -15,7 +15,7 @@ class Wdfb_WidgetEvents extends WP_Widget {
 		add_action( 'admin_print_scripts-widgets.php', array( $this, 'js_load_scripts' ) );
 		add_action( 'admin_print_styles-widgets.php', array( $this, 'css_load_admin_styles' ) );
 
-		parent::WP_Widget( __CLASS__, 'Facebook Events', $widget_ops );
+		parent::__construct( __CLASS__, 'Facebook Events', $widget_ops );
 	}
 
 	function css_load_styles() {
